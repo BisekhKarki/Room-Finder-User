@@ -39,7 +39,7 @@ const loginUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
   try {
-    const redirectUrl = "http://localhost:3000/api/auth/callback/google";
+    const redirectUrl = "http://localhost:4000/api/user/callback/google";
     const oAuth2Client = new OAuth2Client(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -71,13 +71,14 @@ const googleLogin = async (req, res) => {
 const googleCallback = async (req, res) => {
   try {
     const { code } = req.query;
-    const redirectUrl = "http://localhost:3000/api/auth/callback/google";
+    const redirectUrl = "http://localhost:4000/api/user/callback/google";
     const oAuth2Client = new OAuth2Client(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
       redirectUrl
     );
     const { tokens } = await oAuth2Client.getToken(code);
+    oAuth2Client.setCredentials(tokens);
     const response = await fetch(
       "https://www.googleapis.com/oauth2/v3/userinfo",
       {
@@ -88,8 +89,25 @@ const googleCallback = async (req, res) => {
     );
 
     const userData = await response.json();
+
+    const checkIfUserExists = await user.findOne({ Email: userData.email });
+    if (checkIfUserExists) {
+      res.redirect("http://localhost:3000/Home");
+    }
+    const newUser = new user({
+      FirstName: userData.given_name,
+      LastName: userData.family_name,
+      Email: userData.email,
+      Phone: "",
+      Address: "",
+      UserType: "",
+      Password: "",
+    });
+    await newUser.save();
+
     console.log(userData);
-    res.redirect("http://localhost:3000");
+
+    res.redirect("http://localhost:3000/Home");
   } catch (error) {
     return res.status(500).json({
       success: false,

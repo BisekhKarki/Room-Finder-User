@@ -87,6 +87,19 @@ const SignupPage = () => {
     }
   };
 
+  const google = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/user/google");
+      if (response.status === 200 && response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        toast.error("Failed to initiate Google login");
+      }
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
   return (
     <div>
       <div className="px-20 py-12 flex items-center justify-center flex-col">
@@ -257,6 +270,7 @@ const SignupPage = () => {
                   Create Account
                 </Button>
                 <Button
+                  onClick={() => google()}
                   type="button"
                   className="bg-[#f1f1f3] hover:bg-[#e6e6ed] items-center w-80 text-black flex justify-center"
                 >

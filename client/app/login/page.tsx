@@ -79,7 +79,7 @@ const loginPage = () => {
     try {
       const response = await axios.get("http://localhost:4000/api/user/google");
       if (response.status === 200 && response.data.url) {
-        window.location.href = response.data.url; // Redirect to Google Auth
+        window.location.href = response.data.url;
       } else {
         toast.error("Failed to initiate Google login");
       }
@@ -202,7 +202,7 @@ const loginPage = () => {
                   type="button"
                   className="bg-[#f1f1f3] hover:bg-[#e6e6ed] items-center w-80 text-black flex justify-center"
                 >
-                  <FcGoogle /> Signup With Google
+                  <FcGoogle /> Login With Google
                 </Button>
               </div>
             </form>
