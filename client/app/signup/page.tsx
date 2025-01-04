@@ -18,6 +18,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
+import { FcGoogle } from "react-icons/fc";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "Enter at least 1 character"),
@@ -76,10 +77,10 @@ const SignupPage = () => {
         if (response.status === 200) {
           toast.success("User registered successfully");
           console.log(response.data.message);
+          router.push("/login");
         } else {
           toast.error("Failed to register account please try again");
         }
-        router.push("/login");
       }
     } catch (error: any) {
       toast.error(error);
@@ -248,12 +249,18 @@ const SignupPage = () => {
                   )}
                 />
               </div>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center gap-2">
                 <Button
                   type="submit"
                   className="bg-[#5656FF] hover:bg-[#4545D9] items-center w-80"
                 >
                   Create Account
+                </Button>
+                <Button
+                  type="button"
+                  className="bg-[#f1f1f3] hover:bg-[#e6e6ed] items-center w-80 text-black flex justify-center"
+                >
+                  <FcGoogle /> Signup With Google
                 </Button>
               </div>
             </form>

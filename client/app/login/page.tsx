@@ -21,6 +21,7 @@ import * as z from "zod";
 import { IoIosEyeOff } from "react-icons/io";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { FcGoogle } from "react-icons/fc";
 
 const formSchema = z.object({
   email: z.string().min(1, "Enter at least 1 character"),
@@ -69,6 +70,19 @@ const loginPage = () => {
         toast.error("Failed to register account please try again");
       }
       router.push("/Home");
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
+  const google = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/user/google");
+      if (response.status === 200 && response.data.url) {
+        window.location.href = response.data.url; // Redirect to Google Auth
+      } else {
+        toast.error("Failed to initiate Google login");
+      }
     } catch (error: any) {
       toast.error(error);
     }
@@ -176,12 +190,19 @@ const loginPage = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center gap-2">
                 <Button
                   type="submit"
                   className="bg-[#5656FF] hover:bg-[#4545D9] items-center w-80"
                 >
                   Login
+                </Button>
+                <Button
+                  onClick={() => google()}
+                  type="button"
+                  className="bg-[#f1f1f3] hover:bg-[#e6e6ed] items-center w-80 text-black flex justify-center"
+                >
+                  <FcGoogle /> Signup With Google
                 </Button>
               </div>
             </form>
