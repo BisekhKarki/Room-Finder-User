@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -12,66 +11,60 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeClosed } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { BsEye, BsEyeFill } from "react-icons/bs";
-import * as z from "zod";
+import { BsEye } from "react-icons/bs";
 import { IoIosEyeOff } from "react-icons/io";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
+import * as z from "zod";
 
 const formSchema = z.object({
   email: z.string().min(1, "Enter at least 1 character"),
-
-  address: z.string().min(3, "Enter your address"),
   user: z.string(),
-  password: z.string().min(6, "Password must be of more than 6 characters"),
+  password: z.string().min(6, "Password must be more than 6 characters"),
 });
 
-const loginPage = () => {
+const LoginPage = () => {
   const router = useRouter();
-  const [close, open] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      address: "",
-
       password: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/user/login",
-        {
-          Email: values.email,
-          Address: values.address,
-          UserType: values.user,
-          Password: values.password,
+      const response = await fetch("http://localhost:4000/api/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        body: JSON.stringify({
+          Email: values.email,
+          Password: values.password,
+          UserType: values.user,
+        }),
+        credentials: "include",
+      });
+
+      const data = await response.json();
 
       if (response.status === 200) {
-        toast.success("User Logged successfully");
-        console.log(response.data.message);
-      } else {
-        toast.error("Failed to register account please try again");
+        console.log(data);
+        toast.success(data.message);
+        router.push(data.redirect);
+      } else if (response.status === 400) {
+        toast.error(data.message);
       }
-      router.push("/Home");
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.message || "An error occurred");
     }
   };
 
@@ -80,146 +73,139 @@ const loginPage = () => {
       const response = await axios.get("http://localhost:4000/api/user/google");
       if (response.status === 200 && response.data.url) {
         window.location.href = response.data.url;
+        toast.success("Logged in successfully");
       } else {
         toast.error("Failed to initiate Google login");
       }
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.message || "An error occurred");
     }
   };
 
   return (
-    <div>
-      <div className="px-20 py-20 flex items-center justify-center flex-col">
-        <h1 className="font-semibold text-3xl text-start">Login</h1>
-        <div className="border shadow-md px-10 py-5 rounded-xl mt-2  w-1/2">
-          <Form {...form}>
-            <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                name="email"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-6 md:p-10">
+        <h1 className="font-bold text-2xl md:text-3xl text-gray-800 text-center">
+          Login
+        </h1>
+        <Form {...form}>
+          <form
+            className="space-y-4 mt-6"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            {/* Email Field */}
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your email"
+                      {...field}
+                      type="email"
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* User Type Field */}
+            <FormField
+              name="user"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User Type</FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
+                      className="w-full bg-white border rounded-md px-3 py-2"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        Select a user type
+                      </option>
+                      <option value="Tenants">Tenants</option>
+                      <option value="Landlord">Landlord</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Password Field */}
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <div className="relative">
                       <Input
-                        placeholder="Enter your email"
                         {...field}
-                        type="email"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
                         className="w-full"
                       />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name="address"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your address" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="user"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Select user</FormLabel>
-                    <FormControl>
-                      <select
-                        className="w-full bg-white border p-2 rounded px-3"
-                        {...field}
-                        defaultValue={""}
-                      >
-                        <option value="" disabled>
-                          Select a user
-                        </option>
-                        <option value="Tenants">Tenants</option>
-                        <option value="Landlord">Landlord</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="password"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          placeholder="Enter your password"
-                          {...field}
-                          type={close ? "text" : "password"}
-                          className="w-full"
-                        />
-                        <div className="absolute  top-1 right-2">
-                          {close ? (
-                            <BsEye
-                              type="button"
-                              className="cursor-pointer h-6 w-6"
-                              onClick={() => open(!close)}
-                              width={150}
-                              height={150}
-                            />
-                          ) : (
-                            <IoIosEyeOff
-                              type="button"
-                              className="cursor-pointer h-6 w-6"
-                              onClick={() => open(!close)}
-                            />
-                          )}
-                        </div>
+                      <div className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer">
+                        {showPassword ? (
+                          <BsEye
+                            onClick={() => setShowPassword(false)}
+                            className="h-5 w-5 text-gray-500"
+                          />
+                        ) : (
+                          <IoIosEyeOff
+                            onClick={() => setShowPassword(true)}
+                            className="h-5 w-5 text-gray-500"
+                          />
+                        )}
                       </div>
-                    </FormControl>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex items-center justify-center gap-2">
-                <Button
-                  type="submit"
-                  className="bg-[#5656FF] hover:bg-[#4545D9] items-center w-80"
-                >
-                  Login
-                </Button>
-                <Button
-                  onClick={() => google()}
-                  type="button"
-                  className="bg-[#f1f1f3] hover:bg-[#e6e6ed] items-center w-80 text-black flex justify-center"
-                >
-                  <FcGoogle /> Login With Google
-                </Button>
-              </div>
-            </form>
-          </Form>
-          <p className="mt-2">
-            Don't have an account?
-            <span
-              className="text-blue-500 underline cursor-pointer"
-              onClick={() => router.push("/signup")}
-            >
-              Signup
-            </span>
-          </p>
-        </div>
+            {/* Buttons */}
+            <div className="space-y-3">
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+              >
+                Login
+              </Button>
+              <Button
+                onClick={google}
+                type="button"
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-md flex items-center justify-center gap-2"
+              >
+                <FcGoogle className="text-lg" />
+                Login with Google
+              </Button>
+            </div>
+          </form>
+        </Form>
+
+        {/* Signup Redirect */}
+        <p className="mt-4 text-center text-gray-600">
+          Don’t have an account?{" "}
+          <span
+            onClick={() => router.push("/signup")}
+            className="text-blue-500 underline cursor-pointer"
+          >
+            Signup
+          </span>
+        </p>
       </div>
     </div>
   );
 };
 
-export default loginPage;
+export default LoginPage;

@@ -1,5 +1,8 @@
-import SignupPage from "./signup/page";
+"use client";
+import React from "react";
 
-export default function Home() {
-  return <div></div>;
-}
+const page = () => {
+  return <div>Home</div>;
+};
+
+export default page;

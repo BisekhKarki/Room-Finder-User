@@ -2,11 +2,19 @@ const user = require("../../Schemas/UserModel");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 const { OAuth2Client } = require("google-auth-library");
+const generateToken = require("../../lib/token");
 
 // Function to validate user in order to login
 const loginUser = async (req, res) => {
-  const { Email, Password } = req.body;
+  const { Email, Password, UserType } = req.body;
+
   try {
+    if (!["Landlord", "Tenants"].includes(UserType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid User Type",
+      });
+    }
     const findUser = await user.findOne({ Email });
     if (!findUser) {
       return res.status(400).json({
@@ -17,22 +25,31 @@ const loginUser = async (req, res) => {
     }
 
     const checkPassword = await bcrypt.compare(Password, findUser.Password);
+
     if (!checkPassword) {
       return res.status(400).json({
         success: false,
         message: "Incorrect Password\nPlease try again",
       });
     }
+    generateToken(findUser._id, UserType, res);
 
-    return res.status(200).json({
-      success: true,
-      message: "User logged in successfully",
-      //   data: findUser,
-    });
+    if (findUser.UserType === UserType) {
+      return res.status(200).json({
+        success: true,
+        message: `You have been logged in as ${UserType}`,
+        redirect: UserType === "Landlord" ? "/landlord/Home" : "/User/Home",
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "No User Found",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error,
+      message: "An unexpected error occured. Please try again later.",
     });
   }
 };
@@ -91,27 +108,26 @@ const googleCallback = async (req, res) => {
     const userData = await response.json();
 
     const checkIfUserExists = await user.findOne({ Email: userData.email });
+
     if (checkIfUserExists) {
-      res.redirect("http://localhost:3000/Home");
+      return res.redirect("http://localhost:3000/Home");
+    } else {
+      const newUser = new user({
+        FirstName: userData.given_name,
+        LastName: userData.family_name,
+        Email: userData.email,
+        Phone: "",
+        Address: "",
+        UserType: "",
+        Password: "",
+      });
+      await newUser.save();
+      return res.redirect("http://localhost:3000/Home");
     }
-    const newUser = new user({
-      FirstName: userData.given_name,
-      LastName: userData.family_name,
-      Email: userData.email,
-      Phone: "",
-      Address: "",
-      UserType: "",
-      Password: "",
-    });
-    await newUser.save();
-
-    console.log(userData);
-
-    res.redirect("http://localhost:3000/Home");
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };
