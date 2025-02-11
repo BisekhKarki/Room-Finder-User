@@ -59,6 +59,7 @@ const LoginPage = () => {
       if (response.status === 200) {
         console.log(data);
         toast.success(data.message);
+        localStorage.setItem("Token", data.token);
         router.push(data.redirect);
       } else if (response.status === 400) {
         toast.error(data.message);

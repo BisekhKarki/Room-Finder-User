@@ -1,11 +1,17 @@
 const express = require("express");
-const register = require("../Controller/User/Registration");
+const {
+  register,
+  sendingVerificationEmail,
+} = require("../Controller/User/Registration");
 const {
   loginUser,
   googleLogin,
   googleCallback,
 } = require("../Controller/User/login");
 const router = express.Router();
+
+const verifyToken = require("../lib/VerifyToken");
+const checkUser = require("../middleware/VerifyUser");
 
 // For User Registration Route
 router.post("/register", register);
@@ -15,4 +21,9 @@ router.post("/login", loginUser);
 router.get("/google", googleLogin);
 
 router.get("/callback/google", googleCallback);
+
+router.post("/verify/token", verifyToken);
+
+router.post("/verify/code", checkUser, sendingVerificationEmail);
+
 module.exports = router;

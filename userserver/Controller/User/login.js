@@ -1,8 +1,24 @@
 const user = require("../../Schemas/UserModel");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+dotenv.config();
 const { OAuth2Client } = require("google-auth-library");
-const generateToken = require("../../lib/token");
+const jwt = require("jsonwebtoken");
+// const generateToken = require("../../lib/token");
+
+// For Generating token
+const generateToken = async (userId, userType) => {
+  return jwt.sign(
+    {
+      id: userId,
+      type: userType,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
+};
 
 // Function to validate user in order to login
 const loginUser = async (req, res) => {
@@ -32,13 +48,13 @@ const loginUser = async (req, res) => {
         message: "Incorrect Password\nPlease try again",
       });
     }
-    generateToken(findUser._id, UserType, res);
-
+    const token = await generateToken(findUser._id, UserType);
     if (findUser.UserType === UserType) {
       return res.status(200).json({
         success: true,
         message: `You have been logged in as ${UserType}`,
         redirect: UserType === "Landlord" ? "/landlord/Home" : "/User/Home",
+        token: token,
       });
     } else {
       return res.status(400).json({

@@ -37,6 +37,7 @@ const formSchema = z.object({
 
 const SignupPage = () => {
   const router = useRouter();
+  // const dispatch = useDispatch<AppDispatch>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,28 +57,29 @@ const SignupPage = () => {
       if (values.password !== values.confirmPassword) {
         toast.error("Passwords do not match");
       } else {
-        const response = await axios.post(
-          "http://localhost:4000/api/user/register",
+        const response = await fetch(
+          "http://localhost:4000/api/user/verify/code",
           {
-            FirstName: values.firstName,
-            LastName: values.lastName,
-            Email: values.email,
-            Phone: values.phone,
-            Address: values.address,
-            UserType: values.user,
-            Password: values.password,
-          },
-          {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              FirstName: values.firstName,
+              LastName: values.lastName,
+              Email: values.email,
+              Phone: values.phone,
+              Address: values.address,
+              UserType: values.user,
+              Password: values.password,
+            }),
           }
         );
-        if (response.status === 200) {
-          toast.success("User registered successfully");
-          router.push("/login");
+        const val = await response.json();
+        if (!response.ok) {
+          toast.error(val.message || "Please Try again");
         } else {
-          toast.error("Failed to register account, please try again");
+          router.push("/VerifyEmail");
         }
       }
     } catch (error: any) {

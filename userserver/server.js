@@ -10,6 +10,8 @@ const passport = require("passport");
 const approval = require("./Routes/Approval");
 const roomsPosted = require("./Routes/MyRooms");
 const cookieParser = require("cookie-parser");
+const validateUser = require("./Controller/ProtectRoute");
+const router = express.Router();
 
 app.use(express.json());
 app.use(passport.initialize());
@@ -23,6 +25,8 @@ app.use(cookieParser());
 
 // Database connection
 connect();
+
+// Validate User
 
 // For user Routes
 app.use("/api/user", userRouter);

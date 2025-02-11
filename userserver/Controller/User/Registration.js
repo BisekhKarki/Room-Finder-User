@@ -1,52 +1,69 @@
 const user = require("../../Schemas/UserModel");
-const bcrypt = require("bcryptjs");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // true for port 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+function getRandomSixDigit() {
+  return Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+}
+
+let randomSixDigit = getRandomSixDigit();
+let currentUser = [];
+
+const sendingVerificationEmail = async (req, res) => {
+  const userData = req.userData;
+  currentUser = userData;
+  try {
+    // req.session.verificationCode = randomSixDigit;
+    await transporter.sendMail({
+      from: "Room Finder 🏠<karkidai79@gmail.com>",
+      to: userData.Email,
+      subject: "Email Verification Code",
+      html: `
+      Hello ${userData.FirstName}
+      Your email verification code is: ${randomSixDigit}
+      `,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Code sent to email",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // Function to regitser user in the database
 const register = async (req, res) => {
-  const { FirstName, LastName, Email, Phone, Address, UserType, Password } =
-    req.body;
+  const { code } = req.body;
+
   try {
-    const findUser = await user.findOne({ Email });
-    if (findUser) {
+    if (code !== randomSixDigit.toString()) {
       return res.status(400).json({
         success: false,
-        message:
-          "User with the given email already exist\n Try using a different email",
+        message: "Invalid Verification code",
       });
     }
 
-    if (Password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password should be greater than 6 characters",
-      });
-    }
-
-    const hashPassword = await bcrypt.hash(Password, 10);
-
-    if (Phone.length < 10) {
-      return res.status(400).json({
-        success: false,
-        message: "Phone numbers cannot be less than 10 digits",
-      });
-    }
-
-    const newUser = new user({
-      FirstName,
-      LastName,
-      Email,
-      Phone,
-      Address,
-      UserType,
-      Password: hashPassword,
-    });
-
+    const newUser = new user(currentUser);
     await newUser.save();
 
     return res.status(200).json({
       success: true,
       message: "User registered Successfully",
-      newUser,
     });
   } catch (error) {
     return res.status(500).json({
@@ -56,4 +73,4 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = register;
+module.exports = { register, sendingVerificationEmail };
