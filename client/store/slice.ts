@@ -18,6 +18,7 @@ export interface SliceState {
   registrationData: Registration;
   registrationCode: string;
   verified: boolean;
+  resetPassUserEmail: string;
 }
 
 const initialState: SliceState = {
@@ -35,6 +36,7 @@ const initialState: SliceState = {
   },
   registrationCode: "",
   verified: false,
+  resetPassUserEmail: "",
 };
 
 export const checkToken = createAsyncThunk<
@@ -60,6 +62,31 @@ export const checkToken = createAsyncThunk<
     return val;
   } catch (error: any) {
     return rejectWithValue(error.message || "An error occurred");
+  }
+});
+
+// To reset the password
+export const resetPass = createAsyncThunk<
+  { success: boolean },
+  { email: string },
+  { rejectValue: string }
+>("resetPass", async ({ email }, { rejectWithValue }) => {
+  try {
+    const response = await fetch("http://localhost:4000/api/user/pass/code", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      rejectWithValue(data.message);
+    }
+
+    return data;
+  } catch (error: any) {
+    rejectWithValue(error);
   }
 });
 
@@ -92,6 +119,19 @@ export const slicer = createSlice({
         }
       )
       .addCase(checkToken.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(resetPass.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPass.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.resetPassUserEmail = action.payload.email;
+      })
+      .addCase(resetPass.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       });

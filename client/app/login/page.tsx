@@ -17,9 +17,10 @@ import { useForm } from "react-hook-form";
 import { BsEye } from "react-icons/bs";
 import { IoIosEyeOff } from "react-icons/io";
 import axios from "axios";
-import { toast } from "react-toastify";
+
 import { FcGoogle } from "react-icons/fc";
 import * as z from "zod";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().min(1, "Enter at least 1 character"),
@@ -55,14 +56,14 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
+      console.log(data);
 
-      if (response.status === 200) {
-        console.log(data);
+      if (response.status !== 200) {
+        toast.error(data.message);
+      } else {
         toast.success(data.message);
         localStorage.setItem("Token", data.token);
         router.push(data.redirect);
-      } else if (response.status === 400) {
-        toast.error(data.message);
       }
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
@@ -113,7 +114,6 @@ const LoginPage = () => {
                 </FormItem>
               )}
             />
-
             {/* User Type Field */}
             <FormField
               name="user"
@@ -138,7 +138,6 @@ const LoginPage = () => {
                 </FormItem>
               )}
             />
-
             {/* Password Field */}
             <FormField
               name="password"
@@ -173,9 +172,16 @@ const LoginPage = () => {
                 </FormItem>
               )}
             />
+            {/* Signup Redirect */}
+            <p
+              className="mt-4 text-center  text-blue-500 underline cursor-pointer"
+              onClick={() => router.push("/ResetPassword")}
+            >
+              Forgot Password?
+            </p>
 
             {/* Buttons */}
-            <div className="space-y-3">
+            <div className="">
               <Button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"

@@ -55,7 +55,7 @@ const VerifyEmail = () => {
             Verify
           </Button>
           <Button
-            className="mt-1 w-20 bg-gray-200 hover:bg-gray-400 text-black border border-black"
+            className="mt-1 w-20 bg-gray-200 hover:bg-gray-400 text-black border border-gray-300 shadow-md"
             onClick={() => {
               router.push("/signup");
             }}
