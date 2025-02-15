@@ -11,6 +11,7 @@ const approval = require("./Routes/Approval");
 const roomsPosted = require("./Routes/MyRooms");
 const cookieParser = require("cookie-parser");
 const validateUser = require("./Controller/ProtectRoute");
+const ContactUs = require("./Routes/ContactUsRouter");
 const router = express.Router();
 
 app.use(express.json());
@@ -35,6 +36,9 @@ app.use("/api/rooms", approval);
 
 // Router to fetch the room posted by the landlord
 app.use("/api/posted", roomsPosted);
+
+// Router to send contact us message from the user to the admin
+app.use("/api/ContactUs", ContactUs);
 
 // Checking the server is running or not
 app.listen(PORT, () => {

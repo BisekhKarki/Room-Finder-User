@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import LandlordNavbar from "@/components/Navbars/LandLordNavbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <div>
-      <Navbar />
+      <LandlordNavbar />
       {children}
       <Footer />
     </div>
