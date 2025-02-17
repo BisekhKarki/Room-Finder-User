@@ -6,7 +6,7 @@ import Images from "@/components/RoomPostSections/Images";
 import Location from "@/components/RoomPostSections/Location";
 import Stepper from "@/components/RoomPostSections/Stepper";
 // import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const steps = [
   {
@@ -28,6 +28,15 @@ const steps = [
 
 const Page = () => {
   const [counter, setCounter] = useState<number>(0);
+
+  useEffect(() => {
+    const getCounter = localStorage.getItem("Last_Page");
+    if (getCounter && getCounter.length > 0) {
+      const getValue = JSON.parse(getCounter);
+      console.log(parseInt(getCounter));
+      setCounter(parseInt(getValue));
+    }
+  }, []);
 
   return (
     <>
