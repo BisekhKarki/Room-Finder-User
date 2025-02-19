@@ -1,15 +1,14 @@
 const ApprovalSchema = require("../../Schemas/ApproveRooms");
 
 const getApproval = async (req, res) => {
-  const { roomName, location, price, landlordId, phone } = req.body;
+  const { basic, location, features, images, contact, landlordId } = req.body;
   try {
     // Check if a room already exists with the same details
     const findRoomExists = await ApprovalSchema.findOne({
-      roomName,
-      location,
-      price,
-      landlordId,
-      phone,
+      name: basic.name,
+      location: location.city,
+      landlordId: contact.id,
+      phone: contact.phone,
     });
 
     if (findRoomExists) {
@@ -19,7 +18,14 @@ const getApproval = async (req, res) => {
       });
     }
 
-    const Approving = new ApprovalSchema(req.body);
+    const Approving = new ApprovalSchema({
+      basic,
+      location,
+      features,
+      images,
+      contact,
+      landlordId,
+    });
     await Approving.save();
 
     return res.status(200).json({

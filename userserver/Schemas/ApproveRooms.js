@@ -1,57 +1,93 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const forApproval = new mongoose.Schema({
-  roomName: {
-    type: String,
-    required: true,
-  },
-  roomType: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
+  basic: {
+    name: {
+      type: String,
+    },
+    type: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    price: {
+      type: String,
+    },
   },
   location: {
-    type: String,
-    required: true,
+    street: {
+      type: String,
+    },
+    zip: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    Province: {
+      type: String,
+    },
+    landmark: {
+      type: String,
+    },
+    region: {
+      type: String,
+    },
   },
-  price: {
-    type: String,
-    required: true,
+  features: {
+    parking: {
+      type: String,
+    },
+    Kitchen: {
+      type: String,
+    },
+    balcony: {
+      type: String,
+    },
+    category: {
+      type: String,
+    },
+    waterfacility: {
+      type: String,
+    },
+    direction: {
+      type: String,
+    },
+    floor: {
+      type: String,
+    },
+  },
+  images: {
+    type: Array,
+  },
+  contact: {
+    username: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
   },
   landlordId: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
-  landlordName: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: String,
-    required: true,
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
   payment: {
     type: Boolean,
     default: false,
   },
-  phone: {
-    type: String,
-    required: true,
-  },
-  facilities: {
-    type: String,
-    required: true,
-  },
-  images: {
-    type: Array,
-    required: false,
-  },
 });
 
 const approveRoom =
-  mongoose.models.forApproval || mongoose.model("For_Approval", forApproval);
+  mongoose.models.forApproval || mongoose.model("Rooms_Pending", forApproval);
 
 module.exports = approveRoom;

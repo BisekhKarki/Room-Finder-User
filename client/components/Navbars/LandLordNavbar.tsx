@@ -27,10 +27,11 @@ const LandlordNavbar = () => {
   };
 
   const navLists = [
-    { name: "Home", path: "/" },
     { name: "Our Services", path: "/our-services" },
     { name: "Post Rooms", path: "/landlord/RoomsPosting" },
     { name: "Contact Us", path: "/landlord/ContactUs" },
+    { name: "Pending Rooms", path: "/landlord/PendingRooms" },
+    { name: "My Rooms", path: "/landlord/MyRooms" },
   ];
 
   const handleClickOutside = (e: Event) => {

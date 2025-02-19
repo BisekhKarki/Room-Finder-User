@@ -31,6 +31,7 @@ connect();
 
 // For user Routes
 app.use("/api/user", userRouter);
+
 // Router to save the room in the database for the approval from the admin
 app.use("/api/rooms", approval);
 

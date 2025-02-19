@@ -19,6 +19,8 @@ export interface SliceState {
   registrationCode: string;
   verified: boolean;
   resetPassUserEmail: string;
+  user: Array<any>;
+  userLandlordId: string;
 }
 
 const initialState: SliceState = {
@@ -37,6 +39,8 @@ const initialState: SliceState = {
   registrationCode: "",
   verified: false,
   resetPassUserEmail: "",
+  user: [],
+  userLandlordId: "",
 };
 
 export const checkToken = createAsyncThunk<
@@ -56,6 +60,7 @@ export const checkToken = createAsyncThunk<
       }
     );
     const val = await response.json();
+    // console.log(val);
     if (!response.ok) {
       return rejectWithValue(val.message || "Invalid token");
     }
@@ -111,13 +116,13 @@ export const slicer = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        checkToken.fulfilled,
-        (state, action: PayloadAction<{ success: boolean }>) => {
-          state.loading = false;
-          state.validToken = action.payload.success;
-        }
-      )
+      .addCase(checkToken.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.validToken = action.payload.success;
+        state.user = action.payload.userDetails;
+        state.userLandlordId = action.payload.userDetails.id;
+        localStorage.setItem("userId", JSON.stringify(state.user.id));
+      })
       .addCase(checkToken.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;

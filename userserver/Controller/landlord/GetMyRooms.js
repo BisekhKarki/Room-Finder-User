@@ -3,11 +3,11 @@ const ApprovalSchema = require("../../Schemas/ApproveRooms");
 const getAllRooms = async (req, res) => {
   const { landlordId } = req.body;
   try {
-    const findMyRooms = await ApprovalSchema.find({
+    const pendingRooms = await ApprovalSchema.find({
       landlordId: landlordId,
     });
 
-    if (!findMyRooms) {
+    if (!pendingRooms) {
       return res.status(404).json({
         success: false,
         message: "You have not posted rooms",
@@ -16,7 +16,7 @@ const getAllRooms = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: findMyRooms,
+      message: pendingRooms,
     });
   } catch (error) {
     return res.status(500).json({

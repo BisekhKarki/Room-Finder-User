@@ -33,7 +33,6 @@ const Page = () => {
     const getCounter = localStorage.getItem("Last_Page");
     if (getCounter && getCounter.length > 0) {
       const getValue = JSON.parse(getCounter);
-      console.log(parseInt(getCounter));
       setCounter(parseInt(getValue));
     }
   }, []);

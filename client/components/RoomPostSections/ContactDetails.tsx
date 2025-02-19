@@ -17,35 +17,126 @@ interface Props {
 }
 
 const ContactDeatils = ({ counter, setCounter }: Props) => {
-  const [user, setUser] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [landlordId, setLandlordId] = useState<string>("");
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    const getUserId = localStorage.getItem("userId");
+    if (getUserId) {
+      const id = JSON.parse(getUserId);
+      setLandlordId(id);
+    }
+  }, []);
+
+  // Room Every Details
+  const [basic, setBasic] = useState<Array<string>>([]);
+  const [location, setLocation] = useState<Array<string>>([]);
+  const [features, setFeatures] = useState<Array<string>>([]);
+  const [images, setImages] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    const basicDetails = localStorage.getItem("Post_Basic");
+    const locationDetails = localStorage.getItem("Post_Location");
+    const featureDetails = localStorage.getItem("Post_Features");
+    const imageDetails = localStorage.getItem("Post_Images");
+
+    if (basicDetails && locationDetails && featureDetails && imageDetails) {
+      const getBasic = JSON.parse(basicDetails);
+      const getLocation = JSON.parse(locationDetails);
+      const getFeatures = JSON.parse(featureDetails);
+      const getImages = JSON.parse(imageDetails);
+
+      setBasic(getBasic);
+      setLocation(getLocation);
+      setFeatures(getFeatures);
+      setImages(getImages);
+    }
+  }, []);
+
+  useEffect(() => {
     const getContactFromLocalStorage = localStorage.getItem("Post_Contact");
-    console.log(getContactFromLocalStorage);
+
     if (getContactFromLocalStorage && getContactFromLocalStorage?.length > 1) {
       const details = JSON.parse(getContactFromLocalStorage);
-      setUser(details?.username);
+      setUserName(details?.username);
       setPhone(details?.phone);
       setEmail(details?.email);
     }
   }, []);
 
   const setUserContact = () => {
-    if (!user || !phone || !email) {
+    if (!userName || !phone || !email) {
       toast.error("Fill all the details to procced next");
     }
     dispatch(
       contactDetails({
-        username: user,
+        username: userName,
         phone,
         email,
       })
     );
     localStorage.setItem("Last_Page", JSON.stringify(counter));
+  };
+
+  const sendForApproval = async () => {
+    setUserContact();
+
+    try {
+      if (landlordId) {
+        const response = await fetch(
+          "http://localhost:4000/api/rooms/approval",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              basic,
+              location,
+              features,
+              images,
+              contact: {
+                username: userName,
+                email,
+                phone,
+              },
+              landlordId: landlordId,
+            }),
+          }
+        );
+
+        console.log({
+          basic,
+          location,
+          features,
+          images,
+          contact: {
+            username: userName,
+            email,
+            phone,
+          },
+          landlordId: landlordId,
+        });
+        const val = await response.json();
+        if (val.success) {
+          toast.success(val.message);
+          localStorage.removeItem("Last_Page");
+          localStorage.removeItem("Post_Basic");
+          localStorage.removeItem("Post_Contact");
+          localStorage.removeItem("Post_Images");
+          localStorage.removeItem("Post_Location");
+          localStorage.removeItem("Post_Features");
+        } else {
+          toast.error(val.message);
+        }
+      }
+    } catch (error: any) {
+      toast.error("Internal Server Error");
+    }
   };
 
   return (
@@ -54,8 +145,8 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
         <Input
           placeholder="Your Name"
           className="h-12"
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
         />
         <Input
           placeholder="Your contact Number"
@@ -77,6 +168,16 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           type="button"
           className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
           onClick={() => {
+            if (!user || !phone || !email) {
+              toast.error("Fill all the details to procced next");
+            }
+            dispatch(
+              contactDetails({
+                username: userName,
+                phone,
+                email,
+              })
+            );
             setCounter(counter - 1);
             localStorage.setItem("Last_Page", JSON.stringify(counter - 1));
           }}
@@ -86,7 +187,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
         <Button
           type="button"
           className="mt-5 bg-green-600 hover:bg-green-700 w-32"
-          onClick={() => setUserContact()}
+          onClick={() => sendForApproval()}
         >
           <BsSave /> Save
         </Button>

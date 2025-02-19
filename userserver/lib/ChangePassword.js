@@ -1,4 +1,3 @@
-const express = require("express");
 const user = require("../Schemas/UserModel");
 const bcrypt = require("bcryptjs");
 

@@ -25,7 +25,7 @@ const BasicDetails = ({ counter, setCounter }: Props) => {
 
   useEffect(() => {
     const getBasicValuesFromLocalStorage = localStorage.getItem("Post_Basic");
-    console.log(getBasicValuesFromLocalStorage);
+
     if (
       getBasicValuesFromLocalStorage &&
       getBasicValuesFromLocalStorage?.length > 1

@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import toast from "react-hot-toast";
 import { imageDetails } from "@/store/form";
+import { FaTrash } from "react-icons/fa";
 
 interface Props {
   counter: number;
@@ -39,6 +40,11 @@ const Images = ({ counter, setCounter }: Props) => {
     setCounter(counter + 1);
   };
 
+  const deleteImages = (idx: number) => {
+    setImages((prev) => prev.filter((img, index) => index !== idx));
+    localStorage.setItem("Post_Images", JSON.stringify(images));
+  };
+
   return (
     <div>
       <div>
@@ -51,22 +57,32 @@ const Images = ({ counter, setCounter }: Props) => {
           }}
         >
           {({ open }) => (
-            <Button className="" type="button" onClick={() => open()}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              type="button"
+              onClick={() => open()}
+            >
               Upload Image
             </Button>
           )}
         </CldUploadWidget>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-10 flex-wrap mt-10">
           {images &&
             images.length > 0 &&
             images.map((url, index) => (
-              <div key={index}>
+              <div key={index} className="relative">
                 <Image src={url} width={500} height={100} alt="Room Images" />
+                <Button
+                  className="bg-red-600 hover:bg-red-700 absolute top-2 right-1 "
+                  onClick={() => deleteImages(index)}
+                >
+                  <FaTrash />
+                </Button>
               </div>
             ))}
         </div>
       </div>
-      <div className="flex justify-center gap-10">
+      <div className="flex justify-center gap-10 mt-10">
         <Button
           type="button"
           className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"

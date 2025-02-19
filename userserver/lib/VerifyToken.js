@@ -13,6 +13,7 @@ const verifyToken = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     if (!decoded) {
       return res.status(400).json({
         success: false,
@@ -23,6 +24,10 @@ const verifyToken = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Valid Token",
+      userDetails: {
+        id: decoded.id,
+        type: decoded.type,
+      },
     });
   } catch (error) {
     return res.status(500).json({
