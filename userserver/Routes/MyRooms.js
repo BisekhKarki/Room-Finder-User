@@ -7,6 +7,6 @@ const {
 
 // For approval posting router
 router.get("/allRooms", getAllRooms);
-router.get("/SingleRoom/:id", getRoomById);
+router.post("/SingleRoom/:id", getRoomById);
 
 module.exports = router;

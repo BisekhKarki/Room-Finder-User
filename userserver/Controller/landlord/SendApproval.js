@@ -41,4 +41,44 @@ const getApproval = async (req, res) => {
   }
 };
 
-module.exports = getApproval;
+const updateRoomApproval = async (req, res) => {
+  const { status, landlordId, roomId } = req.body;
+
+  console.log(roomId, status, landlordId);
+  try {
+    const findRoom = await ApprovalSchema.findOne({ _id: roomId });
+    // console.log(findRoom);
+    if (!findRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "Room not found",
+      });
+    }
+
+    if (
+      status === "Completed" &&
+      findRoom.landlordId.toString() === landlordId &&
+      !findRoom.payment
+    ) {
+      findRoom.payment = true;
+      await findRoom.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Payment successfull",
+      });
+    }
+
+    return res.status(200).json({
+      success: false,
+      message: "Payment has been already made",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+module.exports = { getApproval, updateRoomApproval };

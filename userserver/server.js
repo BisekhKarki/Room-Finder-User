@@ -12,6 +12,7 @@ const roomsPosted = require("./Routes/MyRooms");
 const cookieParser = require("cookie-parser");
 const validateUser = require("./Controller/ProtectRoute");
 const ContactUs = require("./Routes/ContactUsRouter");
+const paymentGateway = require("./Routes/PaymentRoute");
 const router = express.Router();
 
 app.use(express.json());
@@ -40,6 +41,9 @@ app.use("/api/posted", roomsPosted);
 
 // Router to send contact us message from the user to the admin
 app.use("/api/ContactUs", ContactUs);
+
+// For payment
+app.use("/api/payment", paymentGateway);
 
 // Checking the server is running or not
 app.listen(PORT, () => {
