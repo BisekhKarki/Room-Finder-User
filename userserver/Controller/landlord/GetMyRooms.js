@@ -1,9 +1,9 @@
-const ApprovalSchema = require("../../Schemas/ApproveRooms");
+const roomSchema = require("../../Schemas/RoomSchema");
 
 const getAllRooms = async (req, res) => {
   const { landlordId } = req.body;
   try {
-    const pendingRooms = await ApprovalSchema.find({
+    const pendingRooms = await roomSchema.find({
       landlordId: landlordId,
     });
 
@@ -30,7 +30,7 @@ const getRoomById = async (req, res) => {
   const { landlordId } = req.body;
   const { id } = req.params;
   try {
-    const findSingleRoom = await ApprovalSchema.findOne({
+    const findSingleRoom = await roomSchema.findOne({
       _id: id,
       landlordId: landlordId,
     });

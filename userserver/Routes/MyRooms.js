@@ -6,7 +6,7 @@ const {
 } = require("../Controller/landlord/GetMyRooms");
 
 // For approval posting router
-router.get("/allRooms", getAllRooms);
+router.post("/allRooms", getAllRooms);
 router.post("/SingleRoom/:id", getRoomById);
 
 module.exports = router;

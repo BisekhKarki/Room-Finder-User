@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { contactDetails } from "@/store/form";
 import { FaMoneyBill } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface Props {
   counter: number;
@@ -21,6 +22,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [landlordId, setLandlordId] = useState<string>("");
+  const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -109,18 +111,6 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           }
         );
 
-        console.log({
-          basic,
-          location,
-          features,
-          images,
-          contact: {
-            username: userName,
-            email,
-            phone,
-          },
-          landlordId: landlordId,
-        });
         const val = await response.json();
         if (val.success) {
           toast.success(val.message);
@@ -130,6 +120,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           localStorage.removeItem("Post_Images");
           localStorage.removeItem("Post_Location");
           localStorage.removeItem("Post_Features");
+          router.push("/landlord/PendingRooms");
         } else {
           toast.error(val.message);
         }
