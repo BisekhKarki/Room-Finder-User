@@ -17,6 +17,8 @@ const {
   validateCode,
 } = require("../lib/SendCodeAndVerify");
 const changePass = require("../lib/ChangePassword");
+const protectRoute = require("../middleware/ProtectionRoute");
+const { getDetails } = require("../Controller/User/UserDetails");
 
 // For User Registration Route
 router.post("/register", register);
@@ -37,5 +39,8 @@ router.post("/pass/code", sendingCodeToEmail);
 router.post("/pass/verify/code", validateCode);
 // For Changing the password
 router.post("/pass/change", changePass);
+
+// to get the userDetails
+router.get("/get/details/user", protectRoute, getDetails);
 
 module.exports = router;

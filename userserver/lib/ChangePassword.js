@@ -2,7 +2,7 @@ const user = require("../Schemas/UserModel");
 const bcrypt = require("bcryptjs");
 
 const changePass = async (req, res) => {
-  const { oldPass, newPass, email } = req.body;
+  const { newPass, email } = req.body;
 
   try {
     const validUser = await user.findOne({ Email: email });
@@ -12,15 +12,6 @@ const changePass = async (req, res) => {
         success: false,
         message:
           "User with the email do not exists\n Please register you account",
-      });
-    }
-
-    const checkOldPassword = await bcrypt.compare(oldPass, validUser.Password);
-
-    if (!checkOldPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Your old Password is incorrect",
       });
     }
 

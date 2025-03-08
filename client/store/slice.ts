@@ -11,6 +11,12 @@ interface Registration {
   Password: string;
 }
 
+interface CategoryValues {
+  location: string;
+  price: string;
+  propertyType: string;
+}
+
 export interface SliceState {
   validToken: boolean;
   loading: boolean;
@@ -21,6 +27,7 @@ export interface SliceState {
   resetPassUserEmail: string;
   user: Array<any>;
   userLandlordId: string;
+  searchCategoryValues: CategoryValues;
 }
 
 const initialState: SliceState = {
@@ -41,6 +48,11 @@ const initialState: SliceState = {
   resetPassUserEmail: "",
   user: [],
   userLandlordId: "",
+  searchCategoryValues: {
+    location: "",
+    price: "",
+    propertyType: "",
+  },
 };
 
 export const checkToken = createAsyncThunk<
@@ -60,7 +72,7 @@ export const checkToken = createAsyncThunk<
       }
     );
     const val = await response.json();
-    // console.log(val);
+
     if (!response.ok) {
       return rejectWithValue(val.message || "Invalid token");
     }
@@ -109,6 +121,11 @@ export const slicer = createSlice({
     sendCode: (state, action: PayloadAction<string>) => {
       state.registrationCode = action.payload;
     },
+    setCategory: (state, action: PayloadAction<CategoryValues>) => {
+      state.searchCategoryValues.location = action.payload.location;
+      state.searchCategoryValues.price = action.payload.price;
+      state.searchCategoryValues.propertyType = action.payload.propertyType;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -143,6 +160,7 @@ export const slicer = createSlice({
   },
 });
 
-export const { logout, registrationUserData, sendCode } = slicer.actions;
+export const { logout, registrationUserData, sendCode, setCategory } =
+  slicer.actions;
 
 export default slicer.reducer;

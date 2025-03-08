@@ -1,9 +1,9 @@
 "use client";
 import Khalti from "@/components/payment/Khalti";
 import Stripe from "@/components/payment/Stripe";
-import Description from "@/components/RoomPostRoomView/Description";
-import Overview from "@/components/RoomPostRoomView/Overview";
-import Features from "@/components/RoomPostRoomView/Features";
+import Description from "@/components/RoomView/Description";
+import Overview from "@/components/RoomView/Overview";
+import Features from "@/components/RoomView/Features";
 
 import { RootState } from "@/store/store";
 import { useParams, useRouter } from "next/navigation";
@@ -12,15 +12,11 @@ import toast from "react-hot-toast";
 
 import { useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
-import Location from "@/components/RoomPostRoomView/Location";
+import Location from "@/components/RoomView/Location";
 import Image from "next/image";
-import ContactDetails from "@/components/RoomPostRoomView/ContactDetails";
-import AdditionalDetails from "@/components/RoomPostRoomView/AdditionalDetails";
-import { Button } from "@/components/ui/button";
-import { BsBack } from "react-icons/bs";
-import { ImBackward } from "react-icons/im";
-import { FaBackward } from "react-icons/fa";
-import { IoIosArrowRoundBack, IoMdArrowRoundBack } from "react-icons/io";
+import ContactDetails from "@/components/RoomView/ContactDetails";
+import AdditionalDetails from "@/components/RoomView/AdditionalDetails";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 export interface ContactData {
   email: string;
@@ -85,10 +81,10 @@ const Page = () => {
 
   const getMyPendingRooms = async () => {
     setLoading(true);
-
+    console.log(landlordId);
     try {
       const response = await fetch(
-        `http://localhost:4000/api/posted/SingleRoom/${id}`,
+        `http://localhost:4000/api/rooms/myRooms/pending/single/get/${id}`,
         {
           method: "POST",
           headers: {
@@ -98,6 +94,7 @@ const Page = () => {
         }
       );
       const data = await response.json();
+      console.log(data);
       if (response.status === 200) {
         setPending(data.message);
         setLoading(false);

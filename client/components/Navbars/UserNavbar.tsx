@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { IoHomeOutline } from "react-icons/io5";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { IoReorderThree } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
@@ -12,7 +12,7 @@ import { FaUser } from "react-icons/fa";
 import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slice";
 
-const Navbar = () => {
+const UserNavbar = () => {
   const router = useRouter();
   const pathName = usePathname();
   const [showMobileNavbar, setMobileNavbar] = useState(false);
@@ -27,11 +27,11 @@ const Navbar = () => {
   };
 
   const navLists = [
-    { name: "Home", path: "/" },
-    { name: "Our Services", path: "/OurServices" },
-    { name: "Categories", path: "/categories" },
-    { name: "Contact Us", path: "/contact-us" },
-    { name: "Properties Available", path: "/properties" },
+    { name: "Home", path: "/User/Home" },
+    { name: "Our Services", path: "/User/OurServices" },
+    { name: "Categories", path: "/User/categories" },
+    { name: "Contact Us", path: "/User/ContactUs" },
+    { name: "Properties", path: "/User/Properties" },
   ];
 
   const handleClickOutside = (e: Event) => {
@@ -188,4 +188,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default UserNavbar;

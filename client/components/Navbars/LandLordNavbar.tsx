@@ -27,7 +27,7 @@ const LandlordNavbar = () => {
   };
 
   const navLists = [
-    { name: "Our Services", path: "/our-services" },
+    { name: "Our Services", path: "/landlord/OurServices" },
     { name: "Post Rooms", path: "/landlord/RoomsPosting" },
     { name: "Contact Us", path: "/landlord/ContactUs" },
     { name: "Pending Rooms", path: "/landlord/PendingRooms" },
@@ -100,11 +100,17 @@ const LandlordNavbar = () => {
               {open && (
                 <div className="absolute w-32 top-4 right-4 border border-gray-200 rounded-md bg-blue-400 text-white  shadow-xl">
                   <ul>
-                    <li className="text-sm px-5 py-1 cursor-pointer">
+                    <li
+                      className="text-sm px-5 py-1 cursor-pointer"
+                      onClick={() => router.push("/landlord/MyProfile")}
+                    >
                       My Profile
                     </li>
                     <hr />
-                    <li className="text-sm px-5 py-1 cursor-pointer">
+                    <li
+                      className="text-sm px-5 py-1 cursor-pointer"
+                      onClick={() => router.push("/landlord/Setting")}
+                    >
                       Setting
                     </li>
                     <hr />

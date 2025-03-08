@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 
 const Page = () => {
-  const [oldPass, setOldPass] = useState<string>("");
+  const [confirmPass, setConfirmPass] = useState<string>("");
   const [newPass, setNewPass] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -24,6 +24,9 @@ const Page = () => {
 
   const changePassword = async () => {
     setLoading(true);
+    if (confirmPass !== newPass) {
+      toast.error("Password do not match");
+    }
     try {
       const response = await fetch(
         "http://localhost:4000/api/user/pass/change",
@@ -33,7 +36,6 @@ const Page = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            oldPass,
             newPass,
             email: resetPassUserEmail,
           }),
@@ -59,12 +61,12 @@ const Page = () => {
       <div className="border border-gray-200 shadow-lg py-5 px-14 space-y-4">
         <h1 className="text-black font-bold text-2xl">Reset You Password</h1>
         <div className="w-full space-y-3 relative">
-          <p className="text-gray-700">Enter your old password</p>
+          <p className="text-gray-700">Enter your new password</p>
           <Input
             type={showOldPassword ? "text" : "password"}
             className="w-96"
-            value={oldPass}
-            onChange={(e) => setOldPass(e.target.value)}
+            value={newPass}
+            onChange={(e) => setNewPass(e.target.value)}
           />
           <div className="absolute top-10 right-3 transform -translate-y-1/2 cursor-pointer">
             {showOldPassword ? (
@@ -81,11 +83,11 @@ const Page = () => {
           </div>
         </div>
         <div className="w-full space-y-3 relative">
-          <p className="text-gray-700">Enter your New password</p>
+          <p className="text-gray-700">Confirm New password</p>
           <Input
             type={showNewPassword ? "text" : "password"}
-            value={newPass}
-            onChange={(e) => setNewPass(e.target.value)}
+            value={confirmPass}
+            onChange={(e) => setConfirmPass(e.target.value)}
           />
           <div className="absolute top-10 right-3 transform -translate-y-1/2 cursor-pointer">
             {showNewPassword ? (

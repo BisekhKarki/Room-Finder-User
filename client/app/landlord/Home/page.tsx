@@ -16,7 +16,6 @@ const HomePage = () => {
       dispatch(checkToken({ token }));
     }
   }, [dispatch]);
-  console.log(validToken);
 
   return <div>Landlord Page</div>;
 };

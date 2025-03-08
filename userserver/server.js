@@ -14,6 +14,7 @@ const validateUser = require("./Controller/ProtectRoute");
 const ContactUs = require("./Routes/ContactUsRouter");
 const paymentGateway = require("./Routes/PaymentRoute");
 const router = express.Router();
+const roomRouter = require("./Routes/Rooms");
 
 app.use(express.json());
 app.use(passport.initialize());
@@ -44,6 +45,8 @@ app.use("/api/ContactUs", ContactUs);
 
 // For payment
 app.use("/api/payment", paymentGateway);
+
+app.use("/api/tenants", roomRouter);
 
 // Checking the server is running or not
 app.listen(PORT, () => {

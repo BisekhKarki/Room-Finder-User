@@ -27,4 +27,32 @@ const getMyPendingRooms = async (req, res) => {
   }
 };
 
-module.exports = getMyPendingRooms;
+const getSinglePendingRooms = async (req, res) => {
+  const { landlordId } = req.body;
+  const { id } = req.params;
+  try {
+    const getSingle = await approval.findOne({
+      _id: id,
+      landlordId: landlordId,
+    });
+
+    if (!getSingle) {
+      return res.status(404).json({
+        success: false,
+        message: "No room found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: getSingle,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { getMyPendingRooms, getSinglePendingRooms };

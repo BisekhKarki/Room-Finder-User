@@ -56,8 +56,6 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
-      console.log(data);
-
       if (response.status !== 200) {
         toast.error(data.message);
       } else {
