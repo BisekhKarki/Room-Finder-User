@@ -13,13 +13,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendUserMessage = async (req, res) => {
-  const { first, last, phone, email, message } = req.body;
+const userMessage = async (req, res) => {
+  const {
+    userEmail,
+    landlordEmail,
+    first,
+    last,
+    phone,
+    message,
+    landlordName,
+  } = req.body;
+
   try {
     await transporter.sendMail({
-      from: email,
-      to: "bisekhkarki2003@gmail.com",
-      subject: "Inquiry mail",
+      from: userEmail,
+      to: landlordEmail,
+      subject: "Message from a user",
       html: `
         <!DOCTYPE html>
 <html>
@@ -105,13 +114,13 @@ const sendUserMessage = async (req, res) => {
     <div class="email-container">
         <div class="header">Room Finder</div>
 
-        <p><strong>Dear Admin,</strong></p>
-        <p>You have received a new inquiry for a room listing.</p>
+        <p><strong>Dear ${landlordName},</strong></p>
+        <p>You have received a message from a user.</p>
 
         <div class="info">
             <p><strong>Email from:</strong> ${first} ${last}</p>
             <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #007BFF;">${email}</a></p>
+            <p><strong>Email:</strong> <a href="mailto:${userEmail}" style="color: #007BFF;">${userEmail}</a></p>
         </div>
 
         <p><strong>Message:</strong></p>
@@ -121,7 +130,7 @@ const sendUserMessage = async (req, res) => {
 
         <div class="footer">
             <p>This email was sent from the Room Finder platform.</p>
-            <a href="mailto:${email}" class="button">Reply Now</a>
+            <a href="mailto:${userEmail}" class="button">Reply Now</a>
         </div>
     </div>
 
@@ -138,9 +147,9 @@ const sendUserMessage = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
+      message: error.message,
     });
   }
 };
 
-module.exports = { sendUserMessage };
+module.exports = { userMessage };

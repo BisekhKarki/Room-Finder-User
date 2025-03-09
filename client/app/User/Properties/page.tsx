@@ -129,7 +129,7 @@ const PropertiesSection = () => {
                 <Button
                   className="w-full mt-5 bg-blue-500 hover:bg-blue-600"
                   onClick={() =>
-                    router.push(`/User/Properties/${property._id}`)
+                    router.push(`/user/properties/${property._id}`)
                   }
                 >
                   View Details

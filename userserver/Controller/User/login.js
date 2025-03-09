@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: `You have been logged in as ${UserType}`,
-        redirect: UserType === "Landlord" ? "/landlord/Home" : "/User/Home",
+        redirect: UserType === "Landlord" ? "/landlord/Home" : "/user/home",
         token: token,
       });
     } else {

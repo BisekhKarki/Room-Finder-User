@@ -7,14 +7,17 @@ import Features from "@/components/RoomView/Features";
 import Location from "@/components/RoomView/Location";
 import Overview from "@/components/RoomView/Overview";
 import { Button } from "@/components/ui/button";
+import ContactLandlord from "@/components/UserComponents/ContactLandlord";
+import History from "@/components/UserComponents/History";
+import PropertyImages from "@/components/UserComponents/PropertyImages";
+import PropertyLocation from "@/components/UserComponents/PropertyLocation";
 import { tenant_base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 import axios from "axios";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaAngleRight } from "react-icons/fa6";
-import { FaAngleLeft } from "react-icons/fa";
+
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 export interface ContactData {
@@ -62,12 +65,20 @@ export interface PropertyDetails {
   _id: string;
 }
 
+const viewComponentButtons = [
+  { index: 1, label: "Info" },
+  { index: 2, label: "History" },
+  { index: 3, label: "Contact Landlord" },
+  { index: 4, label: "Location" },
+  { index: 5, label: "Images" },
+];
+
 const PropertiesSection = () => {
   const params = useParams();
   const [id, setId] = useState<string>("");
   const [getToken, setToken] = useState<string>("");
   const [property, setProperty] = useState<PropertyDetails | null>(null);
-  const [imageIndex, setImageIndex] = useState<number>(0);
+  const [buttonIndex, setButtonIndex] = useState<number>(1);
   const router = useRouter();
 
   const token = GetToken();
@@ -80,8 +91,6 @@ const PropertiesSection = () => {
       setToken(token);
     }
   }, [token]);
-
-  console.log(property);
 
   const fetchSingleRooms = async () => {
     try {
@@ -109,70 +118,71 @@ const PropertiesSection = () => {
     }
   }, [getToken]);
 
-  const increaseImageIndex = () => {
-    if (property) {
-      setImageIndex((prev) =>
-        prev > property.images.length - 2 ? 0 : prev + 1
-      );
-    }
-  };
-
-  const decreaseImageIndex = () => {
-    if (property) {
-      setImageIndex((prevIndex) =>
-        prevIndex === 0 ? property.images.length - 1 : prevIndex - 1
-      );
-    }
-  };
-
   return (
     <div className="mt-10 py-10">
-      <div className="text-2xl mb-5 flex items-center gap-1">
+      <div className="text-2xl mb-5 flex items-center gap-1 ml-8">
         <IoIosArrowRoundBack
           className=" text-gray-800 cursor-pointer"
-          onClick={() => router.push("/User/Properties")}
+          onClick={() => router.push("/user/properties")}
         />
         <p
           className="text-base cursor-pointer"
-          onClick={() => router.push("/User/Properties")}
+          onClick={() => router.push("/user/properties")}
         >
           Back
         </p>
       </div>
-      <div>
+      <div className="">
         {property && property.images && property.images.length > 0 && (
           <div className="relative">
-            <div>
-              <Image
-                src={property?.images[imageIndex]}
-                alt="room images"
-                width={1200}
-                height={1200}
-                className="px-5"
-              />
-            </div>
-            <div className="absolute top-96">
-              <div className="flex flex-row justify-between gap-2">
-                <Button
-                  className="bg-white text-black"
-                  onClick={() => decreaseImageIndex()}
-                >
-                  <FaAngleLeft />
-                </Button>
-
-                <Button
-                  className="bg-white text-black"
-                  onClick={() => increaseImageIndex()}
-                >
-                  <FaAngleRight />
-                </Button>
+            <div className="flex px-8 gap-3">
+              <div className="">
+                <Image
+                  src={property?.images[0]}
+                  alt="room images"
+                  width={1200}
+                  height={1300}
+                  className="h-full rounded-md hover:shadow-lg cursor-pointer"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                {property.images &&
+                  property.images
+                    .slice(1)
+                    .map((img, index) => (
+                      <Image
+                        key={index}
+                        src={img}
+                        alt="room images"
+                        width={400}
+                        height={400}
+                        className="rounded-md hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out"
+                      />
+                    ))}
               </div>
             </div>
           </div>
         )}
       </div>
-      {property && (
-        <div className="flex flex-row gap-5">
+      <hr className="mt-10" />
+      <div className="flex px-10 gap-5">
+        {viewComponentButtons.map((btn, index) => (
+          <Button
+            key={index}
+            className={` ${
+              btn.index === buttonIndex
+                ? "bg-blue-400 text-white hover:bg-blue-500"
+                : "bg-white hover:bg-gray-50  text-black"
+            }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+            onClick={() => setButtonIndex(btn.index)}
+          >
+            {btn.label}
+          </Button>
+        ))}
+      </div>
+
+      {buttonIndex === 1 && property && (
+        <div className="flex flex-row gap-5 px-5">
           <div className="py-5 border w-3/4 mt-10 px-10 rounded-md  border-gray-300">
             <Overview basic={property.basic} />
             <Description description={property.basic.description} />
@@ -190,6 +200,15 @@ const PropertiesSection = () => {
           </div>
         </div>
       )}
+      {buttonIndex === 2 && <History />}
+      {property && buttonIndex === 3 && (
+        <ContactLandlord
+          landlordEmail={property?.contact.email}
+          landlordName={property.contact.username}
+        />
+      )}
+      {buttonIndex === 4 && <PropertyLocation />}
+      {buttonIndex === 5 && <PropertyImages />}
     </div>
   );
 };

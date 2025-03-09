@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FaPhone } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
-import { toast } from "sonner";
 
 const Page = () => {
   const [first, setFirst] = useState<string>("");
@@ -18,17 +18,17 @@ const Page = () => {
     e.preventDefault();
     try {
       if (!first || !last || !email) {
-        toast.message("Fill all the details");
+        toast.error("Fill all the details");
         return;
       }
 
       if (phone.length < 10) {
-        toast.message("Phone Number must be of 10 digits");
+        toast.error("Phone Number must be of 10 digits");
         return;
       }
 
       if (message.length < 10) {
-        toast.message("Enter message of at least 1- characters");
+        toast.error("Enter message of at least 1- characters");
         return;
       }
 

@@ -27,11 +27,11 @@ const UserNavbar = () => {
   };
 
   const navLists = [
-    { name: "Home", path: "/User/Home" },
-    { name: "Our Services", path: "/User/OurServices" },
-    { name: "Categories", path: "/User/categories" },
-    { name: "Contact Us", path: "/User/ContactUs" },
-    { name: "Properties", path: "/User/Properties" },
+    { name: "Home", path: "/user/home" },
+    { name: "Our Services", path: "/user/ourservices" },
+    { name: "Categories", path: "/user/categories" },
+    { name: "Contact Us", path: "/user/contactus" },
+    { name: "Properties", path: "/user/properties" },
   ];
 
   const handleClickOutside = (e: Event) => {
