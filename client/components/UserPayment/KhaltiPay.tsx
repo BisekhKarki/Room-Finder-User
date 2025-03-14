@@ -13,9 +13,7 @@ interface Props {
   roomId: string;
 }
 
-const Khalti = ({ name, id, amount, roomId }: Props) => {
-  localStorage.setItem("RoomId", JSON.stringify(roomId));
-
+const KhaltiPay = ({ name, id, amount, roomId }: Props) => {
   const makePayment = async () => {
     try {
       const response = await fetch(
@@ -62,4 +60,4 @@ const Khalti = ({ name, id, amount, roomId }: Props) => {
   );
 };
 
-export default Khalti;
+export default KhaltiPay;

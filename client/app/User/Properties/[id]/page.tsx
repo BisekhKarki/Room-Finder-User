@@ -1,11 +1,10 @@
 "use client";
 
-import AdditionalDetails from "@/components/RoomView/AdditionalDetails";
-import ContactDetails from "@/components/RoomView/ContactDetails";
 import Description from "@/components/RoomView/Description";
 import Features from "@/components/RoomView/Features";
 import Location from "@/components/RoomView/Location";
 import Overview from "@/components/RoomView/Overview";
+// import UserRoomAdditionalDetails from "@/components/RoomView/UserRoomAdditionalDetails";
 import { Button } from "@/components/ui/button";
 import ContactLandlord from "@/components/UserComponents/ContactLandlord";
 import History from "@/components/UserComponents/History";
@@ -17,8 +16,10 @@ import axios from "axios";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import userAvatar from "../../../../assets/user.png";
 
 import { IoIosArrowRoundBack } from "react-icons/io";
+import RentRoom from "@/components/UserComponents/RentRoom";
 
 export interface ContactData {
   email: string;
@@ -71,6 +72,7 @@ const viewComponentButtons = [
   { index: 3, label: "Contact Landlord" },
   { index: 4, label: "Location" },
   { index: 5, label: "Images" },
+  { index: 6, label: "Rent Room" },
 ];
 
 const PropertiesSection = () => {
@@ -183,19 +185,27 @@ const PropertiesSection = () => {
 
       {buttonIndex === 1 && property && (
         <div className="flex flex-row gap-5 px-5">
-          <div className="py-5 border w-3/4 mt-10 px-10 rounded-md  border-gray-300">
+          <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
             <Overview basic={property.basic} />
             <Description description={property.basic.description} />
             <Features features={property.features} />
             <Location location={property.location} />
-          </div>
-          <div className="w-1/4 border mt-10 rounded-md border-gray-200">
-            <div className="px-5 py-5">
-              <ContactDetails contact={property.contact} />
-              <AdditionalDetails
-                payment={property.payment}
-                verified={property.isVerified}
-              />
+            <div className="mb-16">
+              <h1 className="font-bold text-3xl mb-3 font-sans">
+                Landlord Contact Details
+              </h1>
+              <hr />
+              <div className=" flex  justify-between mt-5">
+                <p className="text-gray-500 text-base">
+                  Name: {property.contact.username}
+                </p>
+                <p className="text-gray-500 text-base">
+                  Email: {property.contact.email}
+                </p>
+                <p className="text-gray-500 text-base">
+                  Phone: {property.contact.phone}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -209,6 +219,9 @@ const PropertiesSection = () => {
       )}
       {buttonIndex === 4 && <PropertyLocation />}
       {buttonIndex === 5 && <PropertyImages />}
+      {buttonIndex === 6 && (
+        <RentRoom roomId={id} landlordId={property && property.landlordId} />
+      )}
     </div>
   );
 };

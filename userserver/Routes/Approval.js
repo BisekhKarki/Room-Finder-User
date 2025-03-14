@@ -9,6 +9,8 @@ const {
   getMyPendingRooms,
   getSinglePendingRooms,
 } = require("../Controller/landlord/GetMyPendingRooms");
+const { sendApprovalRent } = require("../Controller/Tenants/Rent/SendApproval");
+const protectRoute = require("../middleware/ProtectionRoute");
 
 // For approval posting router
 router.post("/approval", getApproval);
@@ -17,5 +19,12 @@ router.post("/myRooms/pending", getMyPendingRooms);
 router.post("/myRooms/pending/single/get/:id", getSinglePendingRooms);
 
 router.post("/myRooms/pending/payment", updateRoomApproval);
+
+// For rent approvals
+router.post(
+  "/rent/tentants/application/approval",
+  protectRoute,
+  sendApprovalRent
+);
 
 module.exports = router;

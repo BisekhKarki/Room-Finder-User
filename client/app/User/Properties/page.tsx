@@ -111,18 +111,18 @@ const PropertiesSection = () => {
                 className="rounded-t-md hover:scale-105 transition-all duration-150 ease-in-out hover:shadow-xl hover:rounded-md"
               />
               <div className="border px-7 py-5 rounded-b-md">
-                <h3 className="mb-1 text-gray-600">
+                <h3 className="mb-1 text-gray-900">
                   Name: {property.basic.name}
                 </h3>
                 <div className="flex gap-10">
-                  <p className="text-gray-600">Rs.{property.basic.price}</p>
-                  <p className="text-gray-600">{property.basic.type}</p>
+                  <p className="text-gray-900">Rs.{property.basic.price}</p>
+                  <p className="text-gray-900">{property.basic.type}</p>
                 </div>
                 <div className="flex gap-10 mt-1">
-                  <p className="text-gray-600">
+                  <p className="text-gray-900">
                     Province: {property.location.Province}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-900">
                     City: {property.location.city}
                   </p>
                 </div>
