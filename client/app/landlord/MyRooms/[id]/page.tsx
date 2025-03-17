@@ -17,6 +17,8 @@ import Image from "next/image";
 import ContactDetails from "@/components/RoomView/ContactDetails";
 import AdditionalDetails from "@/components/RoomView/AdditionalDetails";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { Button } from "@/components/ui/button";
+import Applications from "@/components/RentApplications/Applications";
 
 export interface ContactData {
   email: string;
@@ -63,8 +65,14 @@ export interface PendingRoom {
   _id: string;
 }
 
+const viewComponentButtons = [
+  { index: 1, label: "Info" },
+  { index: 2, label: "Rent Applications" },
+];
+
 const Page = () => {
   const { id } = useParams();
+  const [buttonIndex, setButtonIndex] = useState<number>(1);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [pending, setPending] = useState<PendingRoom | null>(null);
@@ -81,7 +89,7 @@ const Page = () => {
 
   const getMyPendingRooms = async () => {
     setLoading(true);
-    console.log(landlordId);
+
     try {
       const response = await fetch(
         `http://localhost:4000/api/posted/SingleRoom/${id}`,
@@ -94,7 +102,7 @@ const Page = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+
       if (response.status === 200) {
         setPending(data.message);
         setLoading(false);
@@ -156,22 +164,42 @@ const Page = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-row gap-5">
-                  <div className="py-5 border w-3/4 mt-10 px-10 rounded-md  border-gray-300">
-                    <Overview basic={pending.basic} />
-                    <Description description={pending.basic.description} />
-                    <Features features={pending.features} />
-                    <Location location={pending.location} />
+                <div>
+                  <div className="flex  gap-5">
+                    {viewComponentButtons.map((btn, index) => (
+                      <Button
+                        key={index}
+                        className={` ${
+                          btn.index === buttonIndex
+                            ? "bg-blue-400 text-white hover:bg-blue-500"
+                            : "bg-white hover:bg-gray-50  text-black"
+                        }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+                        onClick={() => setButtonIndex(btn.index)}
+                      >
+                        {btn.label}
+                      </Button>
+                    ))}
                   </div>
-                  <div className="w-1/4 border mt-10 rounded-md border-gray-200">
-                    <div className="px-5 py-5">
-                      <ContactDetails contact={pending.contact} />
-                      <AdditionalDetails
-                        payment={pending.payment}
-                        verified={pending.isVerified}
-                      />
+                  {buttonIndex === 1 && (
+                    <div className="flex flex-row gap-5">
+                      <div className="py-5 border w-3/4 mt-10 px-10 rounded-md  border-gray-300">
+                        <Overview basic={pending.basic} />
+                        <Description description={pending.basic.description} />
+                        <Features features={pending.features} />
+                        <Location location={pending.location} />
+                      </div>
+                      <div className="w-1/4 border mt-10 rounded-md border-gray-200">
+                        <div className="px-5 py-5">
+                          <ContactDetails contact={pending.contact} />
+                          <AdditionalDetails
+                            payment={pending.payment}
+                            verified={pending.isVerified}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {buttonIndex === 2 && <Applications roomId={id} />}
                 </div>
               </>
             )

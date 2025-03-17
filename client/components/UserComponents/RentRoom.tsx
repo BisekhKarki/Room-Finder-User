@@ -69,6 +69,7 @@ const RentRoom = ({ roomId, landlordId }: RentRoomProps) => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const requiredFields = {
       citizenshipFront,
       citizenshipBack,
@@ -96,6 +97,41 @@ const RentRoom = ({ roomId, landlordId }: RentRoomProps) => {
       toast.error("Please agree the terms");
       return;
     }
+    console.log({
+      personalDetails: {
+        fullName: fullName,
+        email: email,
+        personalContact: personalContact,
+        age: age,
+        numberOfRenters: renters,
+        permanentAddress: personalAddress,
+        marital_status: martialStatus,
+      },
+      employment_and_income: {
+        job: job,
+        income: income,
+      },
+      emergency_contact_details: {
+        name: name,
+        contact: phone,
+        relationship: relationship,
+        alternateContact: contact,
+      },
+      rental_history: {
+        previous_address: history,
+        length_of_stay: length,
+        current_landlord_contact: landlordContact,
+        reason_for_leave: reason,
+        criminal_record: criminal,
+      },
+      images: {
+        citizen_front: citizenshipFront,
+        citizen_back: citizenshipBack,
+        personal_photo: personalphoto,
+      },
+      roomId: roomId,
+      landlordId: landlordId,
+    });
     // Find empty fields
     const emptyFields = Object.entries(requiredFields)
       .filter(([key, value]) => value.trim() === "")
@@ -117,10 +153,10 @@ const RentRoom = ({ roomId, landlordId }: RentRoomProps) => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            perosonalDetails: {
+            personalDetails: {
               fullName: fullName,
               email: email,
-              perosonalContact: personalContact,
+              personalContact: personalContact,
               age: age,
               numberOfRenters: renters,
               permanentAddress: personalAddress,

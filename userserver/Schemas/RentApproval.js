@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const rent_approval = new mongoose.Schema(
   {
-    perosonalDetails: {
+    personalDetails: {
       fullName: {
         type: String,
       },
@@ -87,6 +87,10 @@ const rent_approval = new mongoose.Schema(
     roomId: {
       type: Schema.Types.ObjectId,
       ref: "Rooms",
+    },
+    accepted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

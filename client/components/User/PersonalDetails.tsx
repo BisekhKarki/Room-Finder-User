@@ -23,7 +23,6 @@ interface PersonalDetailsProps {
   setAge: (value: string) => void;
   renters: string;
   setRenters: (value: string) => void;
-
   martialStatus: string;
   setMartialStatus: (value: string) => void;
   personalAddress: string;
@@ -41,7 +40,6 @@ const PersonalDetails = ({
   setAge,
   renters,
   setRenters,
-
   martialStatus,
   setMartialStatus,
   personalAddress,

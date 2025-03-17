@@ -11,6 +11,7 @@ const {
 } = require("../Controller/landlord/GetMyPendingRooms");
 const { sendApprovalRent } = require("../Controller/Tenants/Rent/SendApproval");
 const protectRoute = require("../middleware/ProtectionRoute");
+const { application } = require("../Controller/Tenants/Rent/Applications");
 
 // For approval posting router
 router.post("/approval", getApproval);
@@ -26,5 +27,8 @@ router.post(
   protectRoute,
   sendApprovalRent
 );
+
+// For getting the approval lists
+router.get("/rent/tenants/application/:id", protectRoute, application);
 
 module.exports = router;
