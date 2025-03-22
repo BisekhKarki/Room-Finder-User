@@ -12,7 +12,6 @@ interface Props {
 }
 
 const UserImages = ({ images }: Props) => {
-  console.log(images);
   return (
     <div className="mt-3 mb-3">
       <h1 className="text-3xl font-bold mb-5">

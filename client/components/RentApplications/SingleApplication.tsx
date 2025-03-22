@@ -6,8 +6,10 @@ import RentalHistory from "./ApplicationsDetails/RentalHistory";
 import EmergencyContactDetails from "./ApplicationsDetails/EmergencyContactDetails";
 import UserImages from "./ApplicationsDetails/UserImages";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+
 import { IoIosArrowRoundBack } from "react-icons/io";
+import toast from "react-hot-toast";
+import { base_url } from "@/constants/BaseUrl";
 
 interface SingleTenantApplication {
   _id: string;
@@ -55,12 +57,38 @@ interface Props {
   Application: SingleTenantApplication | null;
   setShowSingle: (val: boolean) => void;
   showSingle: boolean;
+  token: string;
 }
 
-const SingleApplication = ({ Application, setShowSingle }: Props) => {
-  // console.log(Application);
+const SingleApplication = ({ Application, setShowSingle, token }: Props) => {
+  const approveApplication = async () => {
+    try {
+      const response = await fetch(
+        `${base_url}/rooms/rent/tenant/single/application/approval/accept`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            roomId: Application?.roomId,
+            landlordId: Application?.landlordId,
+            userId: Application?.tenantId,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (response.status === 200) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: unknown) {
+      toast.error(String(error));
+    }
+  };
 
-  const router = useRouter();
   return (
     <div>
       <div className="text-2xl mb-5 flex items-center gap-1">
@@ -90,7 +118,10 @@ const SingleApplication = ({ Application, setShowSingle }: Props) => {
         </div>
       )}
       <div className="mt-5">
-        <Button className=" w-1/4 bg-blue-500 hover:bg-blue-600 ">
+        <Button
+          className=" w-1/4 bg-blue-500 hover:bg-blue-600 "
+          onClick={() => approveApplication()}
+        >
           Approve Applications
         </Button>
       </div>

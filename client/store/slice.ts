@@ -77,8 +77,8 @@ export const checkToken = createAsyncThunk<
       return rejectWithValue(val.message || "Invalid token");
     }
     return val;
-  } catch (error: any) {
-    return rejectWithValue(error.message || "An error occurred");
+  } catch (error: unknown) {
+    return rejectWithValue(String(error) || "An error occurred");
   }
 });
 
@@ -102,8 +102,8 @@ export const resetPass = createAsyncThunk<
     }
 
     return data;
-  } catch (error: any) {
-    rejectWithValue(error);
+  } catch (error: unknown) {
+    return rejectWithValue(String(error) || "An error occurred");
   }
 });
 

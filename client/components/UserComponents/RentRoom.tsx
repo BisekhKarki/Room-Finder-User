@@ -134,7 +134,7 @@ const RentRoom = ({ roomId, landlordId }: RentRoomProps) => {
     });
     // Find empty fields
     const emptyFields = Object.entries(requiredFields)
-      .filter(([key, value]) => value.trim() === "")
+      .filter(([value]) => value.trim() === "")
       .map(([key]) => key);
 
     if (emptyFields.length > 0) {

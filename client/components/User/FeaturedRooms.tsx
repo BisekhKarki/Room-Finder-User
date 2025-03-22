@@ -1,11 +1,11 @@
 "use client";
-import { base_url, tenant_base_url } from "@/constants/BaseUrl";
+import { tenant_base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
-import { RootState } from "@/store/store";
+
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+
 import { Button } from "../ui/button";
 import { FaAngleRight } from "react-icons/fa6";
 
@@ -78,8 +78,8 @@ const FeaturedRooms = () => {
       if (response.status === 200) {
         setFeatured(data.message);
       }
-    } catch (error) {
-      toast.error(error);
+    } catch (error: unknown) {
+      toast.error(String(error));
     }
   };
 
@@ -87,6 +87,7 @@ const FeaturedRooms = () => {
     if (getToken) {
       fetchFeaturedRooms();
     }
+    //
   }, [getToken]);
 
   // console.log(featured);

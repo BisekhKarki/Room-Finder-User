@@ -38,8 +38,8 @@ const Khalti = ({ name, id, amount, roomId }: Props) => {
       if (url.success) {
         window.location.href = url.message;
       }
-    } catch (error: any) {
-      toast.error(error);
+    } catch (error: unknown) {
+      toast.error(String(error));
     }
   };
 

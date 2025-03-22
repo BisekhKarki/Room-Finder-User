@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "../ui/input";
 
 interface OtherDetailsProps {

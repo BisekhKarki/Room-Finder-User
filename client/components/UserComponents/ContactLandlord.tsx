@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Input } from "../ui/input";
-import { FaPhone } from "react-icons/fa";
-import { IoMail } from "react-icons/io5";
+
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
@@ -21,7 +20,7 @@ const ContactLandlord = ({ landlordEmail, landlordName }: Props) => {
 
   console.log(landlordName);
 
-  const sendMessage = async (e: Event) => {
+  const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (!first || !last || !email) {

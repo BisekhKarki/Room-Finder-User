@@ -4,7 +4,7 @@ import { GetToken } from "@/constants/GetToken";
 // import { RootState } from "@/store/store";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+
 // import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { FaAngleRight } from "react-icons/fa";

@@ -107,33 +107,42 @@ const Applications = ({ roomId }: Props) => {
           Application={singleDetails}
           setShowSingle={setShowSingle}
           showSingle={showSingle}
+          token={token}
         />
-      ) : applications && applications.length > 0 ? (
-        applications.map((a, index) => (
-          <div key={index} className="">
-            <div className="">
-              <div className="w-1/3 border px-10 py-5 shadow-md rounded-md space-y-2 hover:shadow-xl cursor-pointer transition-all duration-150 ease-in-out">
-                <p>Name: {a.personalDetails?.fullName}</p>
-                <p>Name: {a.personalDetails?.email}</p>
-                <p>Age: {a.personalDetails?.age}</p>
-                <p>Number of Renters: {a.personalDetails?.numberOfRenters}</p>
-                <p>Permanent Address: {a.personalDetails?.permanentAddress}</p>
-                <p>Previous stay: {a.rental_history?.previous_address}</p>
-                <Button
-                  onClick={() => {
-                    setSingleDetails(a);
-                    setShowSingle(true);
-                  }}
-                  className="w-full bg-blue-500 hover:bg-blue-600 transition-all ease-in-out duration-200"
-                >
-                  Show Full Details
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))
       ) : (
-        <div>No Applications till now</div>
+        <div className="flex gap-5 flex-wrap">
+          {applications && applications.length > 0 ? (
+            applications.map((a, index) => (
+              <div key={index} className="">
+                <div className="">
+                  <div className="w-full border px-10 py-5 shadow-md rounded-md space-y-2 hover:shadow-xl cursor-pointer transition-all duration-150 ease-in-out">
+                    <p>Name: {a.personalDetails?.fullName}</p>
+                    <p>Name: {a.personalDetails?.email}</p>
+                    <p>Age: {a.personalDetails?.age}</p>
+                    <p>
+                      Number of Renters: {a.personalDetails?.numberOfRenters}
+                    </p>
+                    <p>
+                      Permanent Address: {a.personalDetails?.permanentAddress}
+                    </p>
+                    <p>Previous stay: {a.rental_history?.previous_address}</p>
+                    <Button
+                      onClick={() => {
+                        setSingleDetails(a);
+                        setShowSingle(true);
+                      }}
+                      className="w-full bg-blue-500 hover:bg-blue-600 transition-all ease-in-out duration-200"
+                    >
+                      Show Full Details
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>No Applications till now</div>
+          )}
+        </div>
       )}
     </div>
   );
