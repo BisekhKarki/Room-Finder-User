@@ -259,6 +259,7 @@ const PropertiesSection = () => {
               price={property?.basic.price}
               token={token}
               seller={property.contact.username}
+              landlord_id={property.landlordId}
             />
           )
         ) : (

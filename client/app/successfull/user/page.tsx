@@ -10,13 +10,15 @@ import { GetToken } from "@/constants/GetToken";
 // import toast from "react-hot-toast";
 
 interface PurchaseDetails {
-  buyer_name: string; // Corrected from "uyer_name"
+  buyer_name: string;
   payment_type: string;
   purchase_amount: number;
-  purchase_date: string | Date; // Can be either a string (ISO format) or Date object
+  purchase_date: string | Date;
   purchase_type: string;
   room_id: string;
-  seller_name: string; // Corrected incomplete value
+  seller_name: string;
+  landlord_id: string;
+  tenant_id: string;
 }
 
 const Page = () => {

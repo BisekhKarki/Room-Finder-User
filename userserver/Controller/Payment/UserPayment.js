@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const purchaseSchema = require("../../Schemas/PaymentSchema");
+const rentedProperties = require("../../Schemas/RentedRoomSchema");
+const roomSchema = require("../../Schemas/RoomSchema");
 
 const userkhaltiPayment = async (req, res) => {
   const {
@@ -11,6 +13,8 @@ const userkhaltiPayment = async (req, res) => {
     purchase_amount,
     purchase_date,
     payment_type,
+    landlord_id,
+    tenant_id,
   } = req.body;
   const convertedAmount = String(purchase_amount);
   try {
@@ -67,17 +71,20 @@ const saveDetails = async (req, res) => {
     room_id,
     buyer_name,
     seller_name,
+    landlord_id,
     purchase_amount,
     purchase_date,
     payment_type,
   } = req.body;
-
+  const userData = req.userData;
   try {
     const findPayment = await purchaseSchema.findOne({
       buyer_name,
       seller_name,
       room_id,
       purchase_type,
+      landlord_id,
+      tenant_id: userData.id,
     });
 
     if (findPayment) {
@@ -95,8 +102,27 @@ const saveDetails = async (req, res) => {
       purchase_amount,
       purchase_date,
       payment_type,
+      landlord_id,
+      landlord_id,
     });
     await newPurchaseDetails.save();
+
+    const findRentedRooms = await roomSchema.findById(room_id);
+
+    const saveRoomToRented = await rentedProperties({
+      basic: findRentedRooms.basic,
+      location: findRentedRooms.location,
+      features: findRentedRooms.features,
+      images: findRentedRooms.images,
+      contact: findRentedRooms.contact,
+      landlordId: findRentedRooms.landlordId,
+      rented_by: userData.id,
+      rented_user_name: buyer_name,
+      rented_date: new Date(),
+      rented: true,
+    });
+
+    await saveRoomToRented.save();
 
     return res.status(200).json({
       success: true,

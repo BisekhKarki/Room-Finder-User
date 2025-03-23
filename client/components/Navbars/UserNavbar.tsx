@@ -110,6 +110,13 @@ const UserNavbar = () => {
                     <hr />
                     <li
                       className="text-sm px-5 py-1 cursor-pointer"
+                      onClick={() => router.push("/user/rentedRooms")}
+                    >
+                      Rented Rooms
+                    </li>
+                    <hr />
+                    <li
+                      className="text-sm px-5 py-1 cursor-pointer"
                       onClick={() => logoutUser()}
                     >
                       Logout

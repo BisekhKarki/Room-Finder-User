@@ -14,8 +14,6 @@ const validateUser = async (req, res) => {
       });
     }
 
-    console.log(token);
-
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decodedToken);
     if (!decodedToken) {

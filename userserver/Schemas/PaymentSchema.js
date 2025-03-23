@@ -10,6 +10,14 @@ const purchase_schema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "Room",
   },
+  landlord_id: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  tenant_id: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   buyer_name: {
     type: String,
     require: true,

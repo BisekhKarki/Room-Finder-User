@@ -17,9 +17,10 @@ interface Props {
   price: string;
   token: string;
   seller: string;
+  landlord_id: string;
 }
 
-const UserPayment = ({ roomId, price, token, seller }: Props) => {
+const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
   const convertAmount = (5 / 100) * parseInt(price);
 
   const [formData, setFormData] = useState({
@@ -30,6 +31,7 @@ const UserPayment = ({ roomId, price, token, seller }: Props) => {
     purchase_amount: convertAmount,
     purchase_date: new Date(),
     payment_type: "online",
+    landlord_id: landlord_id,
   });
 
   const handleChange = (
