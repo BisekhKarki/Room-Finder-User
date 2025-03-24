@@ -4,7 +4,7 @@ const getRentedRoom = async (req, res) => {
   const userData = req.userData;
 
   try {
-    const findRoom = await rentedPropeerties.find({
+    const findRoom = await rentedPropeerties.findOne({
       rented_by: userData.id,
     });
 
