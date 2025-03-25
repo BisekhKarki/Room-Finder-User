@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const rented_properties = new mongoose.Schema(
+const rented_history = new mongoose.Schema(
   {
     basic: {
       name: {
@@ -82,9 +82,6 @@ const rented_properties = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    rented_user_name: {
-      type: String,
-    },
     reviews: [
       {
         id: {
@@ -94,10 +91,13 @@ const rented_properties = new mongoose.Schema(
         comment: {
           type: String,
         },
-        rating: { type: Number, min: 0, max: 5 },
+        rating: { type: Number, min: 1, max: 5 },
       },
     ],
     rented_date: {
+      type: Date,
+    },
+    rent_leave_date: {
       type: Date,
     },
     rented: {
@@ -113,8 +113,8 @@ const rented_properties = new mongoose.Schema(
   }
 );
 
-const rented_room =
-  mongoose.models.rented_properties ||
-  mongoose.model("rented_properties", rented_properties);
+const history =
+  mongoose.models.rented_history ||
+  mongoose.model("rented_history", rented_history);
 
-module.exports = rented_room;
+module.exports = history;

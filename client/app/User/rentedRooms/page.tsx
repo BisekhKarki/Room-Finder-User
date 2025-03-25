@@ -4,9 +4,10 @@ import Description from "@/components/RoomView/Description";
 import Features from "@/components/RoomView/Features";
 import Location from "@/components/RoomView/Location";
 import Overview from "@/components/RoomView/Overview";
+import RentDetails from "@/components/RoomView/RentDetails";
 import { Button } from "@/components/ui/button";
 import ContactLandlord from "@/components/UserComponents/ContactLandlord";
-import History from "@/components/UserComponents/History";
+
 import PropertyImages from "@/components/UserComponents/PropertyImages";
 import PropertyLocation from "@/components/UserComponents/PropertyLocation";
 import { base_url } from "@/constants/BaseUrl";
@@ -71,11 +72,10 @@ export interface PropertyDetails {
 
 const viewComponentButtons = [
   { index: 1, label: "Info" },
-  { index: 2, label: "History" },
   { index: 3, label: "Contact Landlord" },
   { index: 4, label: "Location" },
   { index: 5, label: "Images" },
-  { index: 6, label: "Rent Room" },
+  { index: 6, label: "Rent Details" },
 ];
 
 const Page = () => {
@@ -187,15 +187,23 @@ const Page = () => {
         </div>
       )}
 
-      {buttonIndex === 2 && <History />}
       {myroom && buttonIndex === 3 && (
         <ContactLandlord
           landlordEmail={myroom?.contact.email}
           landlordName={myroom?.contact.username}
         />
       )}
-      {buttonIndex === 4 && <PropertyLocation />}
+      {buttonIndex === 4 && (
+        <PropertyLocation location={myroom?.location.city} />
+      )}
       {buttonIndex === 5 && <PropertyImages />}
+      {myroom && buttonIndex === 6 && (
+        <RentDetails
+          room={myroom}
+          rentDate={myroom?.rented_date}
+          token={token}
+        />
+      )}
     </div>
   );
 };
