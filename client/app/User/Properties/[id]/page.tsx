@@ -54,6 +54,13 @@ export interface LocationData {
   zip: string;
 }
 
+export interface reviewsArray {
+  comment: string;
+  rating: number;
+  _id: string;
+  created_at: Date;
+}
+
 export interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
@@ -65,6 +72,7 @@ export interface PropertyDetails {
   payment: boolean;
   __v: number;
   _id: string;
+  reviews: Array<reviewsArray> | [];
 }
 
 const viewComponentButtons = [
@@ -241,7 +249,7 @@ const PropertiesSection = () => {
           </div>
         </div>
       )}
-      {buttonIndex === 2 && <History />}
+      {property && buttonIndex === 2 && <History review={property.reviews} />}
       {property && buttonIndex === 3 && (
         <ContactLandlord
           landlordEmail={property?.contact.email}

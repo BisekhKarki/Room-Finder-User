@@ -82,6 +82,10 @@ const rented_properties = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    room_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Rooms",
+    },
     rented_user_name: {
       type: String,
     },
@@ -95,6 +99,10 @@ const rented_properties = new mongoose.Schema(
           type: String,
         },
         rating: { type: Number, min: 0, max: 5 },
+        created_at: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
     rented_date: {

@@ -11,9 +11,11 @@ const getFeaturedRooms = async (req, res) => {
       });
     }
 
+    const showRomms = getRooms.filter((room) => room.show === true);
+
     return res.status(200).json({
       success: true,
-      message: getRooms,
+      message: showRomms,
     });
   } catch (error) {
     return res.status(500).json({

@@ -26,6 +26,8 @@ interface RentRoomProps {
 }
 
 const RentRoom = ({ roomId, landlordId }: RentRoomProps) => {
+  console.log(roomId);
+
   const [citizenshipFront, setCitizenshipFront] = useState<string>("");
   const [citizenshipBack, setCitizenshipBack] = useState<string>("");
 

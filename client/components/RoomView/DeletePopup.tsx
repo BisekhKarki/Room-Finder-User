@@ -16,7 +16,12 @@ interface Props {
 const DeletePopup = ({ setPopup, token, landlordId, roomId }: Props) => {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-  console.log();
+
+  console.log({
+    token,
+    landlordId,
+    roomId,
+  });
 
   const leaveRoom = async () => {
     try {

@@ -3,6 +3,7 @@ dotenv.config();
 const purchaseSchema = require("../../Schemas/PaymentSchema");
 const rentedProperties = require("../../Schemas/RentedRoomSchema");
 const roomSchema = require("../../Schemas/RoomSchema");
+const room = require("../../Schemas/RoomSchema");
 
 const userkhaltiPayment = async (req, res) => {
   const {
@@ -25,12 +26,6 @@ const userkhaltiPayment = async (req, res) => {
       purchase_type,
     });
 
-    if (findPayment) {
-      return res.status(400).json({
-        success: false,
-        message: "Payment has already been made",
-      });
-    }
     const response = await fetch(
       "https://a.khalti.com/api/v2/epayment/initiate/",
       {
@@ -78,21 +73,14 @@ const saveDetails = async (req, res) => {
   } = req.body;
   const userData = req.userData;
   try {
-    const findPayment = await purchaseSchema.findOne({
-      buyer_name,
-      seller_name,
-      room_id,
-      purchase_type,
-      landlord_id,
-      tenant_id: userData.id,
-    });
-
-    if (findPayment) {
-      return res.status(400).json({
-        success: false,
-        message: "Payment has already been made",
-      });
-    }
+    // const findPayment = await purchaseSchema.findOne({
+    //   buyer_name,
+    //   seller_name,
+    //   room_id,
+    //   purchase_type,
+    //   landlord_id,
+    //   tenant_id: userData.id,
+    // });
 
     const newPurchaseDetails = await purchaseSchema({
       purchase_type,
@@ -117,12 +105,18 @@ const saveDetails = async (req, res) => {
       contact: findRentedRooms.contact,
       landlordId: findRentedRooms.landlordId,
       rented_by: userData.id,
+      room_id: room_id,
       rented_user_name: buyer_name,
+      reviews: findRentedRooms.reviews,
       rented_date: new Date(),
       rented: true,
     });
 
     await saveRoomToRented.save();
+
+    const findRoomById = await room.findById(room_id);
+    findRoomById.show = false;
+    await findRoomById.save();
 
     return res.status(200).json({
       success: true,

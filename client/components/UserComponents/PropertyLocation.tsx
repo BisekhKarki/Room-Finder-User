@@ -3,13 +3,7 @@ import React from "react";
 import { Map } from "@vis.gl/react-maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-interface Props {
-  location: string | undefined;
-}
-
-const PropertyLocation = ({ location }: Props) => {
-  console.log(location);
-
+const PropertyLocation = () => {
   return (
     <div className="mt-10">
       <Map

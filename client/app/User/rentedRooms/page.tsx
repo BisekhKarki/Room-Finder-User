@@ -68,6 +68,7 @@ export interface PropertyDetails {
   rented_date: Date;
   rented_by: string;
   rented_user_name: string;
+  room_id: string;
 }
 
 const viewComponentButtons = [
@@ -110,99 +111,104 @@ const Page = () => {
 
   return (
     <div className="mt-20 mb-14">
-      <div className="">
-        {myroom && myroom.images && myroom.images.length > 0 && (
-          <div className="relative">
-            <div className="flex px-8 gap-3">
-              <div className="">
-                <Image
-                  src={myroom?.images[0]}
-                  alt="room images"
-                  width={1200}
-                  height={1300}
-                  className="h-full rounded-md hover:shadow-lg cursor-pointer"
-                />
+      {myroom ? (
+        <div>
+          {" "}
+          <div className="">
+            {myroom && myroom.images && myroom.images.length > 0 && (
+              <div className="relative">
+                <div className="flex px-8 gap-3">
+                  <div className="">
+                    <Image
+                      src={myroom?.images[0]}
+                      alt="room images"
+                      width={1200}
+                      height={1300}
+                      className="h-full rounded-md hover:shadow-lg cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {myroom.images &&
+                      myroom.images
+                        .slice(1)
+                        .map((img, index) => (
+                          <Image
+                            key={index}
+                            src={img}
+                            alt="room images"
+                            width={400}
+                            height={400}
+                            className="rounded-md hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out"
+                          />
+                        ))}
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col gap-2">
-                {myroom.images &&
-                  myroom.images
-                    .slice(1)
-                    .map((img, index) => (
-                      <Image
-                        key={index}
-                        src={img}
-                        alt="room images"
-                        width={400}
-                        height={400}
-                        className="rounded-md hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out"
-                      />
-                    ))}
+            )}
+          </div>
+          <hr className="mt-10" />
+          <div className="flex px-10 gap-5">
+            {viewComponentButtons.map((btn, index) => (
+              <Button
+                key={index}
+                className={` ${
+                  btn.index === buttonIndex
+                    ? "bg-blue-400 text-white hover:bg-blue-500"
+                    : "bg-white hover:bg-gray-50  text-black"
+                }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+                onClick={() => setButtonIndex(btn.index)}
+              >
+                {btn.label}
+              </Button>
+            ))}
+          </div>
+          {buttonIndex === 1 && myroom && (
+            <div className="flex flex-row gap-5 px-5">
+              <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
+                <Overview basic={myroom?.basic} />
+                <Description description={myroom?.basic.description} />
+                <Features features={myroom?.features} />
+                <Location location={myroom?.location} />
+                <div className="mb-16">
+                  <h1 className="font-bold text-3xl mb-3 font-sans">
+                    Landlord Contact Details
+                  </h1>
+                  <hr />
+                  <div className=" flex  justify-between mt-5">
+                    <p className="text-gray-500 text-base">
+                      Name: {myroom?.contact.username}
+                    </p>
+                    <p className="text-gray-500 text-base">
+                      Email: {myroom?.contact.email}
+                    </p>
+                    <p className="text-gray-500 text-base">
+                      Phone: {myroom?.contact.phone}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-      <hr className="mt-10" />
-      <div className="flex px-10 gap-5">
-        {viewComponentButtons.map((btn, index) => (
-          <Button
-            key={index}
-            className={` ${
-              btn.index === buttonIndex
-                ? "bg-blue-400 text-white hover:bg-blue-500"
-                : "bg-white hover:bg-gray-50  text-black"
-            }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
-            onClick={() => setButtonIndex(btn.index)}
-          >
-            {btn.label}
-          </Button>
-        ))}
-      </div>
-
-      {buttonIndex === 1 && myroom && (
-        <div className="flex flex-row gap-5 px-5">
-          <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
-            <Overview basic={myroom?.basic} />
-            <Description description={myroom?.basic.description} />
-            <Features features={myroom?.features} />
-            <Location location={myroom?.location} />
-            <div className="mb-16">
-              <h1 className="font-bold text-3xl mb-3 font-sans">
-                Landlord Contact Details
-              </h1>
-              <hr />
-              <div className=" flex  justify-between mt-5">
-                <p className="text-gray-500 text-base">
-                  Name: {myroom?.contact.username}
-                </p>
-                <p className="text-gray-500 text-base">
-                  Email: {myroom?.contact.email}
-                </p>
-                <p className="text-gray-500 text-base">
-                  Phone: {myroom?.contact.phone}
-                </p>
-              </div>
-            </div>
-          </div>
+          )}
+          {myroom && buttonIndex === 3 && (
+            <ContactLandlord
+              landlordEmail={myroom?.contact.email}
+              landlordName={myroom?.contact.username}
+            />
+          )}
+          {buttonIndex === 4 && (
+            <PropertyLocation location={myroom?.location.city} />
+          )}
+          {buttonIndex === 5 && <PropertyImages />}
+          {myroom && buttonIndex === 6 && (
+            <RentDetails
+              room={myroom}
+              rentDate={myroom?.rented_date}
+              token={token}
+            />
+          )}
         </div>
-      )}
-
-      {myroom && buttonIndex === 3 && (
-        <ContactLandlord
-          landlordEmail={myroom?.contact.email}
-          landlordName={myroom?.contact.username}
-        />
-      )}
-      {buttonIndex === 4 && (
-        <PropertyLocation location={myroom?.location.city} />
-      )}
-      {buttonIndex === 5 && <PropertyImages />}
-      {myroom && buttonIndex === 6 && (
-        <RentDetails
-          room={myroom}
-          rentDate={myroom?.rented_date}
-          token={token}
-        />
+      ) : (
+        <div>No room rented</div>
       )}
     </div>
   );

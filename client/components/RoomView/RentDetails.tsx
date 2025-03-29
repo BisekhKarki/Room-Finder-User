@@ -26,6 +26,7 @@ interface PropertyDetails {
   rented_date: Date;
   rented_by: string;
   rented_user_name: string;
+  room_id: string;
 }
 
 interface Rent {
@@ -47,7 +48,7 @@ const RentDetails = ({ rentDate, token, room }: Rent) => {
       {popup && (
         <DeletePopup
           landlordId={room.landlordId}
-          roomId={room._id}
+          roomId={room.room_id}
           token={token}
           setPopup={setPopup}
         />
