@@ -16,6 +16,7 @@ const paymentGateway = require("./Routes/PaymentRoute");
 const router = express.Router();
 const roomRouter = require("./Routes/Rooms");
 const rentedRouter = require("./Routes/Rented");
+const { scheduleUserEmails } = require("./lib/Automatic");
 
 app.use(express.json());
 app.use(passport.initialize());
@@ -29,6 +30,9 @@ app.use(cookieParser());
 
 // Database connection
 connect();
+
+// For Automatic mail
+scheduleUserEmails();
 
 // Validate User
 

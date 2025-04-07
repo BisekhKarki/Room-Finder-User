@@ -1,67 +1,42 @@
 "use client";
 
+import {
+  BasicData,
+  ContactData,
+  FeaturesData,
+  LocationData,
+} from "@/components/User/FeaturedRooms";
+import React, { useEffect, useState } from "react";
+import { reviewsArray } from "../../properties/[id]/page";
+import { base_url, tenant_base_url } from "@/constants/BaseUrl";
+import axios from "axios";
+import { GetToken } from "@/constants/GetToken";
+import { useParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import History from "@/components/UserComponents/History";
+import ContactLandlord from "@/components/UserComponents/ContactLandlord";
+import PropertyLocation from "@/components/UserComponents/PropertyLocation";
+import PropertyImages from "@/components/UserComponents/PropertyImages";
+import UserPayment from "@/components/UserComponents/UserPayment";
+import RentRoom from "@/components/UserComponents/RentRoom";
+import Overview from "@/components/RoomView/Overview";
 import Description from "@/components/RoomView/Description";
 import Features from "@/components/RoomView/Features";
 import Location from "@/components/RoomView/Location";
-import Overview from "@/components/RoomView/Overview";
-
-import { Button } from "@/components/ui/button";
-import ContactLandlord from "@/components/UserComponents/ContactLandlord";
-import History from "@/components/UserComponents/History";
-import PropertyImages from "@/components/UserComponents/PropertyImages";
-import PropertyLocation from "@/components/UserComponents/PropertyLocation";
-import { base_url, tenant_base_url } from "@/constants/BaseUrl";
-import { GetToken } from "@/constants/GetToken";
-import axios from "axios";
-import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-
 import { IoIosArrowRoundBack } from "react-icons/io";
-import RentRoom from "@/components/UserComponents/RentRoom";
-import toast from "react-hot-toast";
-import UserPayment from "@/components/UserComponents/UserPayment";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
-export interface ContactData {
-  email: string;
-  phone: string;
-  username: string;
-}
+const viewComponentButtons = [
+  { index: 1, label: "Info" },
+  { index: 2, label: "History" },
+  { index: 3, label: "Contact Landlord" },
+  { index: 4, label: "Location" },
+  { index: 5, label: "Images" },
+  { index: 6, label: "Rent Room" },
+];
 
-export interface BasicData {
-  description: string;
-  name: string;
-  price: string;
-  type: string;
-}
-
-export interface FeaturesData {
-  Kitchen: string;
-  balcony: string;
-  category: string;
-  direction: string;
-  floor: string;
-  parking: string;
-  waterfacility: string;
-}
-
-export interface LocationData {
-  Province: string;
-  city: string;
-  landmark: string;
-  region: string;
-  street: string;
-  zip: string;
-}
-
-export interface reviewsArray {
-  comment: string;
-  rating: number;
-  _id: string;
-  created_at: Date;
-}
-
-export interface PropertyDetails {
+interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
   images: string[];
@@ -75,16 +50,7 @@ export interface PropertyDetails {
   reviews: Array<reviewsArray> | [];
 }
 
-const viewComponentButtons = [
-  { index: 1, label: "Info" },
-  { index: 2, label: "History" },
-  { index: 3, label: "Contact Landlord" },
-  { index: 4, label: "Location" },
-  { index: 5, label: "Images" },
-  { index: 6, label: "Rent Room" },
-];
-
-const PropertiesSection = () => {
+const Page = () => {
   const params = useParams();
   const [id, setId] = useState<string | undefined>("");
   const [getToken, setToken] = useState<string>("");
@@ -164,11 +130,11 @@ const PropertiesSection = () => {
       <div className="text-2xl mb-5 flex items-center gap-1 ml-8">
         <IoIosArrowRoundBack
           className=" text-gray-800 cursor-pointer"
-          onClick={() => router.push("/user/properties")}
+          onClick={() => router.push("/user/categories")}
         />
         <p
           className="text-base cursor-pointer"
-          onClick={() => router.push("/user/properties")}
+          onClick={() => router.push("/user/categories")}
         >
           Back
         </p>
@@ -277,4 +243,4 @@ const PropertiesSection = () => {
   );
 };
 
-export default PropertiesSection;
+export default Page;

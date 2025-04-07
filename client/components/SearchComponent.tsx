@@ -36,7 +36,7 @@ const SearchComponent = () => {
           />
           <select
             value={price}
-            defaultValue=""
+            aria-label="Select an option"
             onChange={(e) => setPrice(e.target.value)}
             className="border border-gray-300 px-12 py-3 rounded-md cursor-pointer"
           >
@@ -49,7 +49,7 @@ const SearchComponent = () => {
             <option>More than 50k</option>
           </select>
           <select
-            defaultValue=""
+            aria-label="Select an option"
             value={propertyType}
             onChange={(e) => setPropertyType(e.target.value)}
             className="border border-gray-300 px-12 py-3 rounded-md cursor-pointer"

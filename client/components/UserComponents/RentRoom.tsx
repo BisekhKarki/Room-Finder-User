@@ -21,7 +21,7 @@ import toast from "react-hot-toast";
 import { base_url } from "@/constants/BaseUrl";
 
 interface RentRoomProps {
-  roomId: string;
+  roomId: string | undefined;
   landlordId: string | null;
 }
 

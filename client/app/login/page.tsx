@@ -123,7 +123,7 @@ const LoginPage = () => {
                     <select
                       {...field}
                       className="w-full bg-white border rounded-md px-3 py-2"
-                      defaultValue=""
+                      aria-label="Select an option"
                     >
                       <option value="" disabled>
                         Select a user type

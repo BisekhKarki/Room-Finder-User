@@ -215,7 +215,7 @@ const SignupPage = () => {
                     <select
                       {...field}
                       className="w-full bg-white border rounded-md p-2"
-                      defaultValue=""
+                      aria-label="Select an option"
                     >
                       <option value="" disabled>
                         Select a user type

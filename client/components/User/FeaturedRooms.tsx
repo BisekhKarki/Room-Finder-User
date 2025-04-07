@@ -94,14 +94,14 @@ const FeaturedRooms = () => {
 
   return (
     <div className="mt-10">
-      <div className="flex items-center justify-between px-24">
+      <div className="flex items-center justify-between px-20">
         <h1 className="mb-5 text-4xl font-bold text-center">Featured Rooms</h1>
         <div className="text-blue-500 flex items-center gap-1">
           <p className="underline cursor-pointer">View more </p>
           <FaAngleRight className="cursor-pointer" />
         </div>
       </div>
-      <div className="flex justify-center gap-20 mt-10">
+      <div className="grid grid-cols-3 px-12 justify-center gap-20 mt-10">
         {featured &&
           featured.length > 0 &&
           featured.map((feature, index) => (

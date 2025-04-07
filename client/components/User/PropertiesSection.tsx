@@ -66,7 +66,7 @@ const PropertiesSection = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch(`${tenant_base_url}/rooms/featured`, {
+      const response = await fetch(`${tenant_base_url}/rooms/all/rooms`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const PropertiesSection = () => {
           <FaAngleRight className="cursor-pointer" />
         </div>
       </div>
-      <div className="flex justify-center gap-20 mt-10">
+      <div className="grid grid-cols-3 px-20 justify-center gap-24 mt-10">
         {properties &&
           properties.length > 0 &&
           properties.map((property, index) => (

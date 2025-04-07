@@ -12,11 +12,11 @@ import SearchComponent from "@/components/SearchComponent";
 import CategoriesBox from "@/components/User/CategoriesBox";
 import PropertiesSection from "@/components/User/PropertiesSection";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
+  // const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem("Token");
 
@@ -61,7 +61,6 @@ const HomePage = () => {
         ))}
       </div>
       <hr className="mt-10" />
-      <PropertiesSection />
       <PropertiesSection />
     </div>
   );
