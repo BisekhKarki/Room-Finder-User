@@ -14,8 +14,6 @@ interface OtherDetailsProps {
   setPhone: (value: string) => void;
   relationship: string;
   setRelationship: (value: string) => void;
-  contact: string;
-  setContact: (value: string) => void;
 }
 
 const OtherDetails = ({
@@ -29,8 +27,6 @@ const OtherDetails = ({
   setPhone,
   relationship,
   setRelationship,
-  contact,
-  setContact,
 }: OtherDetailsProps) => {
   return (
     <div className="space-y-6 w-full">
@@ -73,12 +69,6 @@ const OtherDetails = ({
             placeholder="Relationship to the person"
             value={relationship}
             onChange={(e) => setRelationship(e.target.value)}
-          />
-          <Input
-            className=""
-            placeholder="Alternate Contact Number"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
           />
         </div>
       </div>

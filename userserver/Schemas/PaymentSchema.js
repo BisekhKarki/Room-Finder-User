@@ -14,7 +14,7 @@ const purchase_schema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  tenant_id: {
+  buyer_id: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
@@ -32,7 +32,11 @@ const purchase_schema = new mongoose.Schema({
   purchase_date: {
     type: Date,
   },
-  payment_type: {
+  payment_method: {
+    type: String,
+    required: true,
+  },
+  payment_status: {
     type: String,
     required: true,
   },

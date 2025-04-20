@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { contactDetails } from "@/store/form";
-import { FaMoneyBill } from "react-icons/fa";
+// import { FaMoneyBill } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -22,15 +22,20 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [landlordId, setLandlordId] = useState<string>("");
+  const [token, setToken] = useState<string>("");
   const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const getUserId = localStorage.getItem("userId");
+    const tokenGet = localStorage.getItem("Token");
     if (getUserId) {
       const id = JSON.parse(getUserId);
       setLandlordId(id);
+    }
+    if (tokenGet) {
+      setToken(tokenGet);
     }
   }, []);
 
@@ -95,6 +100,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               basic,
@@ -125,8 +131,8 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           toast.error(val.message);
         }
       }
-    } catch (error: any) {
-      toast.error("Internal Server Error");
+    } catch (error: unknown) {
+      toast.error(String(error));
     }
   };
 
@@ -159,7 +165,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           type="button"
           className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
           onClick={() => {
-            if (!user || !phone || !email) {
+            if (!userName || !phone || !email) {
               toast.error("Fill all the details to procced next");
             }
             dispatch(
@@ -182,13 +188,13 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
         >
           <BsSave /> Save
         </Button>
-        <Button
+        {/* <Button
           type="button"
           className="mt-5 bg-purple-600 hover:bg-purple-700 w-36"
           onClick={() => setUserContact()}
         >
           <FaMoneyBill /> Make Payment
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import toast from "react-hot-toast";
 import khalti from "../../assets/Khalti.jpg";
 import Image from "next/image";
+import { GetToken } from "@/constants/GetToken";
 
 interface Props {
   name: string;
@@ -15,6 +16,7 @@ interface Props {
 
 const Khalti = ({ name, id, amount, roomId }: Props) => {
   localStorage.setItem("RoomId", JSON.stringify(roomId));
+  const token = GetToken();
 
   const makePayment = async () => {
     try {
@@ -24,6 +26,7 @@ const Khalti = ({ name, id, amount, roomId }: Props) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             name,

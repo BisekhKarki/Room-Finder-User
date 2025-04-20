@@ -12,6 +12,7 @@ const {
 const {
   sendApprovalRent,
   acceptApproval,
+  declineApproval,
 } = require("../Controller/Tenants/Rent/Approval");
 const protectRoute = require("../middleware/ProtectionRoute");
 const {
@@ -20,12 +21,16 @@ const {
 } = require("../Controller/Tenants/Rent/Applications");
 
 // For approval posting router
-router.post("/approval", getApproval);
-router.delete("/cancel/:id", cancelApproval);
-router.post("/myRooms/pending", getMyPendingRooms);
-router.post("/myRooms/pending/single/get/:id", getSinglePendingRooms);
+router.post("/approval", protectRoute, getApproval);
+router.delete("/cancel/:id", protectRoute, cancelApproval);
+router.post("/myRooms/pending", protectRoute, getMyPendingRooms);
+router.post(
+  "/myRooms/pending/single/get/:id",
+  protectRoute,
+  getSinglePendingRooms
+);
 
-router.post("/myRooms/pending/payment", updateRoomApproval);
+router.post("/myRooms/pending/payment", protectRoute, updateRoomApproval);
 
 // For rent approvals
 router.post(
@@ -49,6 +54,12 @@ router.post(
   "/rent/tenant/single/application/approval/accept",
   protectRoute,
   acceptApproval
+);
+
+router.post(
+  "/rent/tenant/single/application/decline",
+  protectRoute,
+  declineApproval
 );
 
 module.exports = router;

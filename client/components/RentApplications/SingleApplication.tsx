@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PersonalDetails from "./ApplicationsDetails/PersonalDetails";
 import EmploymentAndIncome from "./ApplicationsDetails/EmploymentAndIncome";
 import RentalHistory from "./ApplicationsDetails/RentalHistory";
@@ -10,8 +10,35 @@ import { Button } from "../ui/button";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import toast from "react-hot-toast";
 import { base_url } from "@/constants/BaseUrl";
+import DeleteConfirmation from "./DeleteConfirmation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Label } from "../ui/label";
+import RemoveTenantsPopup from "./RemoveTenantsPopup";
 
-interface SingleTenantApplication {
+interface UserTransaction {
+  _id: string;
+  purchase_type: string;
+  room_id: string;
+  landlord_id: string;
+  buyer_id: string;
+  buyer_name: string;
+  seller_name: string;
+  purchase_amount: number; // As numeric value
+  purchase_date: Date;
+  payment_method: string;
+  payment_status: string;
+  __v: number;
+}
+
+export interface SingleTenantApplication {
   _id: string;
   accepted: boolean;
   createdAt: string;
@@ -58,9 +85,20 @@ interface Props {
   setShowSingle: (val: boolean) => void;
   showSingle: boolean;
   token: string;
+  roomId?: string;
+  landlordId?: string;
 }
 
-const SingleApplication = ({ Application, setShowSingle, token }: Props) => {
+const SingleApplication = ({
+  Application,
+  setShowSingle,
+  token,
+  roomId,
+  landlordId,
+}: Props) => {
+  const [popup, setPopup] = useState<boolean>(false);
+  const [done, setDone] = useState<string>("");
+  const [remove, setRemove] = useState<boolean>(false);
   const approveApplication = async () => {
     try {
       const response = await fetch(
@@ -89,8 +127,86 @@ const SingleApplication = ({ Application, setShowSingle, token }: Props) => {
     }
   };
 
+  const [applicationStatus, setApplicationStatus] =
+    useState<UserTransaction | null>(null);
+
+  useEffect(() => {
+    if (token) {
+      getTransactionsDetails();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getTransactionsDetails = async () => {
+    try {
+      const response = await fetch(
+        `${base_url}/payment/tenants/cashOnHand/status/${roomId}/${landlordId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ userId: Application?.tenantId }),
+        }
+      );
+      const val = await response.json();
+      if (response.status === 200) {
+        setApplicationStatus(val.message);
+      }
+    } catch (error: unknown) {
+      toast.error(String(error));
+    }
+  };
+
+  const approvePayment = async () => {
+    if (!done || done === "") return toast.error("Select Yes or no ");
+    try {
+      let url;
+      if (done === "Yes") {
+        url = `/tenants/approval/cashOnHand`;
+      } else if (done === "No") {
+        url = `/tenants/decline/cashOnHand`;
+      }
+
+      const response = await fetch(`${base_url}/payment${url}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          buyerId: Application?.tenantId,
+          roomId: Application?.roomId,
+        }),
+      });
+      const val = await response.json();
+      if (response.status === 200) {
+        setApplicationStatus(val.message);
+        console.log(val.message);
+      }
+    } catch (error: unknown) {
+      toast.error(String(error));
+    }
+  };
+
   return (
     <div>
+      {popup && (
+        <DeleteConfirmation
+          Application={Application}
+          token={token}
+          setPopup={setPopup}
+        />
+      )}
+
+      {remove && (
+        <RemoveTenantsPopup
+          Application={Application}
+          token={token}
+          setRemove={setRemove}
+        />
+      )}
       <div className="text-2xl mb-5 flex items-center gap-1">
         <IoIosArrowRoundBack
           className=" text-gray-800 cursor-pointer"
@@ -117,14 +233,62 @@ const SingleApplication = ({ Application, setShowSingle, token }: Props) => {
           <UserImages images={Application.images} />
         </div>
       )}
-      <div className="mt-5">
-        <Button
-          className=" w-1/4 bg-blue-500 hover:bg-blue-600 "
-          onClick={() => approveApplication()}
-        >
-          Approve Applications
-        </Button>
-      </div>
+      {applicationStatus?.payment_status === "pending" &&
+      Application?.tenantId === applicationStatus?.buyer_id ? (
+        <div className="mt-5 space-y-3">
+          <div>
+            <Label htmlFor="payment_method">Payment made by the renter</Label>
+            <Select
+              value={done}
+              onValueChange={(value: string) => setDone(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a payment method" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Payment</SelectLabel>
+                  <SelectItem value="Yes">Yes</SelectItem>
+                  <SelectItem value="No">No</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            className="mt-2  w-1/4 bg-red-500 hover:bg-red-600 "
+            onClick={() => approvePayment()}
+          >
+            Submit
+          </Button>
+        </div>
+      ) : applicationStatus?.payment_status === "completed" ? (
+        <div className="mt-5 space-y-3">
+          <div>
+            <p>Last Rent Given by the user</p>
+          </div>
+          <Button
+            onClick={() => setRemove(true)}
+            className=" w-1/4 bg-red-500 hover:bg-red-600 "
+          >
+            Remove Tenant
+          </Button>
+        </div>
+      ) : (
+        <div className="mt-5 space-x-3">
+          <Button
+            className=" w-1/4 bg-blue-500 hover:bg-blue-600 "
+            onClick={() => approveApplication()}
+          >
+            Approve Applications
+          </Button>
+          <Button
+            className=" w-1/4 bg-red-500 hover:bg-red-600 "
+            onClick={() => setPopup(true)}
+          >
+            Decline Applications
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

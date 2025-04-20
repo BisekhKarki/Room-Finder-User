@@ -208,7 +208,9 @@ const Page = () => {
           )}
         </div>
       ) : (
-        <div>No room rented</div>
+        <div className="h-[61vh]">
+          <p className="font-bold text-3xl px-20">No room rented</p>
+        </div>
       )}
     </div>
   );

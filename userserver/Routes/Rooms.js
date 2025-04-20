@@ -6,6 +6,7 @@ const {
   getAllRooms,
 } = require("../Controller/Tenants/GetRooms");
 const { getCategoryRooms } = require("../Controller/Tenants/Rent/Rooms");
+const { filterSearch } = require("../Controller/Tenants/SearchRooms");
 const router = express.Router();
 
 router.get("/rooms/featured", protectRoute, getFeaturedRooms);
@@ -17,5 +18,7 @@ router.get(
 );
 
 router.get("/rooms/filter/:category", protectRoute, getCategoryRooms);
+
+router.post("/room/search", protectRoute, filterSearch);
 
 module.exports = router;

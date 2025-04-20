@@ -10,7 +10,7 @@ import ContactLandlord from "@/components/UserComponents/ContactLandlord";
 import History from "@/components/UserComponents/History";
 import PropertyImages from "@/components/UserComponents/PropertyImages";
 import PropertyLocation from "@/components/UserComponents/PropertyLocation";
-import { base_url, tenant_base_url } from "@/constants/BaseUrl";
+import { tenant_base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 import axios from "axios";
 import Image from "next/image";
@@ -19,8 +19,6 @@ import React, { useEffect, useState } from "react";
 
 import { IoIosArrowRoundBack } from "react-icons/io";
 import RentRoom from "@/components/UserComponents/RentRoom";
-import toast from "react-hot-toast";
-import UserPayment from "@/components/UserComponents/UserPayment";
 
 export interface ContactData {
   email: string;
@@ -61,7 +59,7 @@ export interface reviewsArray {
   created_at: Date;
 }
 
-export interface PropertyDetails {
+export interface PropertyProps {
   basic: BasicData;
   features: FeaturesData;
   images: string[];
@@ -86,15 +84,16 @@ const viewComponentButtons = [
 
 const PropertiesSection = () => {
   const params = useParams();
-  const [id, setId] = useState<string | undefined>("");
+  const [id, setId] = useState<string>("");
   const [getToken, setToken] = useState<string>("");
-  const [property, setProperty] = useState<PropertyDetails | null>(null);
+  const [property, setProperty] = useState<PropertyProps | null>(null);
   const [buttonIndex, setButtonIndex] = useState<number>(1);
   const router = useRouter();
 
   const token = GetToken();
   useEffect(() => {
-    setId(params.id);
+    setId(params.id as string);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -127,37 +126,8 @@ const PropertiesSection = () => {
     if (getToken) {
       fetchSingleRooms();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getToken]);
-
-  const [applicationStatus, setApplicationStatus] = useState<boolean>(false);
-  const getApprovalStatus = async () => {
-    const roomId = property?._id;
-    const landlordId = property?.landlordId;
-    try {
-      const response = await fetch(
-        `${base_url}/rooms/rent/tenant/application/approval/check/${roomId}/${landlordId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      if (response.status == 200) {
-        setApplicationStatus(data.message);
-      }
-    } catch (error: unknown) {
-      toast.error(String(error));
-    }
-  };
-
-  useEffect(() => {
-    if (property) {
-      getApprovalStatus();
-    }
-  }, []);
 
   return (
     <div className="mt-10 py-10">
@@ -258,21 +228,9 @@ const PropertiesSection = () => {
       )}
       {buttonIndex === 4 && <PropertyLocation />}
       {buttonIndex === 5 && <PropertyImages />}
-      {buttonIndex === 6 &&
-        (applicationStatus ? (
-          property &&
-          token && (
-            <UserPayment
-              roomId={property?._id}
-              price={property?.basic.price}
-              token={token}
-              seller={property.contact.username}
-              landlord_id={property.landlordId}
-            />
-          )
-        ) : (
-          <RentRoom roomId={id} landlordId={property && property.landlordId} />
-        ))}
+      {buttonIndex === 6 && property && (
+        <RentRoom property={property} roomId={id} />
+      )}
     </div>
   );
 };

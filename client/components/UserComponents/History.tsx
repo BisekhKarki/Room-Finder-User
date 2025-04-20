@@ -19,8 +19,6 @@ interface Props {
 }
 
 const History = ({ review }: Props) => {
-  console.log(review);
-
   return (
     <div className="px-10">
       <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">

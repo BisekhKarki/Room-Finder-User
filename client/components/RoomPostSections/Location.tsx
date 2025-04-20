@@ -47,6 +47,7 @@ const Location = ({ counter, setCounter }: Props) => {
       toast.error("Fill all details to procced next step");
       return;
     }
+    console.log(province);
     dispatch(
       locationDetails({
         street,
@@ -96,6 +97,7 @@ const Location = ({ counter, setCounter }: Props) => {
               value={province}
               className="w-full h-12 bg-white border rounded-md px-3 py-2"
               onChange={(e) => setProvince(e.target.value)}
+              aria-label="Province"
             >
               <option>--- Select Province ---</option>
               <option>Bagmati Province</option>

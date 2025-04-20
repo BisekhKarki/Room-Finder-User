@@ -19,7 +19,7 @@ const rent_approval = new mongoose.Schema(
       numberOfRenters: {
         type: String,
       },
-      permanentAddress: {
+      address: {
         type: String,
       },
       marital_status: {
@@ -44,9 +44,6 @@ const rent_approval = new mongoose.Schema(
       relationship: {
         type: String,
       },
-      alternateContact: {
-        type: String,
-      },
     },
     rental_history: {
       previous_address: {
@@ -55,9 +52,7 @@ const rent_approval = new mongoose.Schema(
       length_of_stay: {
         type: String,
       },
-      current_landlord_contact: {
-        type: String,
-      },
+
       reason_for_leave: {
         type: String,
       },
@@ -91,6 +86,10 @@ const rent_approval = new mongoose.Schema(
     accepted: {
       type: Boolean,
       default: false,
+    },
+    status: {
+      type: String,
+      default: "pending",
     },
   },
   { timestamps: true }

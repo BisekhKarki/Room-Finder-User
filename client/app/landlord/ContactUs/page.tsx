@@ -14,7 +14,7 @@ const Page = () => {
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
-  const sendMessage = async (e: Event) => {
+  const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (!first || !last || !email) {
@@ -95,11 +95,11 @@ const Page = () => {
             Contact Us
           </h1>
           <p className="py-3 px-6 text-gray-500">
-            Have questions or need assistance? We're here to help! Reach out to
-            our friendly team through our Contact Us page. Whether you're
-            looking for more information, have feedback, or need support, we're
-            just a message away. Fill out the form below, and we'll get back to
-            you promptly. Your satisfaction is our priority!
+            Have questions or need assistance? We are here to help! Reach out to
+            our friendly team through our Contact Us page. Whether you are
+            looking for more information, have feedback, or need support, we are
+            just a message away. Fill out the form below, and we will get back
+            to you promptly. Your satisfaction is our priority!
           </p>
           <hr className="mb-5 mt-2 w-full" />
           <form className="mb-2 px-10 py-5 space-y-6">
@@ -141,7 +141,7 @@ const Page = () => {
             <Button
               type="submit"
               className="w-full bg-blue-400 hover:bg-blue-500 "
-              onClick={(e) => sendMessage(e)}
+              onClick={(e: React.FormEvent) => sendMessage(e)}
             >
               Send Message
             </Button>

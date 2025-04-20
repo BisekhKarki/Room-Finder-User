@@ -17,7 +17,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { FcGoogle } from "react-icons/fc";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
+import Image from "next/image";
+import logo from "@/public/assets/Logo.png";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "Enter at least 1 character"),
@@ -76,14 +78,15 @@ const SignupPage = () => {
           }
         );
         const val = await response.json();
-        if (!response.ok) {
+        if (response.status !== 200) {
           toast.error(val.message || "Please Try again");
-        } else {
+        } else if (response.status === 200) {
+          toast.success(val.message);
           router.push("/VerifyEmail");
         }
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error: unknown) {
+      toast.error(String(error) || "An error occurred");
     }
   };
 
@@ -96,17 +99,17 @@ const SignupPage = () => {
       } else {
         toast.error("Failed to initiate Google login");
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error: unknown) {
+      toast.error(String(error) || "An error occurred");
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-5 bg-gray-50 px-4">
-      <div className="w-full max-w-xl bg-white shadow-md rounded-xl p-2 md:p-10">
-        <h1 className="font-semibold text-xl md:text-3xl text-gray-800 text-center">
-          Register Account
-        </h1>
+      <div className="w-full max-w-xl bg-white shadow-md rounded-xl p-1 md:p-10">
+        <div className="flex justify-center items-center">
+          <Image className="" src={logo} width={100} height={100} alt="logo" />
+        </div>
         <Form {...form}>
           <form
             className="space-y-6 mt-6"

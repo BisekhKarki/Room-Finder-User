@@ -1,6 +1,6 @@
 "use client";
 import Khalti from "@/components/payment/Khalti";
-import Stripe from "@/components/payment/Stripe";
+
 import Description from "@/components/RoomView/Description";
 import Overview from "@/components/RoomView/Overview";
 import Features from "@/components/RoomView/Features";
@@ -17,6 +17,7 @@ import Image from "next/image";
 import ContactDetails from "@/components/RoomView/ContactDetails";
 import AdditionalDetails from "@/components/RoomView/AdditionalDetails";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { GetToken } from "@/constants/GetToken";
 
 export interface ContactData {
   email: string;
@@ -72,6 +73,7 @@ const Page = () => {
   const router = useRouter();
 
   const { userLandlordId } = useSelector((state: RootState) => state.slice);
+  const token = GetToken();
 
   useEffect(() => {
     if (userLandlordId) {
@@ -89,6 +91,7 @@ const Page = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ landlordId: landlordId }),
         }
@@ -99,8 +102,8 @@ const Page = () => {
         setPending(data.message);
         setLoading(false);
       }
-    } catch (error: any) {
-      toast.error("Internal Server Error");
+    } catch (error: unknown) {
+      toast.error(String(error));
     } finally {
       setLoading(false);
     }
@@ -110,6 +113,7 @@ const Page = () => {
     if (landlordId && landlordId != "") {
       getMyPendingRooms();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [landlordId]);
 
   return (
@@ -181,11 +185,6 @@ const Page = () => {
                             id={landlordId}
                             amount="10000"
                             roomId={pending._id}
-                          />
-                          <Stripe
-                            name={pending.contact.username}
-                            id={landlordId}
-                            amount="10000"
                           />
                         </div>
                       </div>

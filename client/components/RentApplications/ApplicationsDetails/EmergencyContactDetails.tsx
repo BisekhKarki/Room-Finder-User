@@ -4,7 +4,7 @@ interface EmergencyContactDetails {
   name: string;
   contact: string;
   relationship: string;
-  alternateContact: string;
+  alternateContact?: string;
 }
 interface Props {
   emergency: EmergencyContactDetails | null;

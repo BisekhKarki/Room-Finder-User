@@ -8,21 +8,24 @@ import { useDispatch } from "react-redux";
 import Room from "../../../assets/Room.jpg";
 import FeaturedRooms from "@/components/User/FeaturedRooms";
 import data from "../../../constants/Datas";
-import SearchComponent from "@/components/SearchComponent";
+
 import CategoriesBox from "@/components/User/CategoriesBox";
 import PropertiesSection from "@/components/User/PropertiesSection";
 import { Button } from "@/components/ui/button";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  // const router = useRouter();
+  const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem("Token");
 
     if (token) {
       dispatch(checkToken({ token }));
+    } else if (!token) {
+      router.push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   return (
@@ -34,14 +37,17 @@ const HomePage = () => {
             Explore, Buy, Sell & Research <br /> Find rooms, apartments, shops,
             office based on your <br /> interest in Nepal easily
           </p>
-          <Button className="bg-blue-500 hover:bg-blue-600">
+          <Button
+            className="bg-blue-500 hover:bg-blue-600"
+            onClick={() => router.push("/user/properties")}
+          >
             Explore Properties
           </Button>
         </div>
         <Image src={Room} alt="Room" width={450} className="rounded" />
       </div>
       <hr className="mt-10" />
-      <SearchComponent />
+
       <FeaturedRooms />
       <hr className="mt-10" />
       <CategoriesBox />

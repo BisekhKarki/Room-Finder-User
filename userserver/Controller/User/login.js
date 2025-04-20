@@ -22,21 +22,21 @@ const generateToken = async (userId, userType) => {
 
 // Function to validate user in order to login
 const loginUser = async (req, res) => {
-  const { Email, Password, UserType } = req.body;
+  const { Email, Password } = req.body;
+  if (Email === " " || Password === " ") {
+    return res.status(400).json({
+      success: false,
+      message: "Input field cannot be empty",
+    });
+  }
 
   try {
-    if (!["Landlord", "Tenants"].includes(UserType)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid User Type",
-      });
-    }
     const findUser = await user.findOne({ Email });
+    console.log(findUser.UserType);
     if (!findUser) {
       return res.status(400).json({
         success: false,
-        message:
-          "User with the email do not exists\n Please register you account",
+        message: "User with the email do not exists",
       });
     }
 
@@ -45,27 +45,22 @@ const loginUser = async (req, res) => {
     if (!checkPassword) {
       return res.status(400).json({
         success: false,
-        message: "Incorrect Password\nPlease try again",
+        message: "Incorrect Password",
       });
     }
-    const token = await generateToken(findUser._id, UserType);
-    if (findUser.UserType === UserType) {
-      return res.status(200).json({
-        success: true,
-        message: `You have been logged in as ${UserType}`,
-        redirect: UserType === "Landlord" ? "/landlord/Home" : "/user/home",
-        token: token,
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "No User Found",
-      });
-    }
+    const token = await generateToken(findUser._id, findUser.UserType);
+
+    return res.status(200).json({
+      success: true,
+      message: `You have been logged in as ${findUser.UserType}`,
+      redirect:
+        findUser.UserType === "Landlord" ? "/landlord/MyRooms" : "/user/home",
+      token: token,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "An unexpected error occured. Please try again later.",
+      message: error.message,
     });
   }
 };
@@ -126,7 +121,7 @@ const googleCallback = async (req, res) => {
     const checkIfUserExists = await user.findOne({ Email: userData.email });
 
     if (checkIfUserExists) {
-      return res.redirect("http://localhost:3000/Home");
+      return res.redirect("http://localhost:3000/user/home");
     } else {
       const newUser = new user({
         FirstName: userData.given_name,
@@ -138,7 +133,7 @@ const googleCallback = async (req, res) => {
         Password: "",
       });
       await newUser.save();
-      return res.redirect("http://localhost:3000/Home");
+      return res.redirect("http://localhost:3000/user/home");
     }
   } catch (error) {
     return res.status(500).json({

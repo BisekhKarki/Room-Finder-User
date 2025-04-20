@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import userProfile from "../../../assets/user.png";
 import Image from "next/image";
 
-import Error from "next/error";
+// import Error from "next/error";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -43,8 +43,8 @@ const Page = () => {
       if (response.status === 200) {
         setUser(data.message);
       }
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+    } catch (error: unknown) {
+      toast.error(String(error));
     }
   };
 
@@ -58,6 +58,7 @@ const Page = () => {
     if (getToken) {
       getuserDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getToken]);
 
   return (

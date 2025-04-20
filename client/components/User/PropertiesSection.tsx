@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 // import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { FaAngleRight } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 export interface ContactData {
   email: string;
   phone: string;
@@ -57,6 +58,7 @@ const PropertiesSection = () => {
   const [properties, setProperties] = useState<Array<FeaturedRoom> | []>([]);
   const [getToken, setGetToken] = useState<string>("");
   const token = GetToken();
+  const router = useRouter();
 
   useEffect(() => {
     if (token) {
@@ -86,13 +88,17 @@ const PropertiesSection = () => {
     if (getToken) {
       fetchRooms();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getToken]);
 
   return (
     <div className="mt-10">
       <div className="flex items-center justify-between px-24">
         <h1 className="mb-5 text-4xl font-bold text-center">Properties</h1>
-        <div className="text-blue-500 flex items-center gap-1">
+        <div
+          className="text-blue-500 flex items-center gap-1"
+          onClick={() => router.push("/user/properties")}
+        >
           <p className="underline cursor-pointer">View more </p>
           <FaAngleRight className="cursor-pointer" />
         </div>

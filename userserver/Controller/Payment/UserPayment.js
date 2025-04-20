@@ -4,6 +4,18 @@ const purchaseSchema = require("../../Schemas/PaymentSchema");
 const rentedProperties = require("../../Schemas/RentedRoomSchema");
 const roomSchema = require("../../Schemas/RoomSchema");
 const room = require("../../Schemas/RoomSchema");
+const user = require("../../Schemas/UserModel");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // true for port 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 const userkhaltiPayment = async (req, res) => {
   const {
@@ -69,7 +81,7 @@ const saveDetails = async (req, res) => {
     landlord_id,
     purchase_amount,
     purchase_date,
-    payment_type,
+    payment_method,
   } = req.body;
   const userData = req.userData;
   try {
@@ -89,9 +101,11 @@ const saveDetails = async (req, res) => {
       seller_name,
       purchase_amount,
       purchase_date,
-      payment_type,
       landlord_id,
       landlord_id,
+      payment_method,
+      payment_status: "completed",
+      buyer_id: userData.id,
     });
     await newPurchaseDetails.save();
 
@@ -130,4 +144,329 @@ const saveDetails = async (req, res) => {
   }
 };
 
-module.exports = { userkhaltiPayment, saveDetails };
+const saveCashDetails = async (req, res) => {
+  try {
+    const {
+      purchase_type,
+      room_id,
+      buyer_name,
+      seller_name,
+      landlord_id,
+      purchase_amount,
+      purchase_date,
+      payment_method,
+    } = req.body;
+    const userData = req.userData;
+    const newPurchaseDetails = await purchaseSchema({
+      purchase_type,
+      room_id,
+      buyer_name,
+      seller_name,
+      purchase_amount,
+      purchase_date,
+      payment_status: "pending",
+      landlord_id,
+      landlord_id,
+      payment_method,
+      buyer_id: userData.id,
+    });
+    await newPurchaseDetails.save();
+    return res.status(200).json({
+      success: true,
+      message: "Transaction saved",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+const getCashOnHandStatus = async (req, res) => {
+  const userData = req.userData;
+  const { roomId, landlordId } = req.params;
+
+  try {
+    const findUserPurchase = await purchaseSchema.findOne({
+      buyer_id: userData.id,
+      room_id: roomId,
+      landlord_id: landlordId,
+    });
+
+    if (!findUserPurchase) {
+      return res.status(400).json({
+        success: false,
+        message: "No transaction found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: findUserPurchase.payment_status,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+const getCashOnHandStatusForLandlord = async (req, res) => {
+  const { roomId, landlordId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const findUserPurchase = await purchaseSchema.findOne({
+      buyer_id: userId,
+      room_id: roomId,
+      landlord_id: landlordId,
+    });
+
+    if (!findUserPurchase) {
+      return res.status(400).json({
+        success: false,
+        message: "No transaction found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: findUserPurchase,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+const accpetPayment = async (req, res) => {
+  const userData = req.userData;
+  const { roomId, buyerId } = req.body;
+  try {
+    const purchase = await purchaseSchema.findOne({
+      room_id: roomId,
+      buyer_id: buyerId,
+      landlord_id: userData.id,
+    });
+
+    purchase.payment_status = "completed";
+    await purchase.save();
+    savePaymentDetails(roomId, purchase.buyer_name, buyerId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Tenant added to the room",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const savePaymentDetails = async (room_id, buyer_name, tenantId) => {
+  try {
+    const findRentedRooms = await roomSchema.findById(room_id);
+
+    const saveRoomToRented = await rentedProperties({
+      basic: findRentedRooms.basic,
+      location: findRentedRooms.location,
+      features: findRentedRooms.features,
+      images: findRentedRooms.images,
+      contact: findRentedRooms.contact,
+      landlordId: findRentedRooms.landlordId,
+      rented_by: tenantId,
+      room_id: room_id,
+      rented_user_name: buyer_name,
+      reviews: findRentedRooms.reviews,
+      rented_date: new Date(),
+      rented: true,
+    });
+
+    await saveRoomToRented.save();
+
+    const findRoomById = await room.findById(room_id);
+    findRoomById.show = false;
+    await findRoomById.save();
+
+    return;
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+const declinePayment = async (req, res) => {
+  const userData = req.userData;
+  const { roomId, buyerId } = req.body;
+  try {
+    const purchase = await purchaseSchema.findOne({
+      room_id: roomId,
+      buyer_id: buyerId,
+      landlord_id: userData.id,
+    });
+
+    const room = await roomSchema.findById(roomId);
+    const tenant = await user.findById(buyerId);
+
+    sendDeclineEmail(
+      purchase.buyer_name,
+      roomId,
+      room.basic.name,
+      tenant.Email
+    );
+
+    console.log(purchase);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const sendDeclineEmail = async (buyer_name, roomId, roomName, email) => {
+  console.log({
+    buyer_name,
+    roomId,
+    roomName,
+    email,
+  });
+  try {
+    await transporter.sendMail({
+      from: "RoomFinderNepal@np.nepal",
+      to: email,
+      subject: "Room Post Application Mail",
+      html: ` 
+  <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Declined Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            max-width: 600px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        .header {
+            color: #e74c3c;
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .content {
+            margin: 25px 0;
+        }
+        .details-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .detail-item {
+            margin: 10px 0;
+            color: #555;
+        }
+        .detail-item strong {
+            color: #333;
+            width: 120px;
+            display: inline-block;
+        }
+        .action-button {
+            display: inline-block;
+            background: #e74c3c;
+            color: white !important;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h2>Payment Not Received</h2>
+        </div>
+        
+        <div class="content">
+            <p>Dear ${buyer_name},</p>
+            
+            <p>We regret to inform you that your payment for the room application has not be accepted. As a result, your application for <strong>${roomName}</strong> has been declined. <br /> Please pay either with online or cash in hand and contact it with landlord after the payment is made</p>
+            
+            <div class="details-box">
+                <div class="detail-item">
+                  <strong>Room Name:</strong> ${roomId}
+                    <strong>Room Name:</strong> ${roomName}
+                </div>
+                <div class="detail-item">
+                    <strong>Applicant Name:</strong> ${buyer_name}
+                </div>
+                <div class="detail-item">
+                    <strong>Status:</strong> <span style="color: #e74c3c;">Declined</span>
+                </div>
+            </div>
+
+            <p>Please take the following actions:</p>
+            <ul style="color: #555; line-height: 1.6;">
+                <li>Verify your payment method details</li>
+                <li>Ensure sufficient funds are available</li>
+                <li>Contact your financial institution if needed</li>
+            </ul>
+
+            // <center>
+            //     <a href="[Your_Portal_Link]" class="action-button">
+            //         View Application Details
+            //     </a>
+            // </center>
+        </div>
+
+        <div class="footer">
+            <p>If you believe this is an error, please contact our support team immediately.</p>
+            <p>© 2024 Room Finder Nepal. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+  `,
+    });
+    return;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  userkhaltiPayment,
+  saveDetails,
+  saveCashDetails,
+  getCashOnHandStatus,
+  getCashOnHandStatusForLandlord,
+  accpetPayment,
+  declinePayment,
+};

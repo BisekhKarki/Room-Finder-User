@@ -8,6 +8,7 @@ import SingleApplication from "./SingleApplication";
 
 interface Props {
   roomId: string;
+  landlordId: string;
 }
 interface TenantApplication {
   _id: string;
@@ -51,7 +52,7 @@ interface TenantApplication {
   };
 }
 
-const Applications = ({ roomId }: Props) => {
+const Applications = ({ roomId, landlordId }: Props) => {
   const [token, setToken] = useState<string>("");
   const getToken = GetToken();
 
@@ -74,6 +75,7 @@ const Applications = ({ roomId }: Props) => {
     if (token) {
       getApplications();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const getApplications = async () => {
@@ -108,6 +110,8 @@ const Applications = ({ roomId }: Props) => {
           setShowSingle={setShowSingle}
           showSingle={showSingle}
           token={token}
+          roomId={roomId}
+          landlordId={landlordId}
         />
       ) : (
         <div className="flex gap-5 flex-wrap">

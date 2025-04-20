@@ -1,6 +1,5 @@
 "use client";
-import Khalti from "@/components/payment/Khalti";
-import Stripe from "@/components/payment/Stripe";
+
 import Description from "@/components/RoomView/Description";
 import Overview from "@/components/RoomView/Overview";
 import Features from "@/components/RoomView/Features";
@@ -19,6 +18,7 @@ import AdditionalDetails from "@/components/RoomView/AdditionalDetails";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import Applications from "@/components/RentApplications/Applications";
+import { GetToken } from "@/constants/GetToken";
 
 export interface ContactData {
   email: string;
@@ -87,8 +87,12 @@ const Page = () => {
     }
   }, [userLandlordId]);
 
+  const token = GetToken();
+
   const getMyPendingRooms = async () => {
     setLoading(true);
+
+    if (!token) return;
 
     try {
       const response = await fetch(
@@ -97,6 +101,7 @@ const Page = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ landlordId: landlordId }),
         }
@@ -107,8 +112,8 @@ const Page = () => {
         setPending(data.message);
         setLoading(false);
       }
-    } catch (error: any) {
-      toast.error("Internal Server Error");
+    } catch (error: unknown) {
+      toast.error(String(error));
     } finally {
       setLoading(false);
     }
@@ -118,6 +123,7 @@ const Page = () => {
     if (landlordId && landlordId != "") {
       getMyPendingRooms();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [landlordId]);
 
   return (
@@ -191,15 +197,24 @@ const Page = () => {
                       <div className="w-1/4 border mt-10 rounded-md border-gray-200">
                         <div className="px-5 py-5">
                           <ContactDetails contact={pending.contact} />
-                          <AdditionalDetails
-                            payment={pending.payment}
-                            verified={pending.isVerified}
-                          />
+                          {pending.payment ? (
+                            ""
+                          ) : (
+                            <AdditionalDetails
+                              payment={pending.payment}
+                              verified={pending.isVerified}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
                   )}
-                  {buttonIndex === 2 && <Applications roomId={id} />}
+                  {id && buttonIndex === 2 && (
+                    <Applications
+                      roomId={id as string}
+                      landlordId={landlordId as string}
+                    />
+                  )}
                 </div>
               </>
             )

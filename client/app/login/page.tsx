@@ -20,11 +20,12 @@ import axios from "axios";
 
 import { FcGoogle } from "react-icons/fc";
 import * as z from "zod";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
+import logo from "@/public/assets/Logo.png";
+import Image from "next/image";
 
 const formSchema = z.object({
   email: z.string().min(1, "Enter at least 1 character"),
-  user: z.string(),
   password: z.string().min(6, "Password must be more than 6 characters"),
 });
 
@@ -41,6 +42,7 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("Hellow world");
     try {
       const response = await fetch("http://localhost:4000/api/user/login", {
         method: "POST",
@@ -50,21 +52,20 @@ const LoginPage = () => {
         body: JSON.stringify({
           Email: values.email,
           Password: values.password,
-          UserType: values.user,
         }),
         credentials: "include",
       });
 
       const data = await response.json();
-      if (response.status !== 200) {
-        toast.error(data.message);
-      } else {
+      if (response.status === 200) {
         toast.success(data.message);
         localStorage.setItem("Token", data.token);
         router.push(data.redirect);
+      } else {
+        toast.error(data.message);
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error: unknown) {
+      toast.error(String(error) || "An error occurred");
     }
   };
 
@@ -77,17 +78,17 @@ const LoginPage = () => {
       } else {
         toast.error("Failed to initiate Google login");
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error: unknown) {
+      toast.error(String(error) || "An error occurred");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-200 px-4">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-6 md:p-10">
-        <h1 className="font-bold text-2xl md:text-3xl text-gray-800 text-center">
-          Login
-        </h1>
+        <div className="flex justify-center items-center">
+          <Image className="" src={logo} width={100} height={100} alt="logo" />
+        </div>
         <Form {...form}>
           <form
             className="space-y-4 mt-6"
@@ -112,30 +113,7 @@ const LoginPage = () => {
                 </FormItem>
               )}
             />
-            {/* User Type Field */}
-            <FormField
-              name="user"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User Type</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      className="w-full bg-white border rounded-md px-3 py-2"
-                      aria-label="Select an option"
-                    >
-                      <option value="" disabled>
-                        Select a user type
-                      </option>
-                      <option value="Tenants">Tenants</option>
-                      <option value="Landlord">Landlord</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             {/* Password Field */}
             <FormField
               name="password"
@@ -179,7 +157,7 @@ const LoginPage = () => {
             </p>
 
             {/* Buttons */}
-            <div className="">
+            <div className="space-y-2">
               <Button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
@@ -200,7 +178,7 @@ const LoginPage = () => {
 
         {/* Signup Redirect */}
         <p className="mt-4 text-center text-gray-600">
-          Don’t have an account?{" "}
+          Dont have an account?{" "}
           <span
             onClick={() => router.push("/signup")}
             className="text-blue-500 underline cursor-pointer"

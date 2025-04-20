@@ -18,8 +18,6 @@ const ContactLandlord = ({ landlordEmail, landlordName }: Props) => {
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
-  console.log(landlordName);
-
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

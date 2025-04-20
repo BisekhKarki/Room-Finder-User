@@ -1,5 +1,4 @@
 const rentApproval = require("../../../Schemas/RentApproval");
-const approved = require("../../../Schemas/RentApprovedSchema");
 
 const application = async (req, res) => {
   const { id } = req.params;
@@ -28,10 +27,7 @@ const application = async (req, res) => {
 
 const getApprovedApplications = async (req, res) => {
   const { roomId, landlordId } = req.params;
-  console.log({
-    landlordId,
-    roomId,
-  });
+
   try {
     const id = req.userData.id;
     const findApplication = await rentApproval.findOne({
@@ -48,7 +44,7 @@ const getApprovedApplications = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: findApplication.accepted,
+      message: findApplication.status,
     });
   } catch (error) {
     return res.status(500).json({

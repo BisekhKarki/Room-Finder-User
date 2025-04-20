@@ -18,6 +18,8 @@ const roomRouter = require("./Routes/Rooms");
 const rentedRouter = require("./Routes/Rented");
 const { scheduleUserEmails } = require("./lib/Automatic");
 
+const homeRouter = require("./Routes/HomeRoute");
+
 app.use(express.json());
 app.use(passport.initialize());
 app.use(
@@ -35,6 +37,8 @@ connect();
 scheduleUserEmails();
 
 // Validate User
+// for home router
+app.use("/api", homeRouter);
 
 // For user Routes
 app.use("/api/user", userRouter);

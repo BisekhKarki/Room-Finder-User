@@ -26,7 +26,7 @@ const forApproval = new mongoose.Schema({
     city: {
       type: String,
     },
-    Province: {
+    province: {
       type: String,
     },
     landmark: {

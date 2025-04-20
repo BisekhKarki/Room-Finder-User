@@ -23,7 +23,9 @@ const UserNavbar = () => {
   const menuRef = useRef(null);
 
   const logoutUser = () => {
+    localStorage.removeItem("Token");
     dispatch(logout());
+    router.push("/");
   };
 
   const navLists = [

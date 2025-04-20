@@ -4,9 +4,10 @@ const {
   getAllRooms,
   getRoomById,
 } = require("../Controller/landlord/GetMyRooms");
+const protectRoute = require("../middleware/ProtectionRoute");
 
 // For approval posting router
-router.post("/allRooms", getAllRooms);
-router.post("/SingleRoom/:id", getRoomById);
+router.post("/allRooms", protectRoute, getAllRooms);
+router.post("/SingleRoom/:id", protectRoute, getRoomById);
 
 module.exports = router;

@@ -77,6 +77,7 @@ const BasicDetails = ({ counter, setCounter }: Props) => {
           value={type}
           className="w-[36rem] h-12 bg-white border rounded-md px-3 py-2"
           onChange={(e) => setType(e.target.value)}
+          aria-label="Type"
         >
           <option>--- Select Type ---</option>
           <option>Residental Properties</option>
@@ -88,7 +89,7 @@ const BasicDetails = ({ counter, setCounter }: Props) => {
           placeholder="Price"
           className="w-[36rem] h-12"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => setPrice(Number(e.target.value))}
         />
         <Input
           placeholder="title"

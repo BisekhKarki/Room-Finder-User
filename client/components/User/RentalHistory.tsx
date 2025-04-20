@@ -8,8 +8,7 @@ interface RentalHistoryProps {
   setHistory: (value: string) => void;
   length: string;
   setLength: (value: string) => void;
-  landlordContact: string;
-  setLandlordContact: (value: string) => void;
+
   reason: string;
   setReason: (value: string) => void;
 }
@@ -19,8 +18,7 @@ const RentalHistory = ({
   setHistory,
   length,
   setLength,
-  landlordContact,
-  setLandlordContact,
+
   reason,
   setReason,
 }: RentalHistoryProps) => {
@@ -42,12 +40,7 @@ const RentalHistory = ({
           onChange={(e) => setLength(e.target.value)}
         />
       </div>
-      <Input
-        className=""
-        placeholder="Current Landlord Contact Number"
-        value={landlordContact}
-        onChange={(e) => setLandlordContact(e.target.value)}
-      />
+
       <Textarea
         className=""
         placeholder="Reason for Leaving Previous Rental"

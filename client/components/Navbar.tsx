@@ -6,11 +6,11 @@ import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { IoReorderThree } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { FaUser } from "react-icons/fa";
-import { AppDispatch, RootState } from "@/store/store";
-import { logout } from "@/store/slice";
+import { RootState } from "@/store/store";
+// import { logout } from "@/store/slice";
 
 const Navbar = () => {
   const router = useRouter();
@@ -18,17 +18,18 @@ const Navbar = () => {
   const [showMobileNavbar, setMobileNavbar] = useState(false);
   const closeNavbarMobile = useRef(null);
   const { validToken } = useSelector((state: RootState) => state.slice);
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
   const logoutUser = () => {
-    dispatch(logout());
+    localStorage.removeItem("Token");
+    router.push("/");
   };
 
   const navLists = [
     { name: "Home", path: "/" },
-    { name: "Our Services", path: "/OurServices" },
+    { name: "Our Services", path: "/ourservices" },
     { name: "Categories", path: "/categories" },
     { name: "Contact Us", path: "/contact-us" },
     { name: "Properties Available", path: "/properties" },

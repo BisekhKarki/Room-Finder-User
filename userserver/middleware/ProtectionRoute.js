@@ -24,6 +24,7 @@ const protectRoute = async (req, res, next) => {
     }
 
     req.userData = decodeUser;
+    // console.log(req.userData);
     next();
   } catch (error) {
     return res.status(500).json({

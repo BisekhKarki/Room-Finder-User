@@ -6,6 +6,8 @@ import success from "../../../assets/Successpayment.png";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ImCross } from "react-icons/im";
 import toast from "react-hot-toast";
+import { GetToken } from "@/constants/GetToken";
+import { base_url } from "@/constants/BaseUrl";
 
 const Page = () => {
   const router = useRouter();
@@ -28,6 +30,7 @@ const Page = () => {
     if (getRoomId != "" && getStatus != "") {
       paymentSuccessfull();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getRoomId, getLandlordId, getStatus]);
 
   console.log({
@@ -35,6 +38,7 @@ const Page = () => {
     landlordId: getLandlordId,
     roomId: getRoomId,
   });
+  const token = GetToken();
 
   const paymentSuccessfull = async () => {
     try {
@@ -44,6 +48,7 @@ const Page = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             status: getStatus,
@@ -61,6 +66,29 @@ const Page = () => {
     } catch (error: unknown) {
       toast.error("Internal server error");
       console.log(String(error));
+    }
+  };
+
+  const savePaymentDetails = async () => {
+    try {
+      const response = await fetch(`${base_url}/payment/pending/save`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          roomId: getRoomId,
+          status: getStatus,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.success && response.status === 200) {
+        router.push("/landlord/MyRooms");
+      }
+    } catch (error: unknown) {
+      toast.error(String(error));
     }
   };
 
@@ -83,7 +111,7 @@ const Page = () => {
           </div>
           <Button
             className="absolute top-5 right-4 bg-red-500 hover:bg-red-600 border-none"
-            onClick={() => router.push("/landlord/MyRooms")}
+            onClick={() => savePaymentDetails()}
           >
             <ImCross />
           </Button>
