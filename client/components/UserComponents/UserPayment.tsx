@@ -150,8 +150,6 @@ const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
     getPaymentStatus();
   }, [landlord_id, roomId, token]);
 
-  console.log(status);
-
   return (
     <>
       {status === "pending" ? (

@@ -146,31 +146,14 @@ const PropertiesSection = () => {
       <div className="">
         {property && property.images && property.images.length > 0 && (
           <div className="relative">
-            <div className="flex px-8 gap-3">
-              <div className="">
-                <Image
-                  src={property?.images[0]}
-                  alt="room images"
-                  width={1200}
-                  height={1300}
-                  className="h-full rounded-md hover:shadow-lg cursor-pointer"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                {property.images &&
-                  property.images
-                    .slice(1)
-                    .map((img, index) => (
-                      <Image
-                        key={index}
-                        src={img}
-                        alt="room images"
-                        width={400}
-                        height={400}
-                        className="rounded-md hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out"
-                      />
-                    ))}
-              </div>
+            <div className="px-8">
+              <Image
+                src={property?.images[0]}
+                alt="room images"
+                width={1500}
+                height={1300}
+                className="h-full rounded-md hover:shadow-lg cursor-pointer"
+              />
             </div>
           </div>
         )}
@@ -226,8 +209,12 @@ const PropertiesSection = () => {
           landlordName={property.contact.username}
         />
       )}
-      {buttonIndex === 4 && <PropertyLocation />}
-      {buttonIndex === 5 && <PropertyImages />}
+      {buttonIndex === 4 && (
+        <PropertyLocation
+          location={property?.location.street + ", " + property?.location.city}
+        />
+      )}
+      {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}
       {buttonIndex === 6 && property && (
         <RentRoom property={property} roomId={id} />
       )}

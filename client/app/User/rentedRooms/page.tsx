@@ -89,6 +89,7 @@ const Page = () => {
     if (token) {
       fetchRoomDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const fetchRoomDetails = async () => {
@@ -113,7 +114,6 @@ const Page = () => {
     <div className="mt-20 mb-14">
       {myroom ? (
         <div>
-          {" "}
           <div className="">
             {myroom && myroom.images && myroom.images.length > 0 && (
               <div className="relative">
@@ -196,9 +196,13 @@ const Page = () => {
             />
           )}
           {buttonIndex === 4 && (
-            <PropertyLocation location={myroom?.location.city} />
+            <PropertyLocation
+              location={myroom?.location.city + ", " + myroom?.location.city}
+            />
           )}
-          {buttonIndex === 5 && <PropertyImages />}
+          {buttonIndex === 5 && (
+            <PropertyImages propertyImage={myroom.images} />
+          )}
           {myroom && buttonIndex === 6 && (
             <RentDetails
               room={myroom}

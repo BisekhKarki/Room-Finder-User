@@ -26,7 +26,7 @@ import { PropertyProps } from "@/app/user/properties/[id]/page";
 
 interface RentRoomProps {
   property: PropertyProps | null;
-  roomId: string;
+  roomId: string | undefined;
 }
 
 const RentRoom = ({ property, roomId }: RentRoomProps) => {

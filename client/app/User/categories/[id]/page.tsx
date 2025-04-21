@@ -60,7 +60,8 @@ const Page = () => {
 
   const token = GetToken();
   useEffect(() => {
-    setId(params.id);
+    setId(params.id as string);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -93,6 +94,8 @@ const Page = () => {
     if (getToken) {
       fetchSingleRooms();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getToken]);
 
   const [applicationStatus, setApplicationStatus] = useState<boolean>(false);
@@ -123,6 +126,7 @@ const Page = () => {
     if (property) {
       getApprovalStatus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -222,8 +226,12 @@ const Page = () => {
           landlordName={property.contact.username}
         />
       )}
-      {buttonIndex === 4 && <PropertyLocation />}
-      {buttonIndex === 5 && <PropertyImages />}
+      {buttonIndex === 4 && (
+        <PropertyLocation
+          location={property?.location.street + ", " + property?.location.city}
+        />
+      )}
+      {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}
       {buttonIndex === 6 &&
         (applicationStatus ? (
           property &&
@@ -237,7 +245,7 @@ const Page = () => {
             />
           )
         ) : (
-          <RentRoom roomId={id} landlordId={property && property.landlordId} />
+          <RentRoom roomId={id} property={property} />
         ))}
     </div>
   );

@@ -32,6 +32,9 @@ const rooms = new mongoose.Schema({
     landmark: {
       type: String,
     },
+    address: {
+      type: String,
+    },
     region: {
       type: String,
     },

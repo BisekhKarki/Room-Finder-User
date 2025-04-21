@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Label } from "../ui/label";
-import RemoveTenantsPopup from "./RemoveTenantsPopup";
 
 interface UserTransaction {
   _id: string;
@@ -98,7 +97,7 @@ const SingleApplication = ({
 }: Props) => {
   const [popup, setPopup] = useState<boolean>(false);
   const [done, setDone] = useState<string>("");
-  const [remove, setRemove] = useState<boolean>(false);
+
   const approveApplication = async () => {
     try {
       const response = await fetch(
@@ -200,13 +199,6 @@ const SingleApplication = ({
         />
       )}
 
-      {remove && (
-        <RemoveTenantsPopup
-          Application={Application}
-          token={token}
-          setRemove={setRemove}
-        />
-      )}
       <div className="text-2xl mb-5 flex items-center gap-1">
         <IoIosArrowRoundBack
           className=" text-gray-800 cursor-pointer"
@@ -264,14 +256,16 @@ const SingleApplication = ({
       ) : applicationStatus?.payment_status === "completed" ? (
         <div className="mt-5 space-y-3">
           <div>
-            <p>Last Rent Given by the user</p>
+            <p className="text-xl font-bold">
+              Last Rent Given by the user on : {""}
+            </p>
           </div>
-          <Button
+          {/* <Button
             onClick={() => setRemove(true)}
             className=" w-1/4 bg-red-500 hover:bg-red-600 "
           >
             Remove Tenant
-          </Button>
+          </Button> */}
         </div>
       ) : (
         <div className="mt-5 space-x-3">

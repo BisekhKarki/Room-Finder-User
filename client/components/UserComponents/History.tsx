@@ -1,13 +1,11 @@
 "use client";
-
 import React from "react";
 import { GoStarFill } from "react-icons/go";
-
 import user from "@/assets/user.png";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 
-export interface reviews {
+export interface Review {
   comment: string;
   rating: number;
   _id: string;
@@ -15,44 +13,63 @@ export interface reviews {
 }
 
 interface Props {
-  review: Array<reviews> | [];
+  review: Array<Review> | [];
 }
 
 const History = ({ review }: Props) => {
   return (
-    <div className="px-10">
-      <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="py-6 border w-full mt-8 px-6 rounded-lg border-gray-200 shadow-sm">
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">
+          Customer Reviews
+        </h2>
+
         {review && review.length > 0 ? (
-          <div className="flex items-center gap-10 flex-wrap">
-            {review.map((r, k) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {review.map((r) => (
               <div
-                key={k}
-                className="bg-gray-100  rounded border border-gray-300 px-10 py-5 hover:shadow-md cursor-pointer transition-all duration-300 ease-in-out"
+                key={r._id}
+                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-all duration-300 ease-in-out flex flex-col"
               >
-                <div className="space-y-1 flex gap-4">
-                  <Image src={user} width={50} height={45} alt="user" />
-                  <div className="space-y-1">
-                    <div>
-                      <p className="text-sm">Review by User</p>
-                      <div>
-                        <div className="flex ">
-                          {[1, 2, 3, 4, 5].map((s, k) => (
-                            <GoStarFill
-                              key={k}
-                              className={`${
-                                s <= r.rating
-                                  ? "text-yellow-300"
-                                  : "text-gray-300"
-                              } text-sm `}
-                            />
-                          ))}
-                        </div>
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={user}
+                      width={50}
+                      height={50}
+                      alt="user"
+                      className="rounded-full border-2 border-gray-200"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-medium text-gray-800">
+                      Anonymous User
+                    </h3>
+                    <div className="flex items-center mt-1">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <GoStarFill
+                            key={star}
+                            className={`${
+                              star <= r.rating
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            } text-sm`}
+                          />
+                        ))}
                       </div>
+                      <span className="ml-2 text-xs text-gray-500">
+                        {r.rating.toFixed(1)}/5
+                      </span>
                     </div>
                   </div>
                 </div>
-                <p className="text-sm ml-10">{r.comment}</p>
-                <p className="text-end mt-5 text-sm">
+
+                <p className="text-gray-600 text-sm mb-4 flex-grow">
+                  {r.comment}
+                </p>
+
+                <p className="text-xs text-gray-400 text-right mt-auto">
                   {formatDistanceToNow(new Date(r.created_at), {
                     addSuffix: true,
                   })}
@@ -61,7 +78,12 @@ const History = ({ review }: Props) => {
             ))}
           </div>
         ) : (
-          <div>No reviews made</div>
+          <div className="text-center py-10">
+            <div className="text-gray-500 mb-2">No reviews yet</div>
+            <p className="text-sm text-gray-400">
+              Be the first to leave a review!
+            </p>
+          </div>
         )}
       </div>
     </div>
