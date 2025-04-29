@@ -1,4 +1,5 @@
 const rentApproval = require("../../../Schemas/RentApproval");
+const rented = require("../../../Schemas/RentedRoomSchema");
 
 const application = async (req, res) => {
   const { id } = req.params;
@@ -54,4 +55,30 @@ const getApprovedApplications = async (req, res) => {
   }
 };
 
-module.exports = { application, getApprovedApplications };
+const checkRentedRoom = async (req, res) => {
+  const userData = req.userData;
+  try {
+    const findApplication = await rented.findOne({
+      rented_by: userData.id,
+    });
+
+    if (!findApplication) {
+      return res.status(200).json({
+        success: false,
+        message: false,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { application, getApprovedApplications, checkRentedRoom };

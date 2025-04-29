@@ -88,75 +88,82 @@ const Page = () => {
   return (
     <div>
       {loading ? (
-        <div>
+        <div className="flex justify-center items-center h-[80vh]">
           <ClipLoader
             color={"blue"}
             loading={loading}
-            // cssOverride={override}
-            size={150}
+            size={120}
             aria-label="Loading Spinner"
             data-testid="loader"
           />
         </div>
       ) : pending && pending.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 px-10 py-5 mb-40 mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 lg:gap-4 px-2 sm:px-4 md:px-6 py-3 mb-10 md:mb-16 mt-3 md:mt-4">
           {pending.map((pend, index) => (
-            <React.Fragment key={index}>
-              <div className="w-full max-w-sm mx-auto shadow-xl rounded-lg border hover:cursor-pointer border-gray-300 hover:-translate-y-2 transition-all duration-200 ease-in-out">
-                <div className="h-96">
-                  <div className="relative">
-                    <Image
-                      src={pend.images[0]}
-                      alt="images"
-                      width={400}
-                      height={300}
-                      className="w-full h-52 object-cover rounded-t-md"
-                    />
-                    <p className="bg-red-500 text-white px-2 py-1 text-xs w-24 absolute shadow-md hover:bg-red-600 top-0 left-0 rounded-tl-md">
+            <div
+              key={index}
+              className="w-full mx-auto shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-150 ease-in-out overflow-hidden"
+            >
+              <div className="min-h-[260px] md:min-h-[220px] flex flex-col">
+                <div className="relative aspect-[3/2]">
+                  <Image
+                    src={pend.images[0]}
+                    alt="Property image"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 28vw"
+                  />
+                  <div className="absolute top-0 w-full flex justify-between">
+                    <span className="bg-red-500 text-white px-1.5 py-0.5 text-[0.65rem] md:text-xs font-medium rounded-br">
                       {pend.payment ? "Payment Done" : "Payment Left"}
-                    </p>
-                    <p className="bg-yellow-300 text-gray-500 px-2 py-1 text-xs w-24 absolute shadow-md hover:bg-yellow-400 top-0 right-0 rounded-tr-md">
+                    </span>
+                    <span className="bg-yellow-300 text-gray-700 px-1.5 py-0.5 text-[0.65rem] md:text-xs font-medium rounded-bl">
                       {pend.isVerified ? "Verified" : "Unverified"}
-                    </p>
-                  </div>
-                  <p className="text-center bg-blue-400 text-white">
-                    {pend.basic.type}
-                  </p>
-                  <div className="px-5">
-                    <h1 className="text-md font-semibold font-sans mt-2">
-                      {pend.basic.name}
-                    </h1>
-                    <div className="flex justify-between">
-                      <h2 className="text-base font-sans text-gray-600 py-1">
-                        Rs: {pend.basic.price}
-                      </h2>
-                      <p className="font-sans text-gray-600">
-                        {pend.features.category}
-                      </p>
-                    </div>
-                    <p className="flex flex-row items-center text-sm gap-1">
-                      <IoLocation className="text-red-700 text-xl" />
-                      {pend.location.city}, {pend.location.street}
-                    </p>
-                    <div className="flex justify-center mt-3 mb-4">
-                      <Button
-                        className="w-full bg-blue-500 hover:bg-blue-600"
-                        onClick={() =>
-                          router.push(`/landlord/MyRooms/${pend._id}`)
-                        }
-                      >
-                        View Details
-                      </Button>
-                    </div>
+                    </span>
                   </div>
                 </div>
+
+                <div className="p-2 md:p-3 flex-1 flex flex-col">
+                  <p className="text-center bg-blue-100 text-blue-800 text-xs md:text-sm py-0.5 rounded-sm mb-1">
+                    {pend.basic.type}
+                  </p>
+
+                  <h2 className="text-sm md:text-base font-medium mb-1 line-clamp-1">
+                    {pend.basic.name}
+                  </h2>
+
+                  <div className="flex justify-between items-center mb-1">
+                    <p className="text-xs md:text-sm font-medium text-gray-800">
+                      Rs: {pend.basic.price}
+                    </p>
+                    <span className="text-[0.65rem] md:text-xs text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">
+                      {pend.features.category}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-[0.65rem] md:text-xs text-gray-600 mt-auto">
+                    <IoLocation className="text-red-600 shrink-0 text-xs" />
+                    <p className="line-clamp-1">
+                      {pend.location.city}, {pend.location.street}
+                    </p>
+                  </div>
+
+                  <Button
+                    className="w-full mt-1.5 bg-blue-600 hover:bg-blue-700 text-xs md:text-sm py-1"
+                    onClick={() => router.push(`/landlord/MyRooms/${pend._id}`)}
+                  >
+                    View Details
+                  </Button>
+                </div>
               </div>
-            </React.Fragment>
+            </div>
           ))}
         </div>
       ) : (
-        <div className="h-[80.5vh] flex justify-center items-center">
-          <p className="text-3xl font-bold">No Rooms for pending</p>
+        <div className="h-[80vh] flex justify-center items-center">
+          <p className="text-base md:text-lg font-medium text-gray-600 text-center px-4">
+            No Pending Rooms Available
+          </p>
         </div>
       )}
     </div>

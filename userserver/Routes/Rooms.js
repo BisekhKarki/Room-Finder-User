@@ -5,7 +5,10 @@ const {
   getSingleRoomDetailsForTenants,
   getAllRooms,
 } = require("../Controller/Tenants/GetRooms");
-const { getCategoryRooms } = require("../Controller/Tenants/Rent/Rooms");
+const {
+  getCategoryRooms,
+  history,
+} = require("../Controller/Tenants/Rent/Rooms");
 const { filterSearch } = require("../Controller/Tenants/SearchRooms");
 const router = express.Router();
 
@@ -18,6 +21,7 @@ router.get(
 );
 
 router.get("/rooms/filter/:category", protectRoute, getCategoryRooms);
+router.get("/rooms/history", protectRoute, history);
 
 router.post("/room/search", protectRoute, filterSearch);
 

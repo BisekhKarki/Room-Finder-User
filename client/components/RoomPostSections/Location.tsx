@@ -63,39 +63,42 @@ const Location = ({ counter, setCounter }: Props) => {
   };
 
   return (
-    <div>
-      <div>
-        <div className="flex gap-10 mb-7">
-          <div className="w-1/2">
+    <div className="px-4 md:px-0">
+      <div className="space-y-6">
+        {/* Street Address & Zip Code */}
+        <div className="flex flex-col md:flex-row gap-4 md:gap-10">
+          <div className="w-full md:w-1/2">
             <Input
               placeholder="Street Address"
-              className="h-12"
+              className="h-12 w-full"
               value={street}
               onChange={(e) => setStreet(e.target.value)}
             />
           </div>
-          <div className="w-1/2">
+          <div className="w-full md:w-1/2">
             <Input
-              placeholder="zip/Postal code"
-              className="h-12"
+              placeholder="Zip/Postal Code"
+              className="h-12 w-full"
               value={zip}
               onChange={(e) => setZip(e.target.value)}
             />
           </div>
         </div>
-        <div className="flex gap-8 mb-7">
-          <div className="w-1/2">
+
+        {/* City & Province */}
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+          <div className="w-full md:w-1/2">
             <Input
-              placeholder="city"
-              className="h-12"
+              placeholder="City"
+              className="h-12 w-full"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
           </div>
-          <div className="w-1/2">
+          <div className="w-full md:w-1/2">
             <select
               value={province}
-              className="w-full h-12 bg-white border rounded-md px-3 py-2"
+              className="w-full h-12 bg-background border rounded-md px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               onChange={(e) => setProvince(e.target.value)}
               aria-label="Province"
             >
@@ -110,37 +113,39 @@ const Location = ({ counter, setCounter }: Props) => {
             </select>
           </div>
         </div>
-        <div className="w-full mb-7">
+
+        {/* Region & Landmark */}
+        <div className="w-full space-y-6">
           <Input
             placeholder="Region/Neighbourhood"
-            className="h-12"
+            className="h-12 w-full"
             value={region}
             onChange={(e) => setRegion(e.target.value)}
           />
-        </div>
-        <div className="w-full">
           <Input
-            placeholder="landmark"
-            className="h-20 "
+            placeholder="Landmark"
+            className="h-20 w-full"
             value={landmark}
             onChange={(e) => setLandmark(e.target.value)}
           />
         </div>
       </div>
-      <div className="flex justify-center gap-5">
+
+      {/* Buttons */}
+      <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
         <Button
           type="button"
-          className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
-          onClick={() => setLocationDetails()}
+          className="w-full md:w-32 bg-blue-400 hover:bg-blue-500 order-2 md:order-1"
+          onClick={() => setCounter(counter - 1)}
         >
-          Next <RxArrowRight />
+          <RxArrowLeft className="mr-2" /> Previous
         </Button>
         <Button
           type="button"
-          className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
-          onClick={() => setCounter(counter - 1)}
+          className="w-full md:w-32 bg-blue-400 hover:bg-blue-500 order-1 md:order-2"
+          onClick={() => setLocationDetails()}
         >
-          <RxArrowLeft /> Previous
+          Next <RxArrowRight className="ml-2" />
         </Button>
       </div>
     </div>

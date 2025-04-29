@@ -199,13 +199,14 @@ const SingleApplication = ({
         />
       )}
 
-      <div className="text-2xl mb-5 flex items-center gap-1">
+      {/* Back Button */}
+      <div className="text-xl md:text-2xl mb-4 md:mb-5 flex items-center gap-2">
         <IoIosArrowRoundBack
-          className=" text-gray-800 cursor-pointer"
+          className="text-gray-800 cursor-pointer text-2xl md:text-3xl"
           onClick={() => setShowSingle(false)}
         />
         <p
-          className="text-base cursor-pointer"
+          className="text-sm md:text-base cursor-pointer hover:underline"
           onClick={() => setShowSingle(false)}
         >
           Back
@@ -213,7 +214,7 @@ const SingleApplication = ({
       </div>
 
       {Application && (
-        <div className="space-y-10 mt-10 mb-10">
+        <div className="space-y-6 md:space-y-8 mt-6 md:mt-8 mb-6 md:mb-8">
           <PersonalDetails Personal_Details={Application.personalDetails} />
           <EmploymentAndIncome
             IncomeDetails={Application.employment_and_income}
@@ -225,11 +226,14 @@ const SingleApplication = ({
           <UserImages images={Application.images} />
         </div>
       )}
+
       {applicationStatus?.payment_status === "pending" &&
       Application?.tenantId === applicationStatus?.buyer_id ? (
-        <div className="mt-5 space-y-3">
-          <div>
-            <Label htmlFor="payment_method">Payment made by the renter</Label>
+        <div className="mt-4 md:mt-6 space-y-2 md:space-y-3">
+          <div className="w-full">
+            <Label htmlFor="payment_method" className="text-sm md:text-base">
+              Payment made by the renter
+            </Label>
             <Select
               value={done}
               onValueChange={(value: string) => setDone(value)}
@@ -247,39 +251,36 @@ const SingleApplication = ({
             </Select>
           </div>
           <Button
-            className="mt-2  w-1/4 bg-red-500 hover:bg-red-600 "
+            className="w-full md:w-1/3 bg-red-500 hover:bg-red-600 py-3"
             onClick={() => approvePayment()}
           >
             Submit
           </Button>
         </div>
       ) : applicationStatus?.payment_status === "completed" ? (
-        <div className="mt-5 space-y-3">
+        <div className="mt-4 md:mt-6 space-y-2 md:space-y-3">
           <div>
-            <p className="text-xl font-bold">
-              Last Rent Given by the user on : {""}
+            <p className="text-lg md:text-xl font-semibold">
+              Last Rent Given by the user on: {""}
+              <span className="block md:inline text-sm md:text-base font-normal">
+                {/* Add date here */}
+              </span>
             </p>
           </div>
-          {/* <Button
-            onClick={() => setRemove(true)}
-            className=" w-1/4 bg-red-500 hover:bg-red-600 "
-          >
-            Remove Tenant
-          </Button> */}
         </div>
       ) : (
-        <div className="mt-5 space-x-3">
+        <div className="mt-4 md:mt-6 flex flex-col md:flex-row gap-2 md:gap-3">
           <Button
-            className=" w-1/4 bg-blue-500 hover:bg-blue-600 "
+            className="w-full md:w-1/3 bg-blue-500 hover:bg-blue-600 py-3"
             onClick={() => approveApplication()}
           >
-            Approve Applications
+            Approve Application
           </Button>
           <Button
-            className=" w-1/4 bg-red-500 hover:bg-red-600 "
+            className="w-full md:w-1/3 bg-red-500 hover:bg-red-600 py-3"
             onClick={() => setPopup(true)}
           >
-            Decline Applications
+            Decline Application
           </Button>
         </div>
       )}

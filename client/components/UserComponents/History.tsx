@@ -18,31 +18,31 @@ interface Props {
 
 const History = ({ review }: Props) => {
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="py-6 border w-full mt-8 px-6 rounded-lg border-gray-200 shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">
+    <div className="px-4 xs:px-5 sm:px-6 lg:px-8">
+      <div className="py-4 sm:py-6 border w-full mt-6 sm:mt-8 px-4 sm:px-6 rounded-lg border-gray-200 shadow-sm">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
           Customer Reviews
         </h2>
 
         {review && review.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {review.map((r) => (
               <div
                 key={r._id}
-                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-all duration-300 ease-in-out flex flex-col"
+                className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-all duration-300 ease-in-out flex flex-col"
               >
-                <div className="flex items-start gap-4 mb-4">
+                <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
                   <div className="flex-shrink-0">
                     <Image
                       src={user}
-                      width={50}
-                      height={50}
+                      width={40}
+                      height={40}
                       alt="user"
-                      className="rounded-full border-2 border-gray-200"
+                      className="rounded-full border-2 border-gray-200 w-8 h-8 sm:w-10 sm:h-10"
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-medium text-gray-800">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-800">
                       Anonymous User
                     </h3>
                     <div className="flex items-center mt-1">
@@ -54,22 +54,22 @@ const History = ({ review }: Props) => {
                               star <= r.rating
                                 ? "text-yellow-400"
                                 : "text-gray-300"
-                            } text-sm`}
+                            } text-xs sm:text-sm`}
                           />
                         ))}
                       </div>
-                      <span className="ml-2 text-xs text-gray-500">
+                      <span className="ml-2 text-[10px] sm:text-xs text-gray-500">
                         {r.rating.toFixed(1)}/5
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm mb-4 flex-grow">
+                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 flex-grow">
                   {r.comment}
                 </p>
 
-                <p className="text-xs text-gray-400 text-right mt-auto">
+                <p className="text-[10px] xs:text-xs text-gray-400 text-right mt-auto">
                   {formatDistanceToNow(new Date(r.created_at), {
                     addSuffix: true,
                   })}
@@ -78,9 +78,11 @@ const History = ({ review }: Props) => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-10">
-            <div className="text-gray-500 mb-2">No reviews yet</div>
-            <p className="text-sm text-gray-400">
+          <div className="text-center py-6 sm:py-8">
+            <div className="text-sm sm:text-base text-gray-500 mb-2">
+              No reviews yet
+            </div>
+            <p className="text-xs sm:text-sm text-gray-400">
               Be the first to leave a review!
             </p>
           </div>

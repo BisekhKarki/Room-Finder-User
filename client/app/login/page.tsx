@@ -23,6 +23,7 @@ import * as z from "zod";
 import { toast } from "react-hot-toast";
 import logo from "@/public/assets/Logo.png";
 import Image from "next/image";
+import { base_url } from "@/constants/BaseUrl";
 
 const formSchema = z.object({
   email: z.string().min(1, "Enter at least 1 character"),
@@ -44,7 +45,7 @@ const LoginPage = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("Hellow world");
     try {
-      const response = await fetch("http://localhost:4000/api/user/login", {
+      const response = await fetch(`${base_url}/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +72,7 @@ const LoginPage = () => {
 
   const google = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/user/google");
+      const response = await axios.get(`${base_url}/user/google`);
       if (response.status === 200 && response.data.url) {
         window.location.href = response.data.url;
         toast.success("Logged in successfully");
@@ -84,14 +85,23 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200 px-4">
-      <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-6 md:p-10">
-        <div className="flex justify-center items-center">
-          <Image className="" src={logo} width={100} height={100} alt="logo" />
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6 md:p-8 transition-all duration-200 hover:shadow-lg transform hover:scale-[1.005]">
+        {/* Logo Container */}
+        <div className="flex justify-center items-center mb-6 md:mb-8">
+          <Image
+            src={logo}
+            alt="Company Logo"
+            className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0"
+            width={80}
+            height={80}
+            priority
+          />
         </div>
+
         <Form {...form}>
           <form
-            className="space-y-4 mt-6"
+            className="flex flex-col gap-6"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             {/* Email Field */}
@@ -99,17 +109,19 @@ const LoginPage = () => {
               name="email"
               control={form.control}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm md:text-base font-medium">
+                    Email
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       {...field}
                       type="email"
-                      className="w-full"
+                      className="w-full py-3 md:py-3.5 text-sm md:text-base"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -119,72 +131,77 @@ const LoginPage = () => {
               name="password"
               control={form.control}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm md:text-base font-medium">
+                    Password
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         {...field}
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
-                        className="w-full"
+                        className="w-full py-3 md:py-3.5 text-sm md:text-base pr-10"
                       />
-                      <div className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer">
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
                         {showPassword ? (
-                          <BsEye
-                            onClick={() => setShowPassword(false)}
-                            className="h-5 w-5 text-gray-500"
-                          />
+                          <BsEye className="h-5 w-5" />
                         ) : (
-                          <IoIosEyeOff
-                            onClick={() => setShowPassword(true)}
-                            className="h-5 w-5 text-gray-500"
-                          />
+                          <IoIosEyeOff className="h-5 w-5" />
                         )}
-                      </div>
+                      </button>
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
-            {/* Signup Redirect */}
-            <p
-              className="mt-4 text-center  text-blue-500 underline cursor-pointer"
-              onClick={() => router.push("/ResetPassword")}
-            >
-              Forgot Password?
-            </p>
+
+            {/* Forgot Password */}
+            <div className="-mt-2 text-right">
+              <button
+                type="button"
+                onClick={() => router.push("/ResetPassword")}
+                className="text-xs md:text-sm text-blue-600 hover:text-blue-700 underline font-medium"
+              >
+                Forgot Password?
+              </button>
+            </div>
 
             {/* Buttons */}
-            <div className="space-y-2">
+            <div className="flex flex-col gap-3">
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+                className="w-full py-3 md:py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base font-medium"
               >
                 Login
               </Button>
+
               <Button
                 onClick={google}
                 type="button"
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-md flex items-center justify-center gap-2"
+                className="w-full py-3 md:py-3.5 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-sm md:text-base font-medium"
               >
-                <FcGoogle className="text-lg" />
-                Login with Google
+                <FcGoogle className="text-xl mr-2" />
+                Continue with Google
               </Button>
             </div>
           </form>
         </Form>
 
-        {/* Signup Redirect */}
-        <p className="mt-4 text-center text-gray-600">
+        {/* Signup Link */}
+        <p className="mt-6 text-center text-xs md:text-sm text-gray-600">
           Dont have an account?{" "}
-          <span
+          <button
             onClick={() => router.push("/signup")}
-            className="text-blue-500 underline cursor-pointer"
+            className="text-blue-600 hover:text-blue-700 underline font-medium"
           >
-            Signup
-          </span>
+            Sign up
+          </button>
         </p>
       </div>
     </div>

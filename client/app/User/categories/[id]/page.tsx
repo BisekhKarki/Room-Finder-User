@@ -130,61 +130,49 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="mt-10 py-10">
-      <div className="text-2xl mb-5 flex items-center gap-1 ml-8">
+    <div className="mt-6 md:mt-10 py-6 md:py-10 px-4 sm:px-6 lg:px-8">
+      {/* Back Button Section */}
+      <div className="text-lg md:text-2xl mb-4 md:mb-5 flex items-center gap-1 ml-2 sm:ml-4 md:ml-8">
         <IoIosArrowRoundBack
-          className=" text-gray-800 cursor-pointer"
+          className="text-gray-800 cursor-pointer hover:text-gray-600"
           onClick={() => router.push("/user/categories")}
         />
         <p
-          className="text-base cursor-pointer"
+          className="text-sm md:text-base cursor-pointer hover:text-gray-600"
           onClick={() => router.push("/user/categories")}
         >
           Back
         </p>
       </div>
-      <div className="">
-        {property && property.images && property.images.length > 0 && (
-          <div className="relative">
-            <div className="flex px-8 gap-3">
-              <div className="">
-                <Image
-                  src={property?.images[0]}
-                  alt="room images"
-                  width={1200}
-                  height={1300}
-                  className="h-full rounded-md hover:shadow-lg cursor-pointer"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                {property.images &&
-                  property.images
-                    .slice(1)
-                    .map((img, index) => (
-                      <Image
-                        key={index}
-                        src={img}
-                        alt="room images"
-                        width={400}
-                        height={400}
-                        className="rounded-md hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out"
-                      />
-                    ))}
-              </div>
-            </div>
+
+      {/* Main Image Section */}
+      <div className="relative">
+        <div className="flex flex-col lg:flex-row px-2 sm:px-4 md:px-8 gap-2 md:gap-3">
+          <div className="w-full lg:w-2/3 h-48 sm:h-64 md:h-80 lg:h-96">
+            {property?.images?.[0] && (
+              <Image
+                src={property?.images[0]}
+                alt="room images"
+                fill
+                className="object-cover rounded-md hover:shadow-lg cursor-pointer"
+              />
+            )}
           </div>
-        )}
+        </div>
       </div>
-      <hr className="mt-10" />
-      <div className="flex px-10 gap-5">
-        {viewComponentButtons.map((btn, index) => (
+
+      <hr className="mt-6 md:mt-10" />
+
+      {/* Navigation Buttons */}
+      <div className="flex flex-wrap justify-center gap-2 md:gap-3 px-2 sm:px-4 md:px-8 mt-6 md:mt-10">
+        {viewComponentButtons.map((btn) => (
           <Button
-            key={index}
-            className={` ${
+            key={btn.index}
+            className={`text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 py-2 md:py-3 ${
               btn.index === buttonIndex
                 ? "bg-blue-400 text-white hover:bg-blue-500"
-                : "bg-white hover:bg-gray-50  text-black"
-            }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+                : "bg-white text-black hover:bg-gray-50"
+            } border border-gray-200 md:border-300 shadow-sm transition-all`}
             onClick={() => setButtonIndex(btn.index)}
           >
             {btn.label}
@@ -192,61 +180,82 @@ const Page = () => {
         ))}
       </div>
 
-      {buttonIndex === 1 && property && (
-        <div className="flex flex-row gap-5 px-5">
-          <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
-            <Overview basic={property.basic} />
-            <Description description={property.basic.description} />
-            <Features features={property.features} />
-            <Location location={property.location} />
-            <div className="mb-16">
-              <h1 className="font-bold text-3xl mb-3 font-sans">
-                Landlord Contact Details
-              </h1>
-              <hr />
-              <div className=" flex  justify-between mt-5">
-                <p className="text-gray-500 text-base">
-                  Name: {property.contact.username}
-                </p>
-                <p className="text-gray-500 text-base">
-                  Email: {property.contact.email}
-                </p>
-                <p className="text-gray-500 text-base">
-                  Phone: {property.contact.phone}
-                </p>
+      {/* Content Sections */}
+      <div className="px-2 sm:px-4 md:px-8">
+        {buttonIndex === 1 && property && (
+          <div className="flex flex-col lg:flex-row gap-3 md:gap-5 mt-6 md:mt-10">
+            <div className="w-full py-3 md:py-5 border mt-3 sm:mt-6 md:mt-10 px-2 sm:px-4 md:px-8 rounded-md border-gray-200 md:border-gray-300">
+              {/* Contact Details */}
+              <div className="mb-4 md:mb-8">
+                <h1 className="font-bold text-lg sm:text-xl md:text-3xl mb-2 md:mb-3">
+                  Landlord Contact Details
+                </h1>
+                <hr />
+                <div className="flex flex-col sm:flex-row justify-between gap-1 md:gap-2 mt-3 md:mt-5 text-xs sm:text-sm md:text-base">
+                  <p className="truncate">Name: {property.contact.username}</p>
+                  <p className="truncate">Email: {property.contact.email}</p>
+                  <p className="truncate">Phone: {property.contact.phone}</p>
+                </div>
               </div>
+
+              {/* Info Sections */}
+              <Overview basic={property.basic} />
+              <Description description={property.basic.description} />
+              <Features features={property.features} />
+              <Location location={property.location} />
             </div>
           </div>
-        </div>
-      )}
-      {property && buttonIndex === 2 && <History review={property.reviews} />}
-      {property && buttonIndex === 3 && (
-        <ContactLandlord
-          landlordEmail={property?.contact.email}
-          landlordName={property.contact.username}
-        />
-      )}
-      {buttonIndex === 4 && (
-        <PropertyLocation
-          location={property?.location.street + ", " + property?.location.city}
-        />
-      )}
-      {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}
-      {buttonIndex === 6 &&
-        (applicationStatus ? (
-          property &&
-          token && (
-            <UserPayment
-              roomId={property?._id}
-              price={property?.basic.price}
-              token={token}
-              seller={property.contact.username}
-              landlord_id={property.landlordId}
+        )}
+
+        {/* Other Sections */}
+        {property && buttonIndex === 2 && (
+          <div className="mt-4 md:mt-8">
+            <History review={property.reviews} />
+          </div>
+        )}
+
+        {property && buttonIndex === 3 && (
+          <div className="mt-4 md:mt-8 max-w-2xl mx-auto">
+            <ContactLandlord
+              landlordEmail={property.contact.email}
+              landlordName={property.contact.username}
             />
-          )
-        ) : (
-          <RentRoom roomId={id} property={property} />
-        ))}
+          </div>
+        )}
+
+        {buttonIndex === 4 && (
+          <div className="mt-4 md:mt-8">
+            <PropertyLocation
+              location={`${property?.location.street}, ${property?.location.city}`}
+            />
+          </div>
+        )}
+
+        {buttonIndex === 5 && (
+          <div className="mt-4 md:mt-8">
+            <PropertyImages propertyImage={property?.images} />
+          </div>
+        )}
+
+        {buttonIndex === 6 && (
+          <div className="mt-4 md:mt-8 max-w-2xl mx-auto px-2 sm:px-4">
+            {applicationStatus ? (
+              <UserPayment
+                roomId={property?._id as string}
+                price={property?.basic.price as string}
+                token={token}
+                seller={property?.contact.username as string}
+                landlord_id={property?.landlordId as string}
+              />
+            ) : (
+              <RentRoom
+                roomId={id}
+                property={property as unknown as PropertyDetails}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

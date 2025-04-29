@@ -14,20 +14,31 @@ interface Props {
 
 const RentalHistory = ({ History }: Props) => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-5">Rental History</h1>
-      <hr className="mb-4" />
-      <div className="space-y-4">
-        <div className="flex justify-between flex-wrap">
-          <p>Previous Address: {History.previous_address}</p>
-          <p>Length of stay: {History.length_of_stay}</p>
-          <p>
-            Previous Landlord Contact Number: {History.current_landlord_contact}
-          </p>
+    <div className="space-y-4">
+      <h1 className="text-2xl md:text-3xl font-semibold mb-3 md:mb-4">
+        Rental History
+      </h1>
+      <hr className="border-gray-200 mb-4" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base">
+        <div className="space-y-1">
+          <p className="font-medium">Previous Address:</p>
+          <p className="line-clamp-2">{History.previous_address}</p>
         </div>
-        <div className="flex gap-20">
-          <p>Criminal Records: {History.criminal_record}</p>
-          <p>Resaons to leave Previous Address: {History.reason_for_leave}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Length of Stay:</p>
+          <p>{History.length_of_stay}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Landlord Contact:</p>
+          <p>{History.current_landlord_contact}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Leave Reason:</p>
+          <p className="line-clamp-2">{History.reason_for_leave}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Criminal Record:</p>
+          <p>{History.criminal_record}</p>
         </div>
       </div>
     </div>

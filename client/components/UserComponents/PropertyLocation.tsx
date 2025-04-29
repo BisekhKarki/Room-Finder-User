@@ -1,36 +1,48 @@
 "use client";
-import React from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import L from "leaflet";
+
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
-import "leaflet/";
-import { useEffect, useState } from "react";
 
-// Fix for marker icons - must be defined outside the component
-const DefaultIcon = L.icon({
-  iconUrl: "/images/marker-icon.png",
-  iconRetinaUrl: "/images/marker-icon-2x.png",
-  shadowUrl: "/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+// Dynamically import react-leaflet components
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  {
+    ssr: false,
+  }
+);
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  {
+    ssr: false,
+  }
+);
+const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+  ssr: false,
 });
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  {
+    ssr: false,
+  }
+);
 
-// Set default icon globally
-L.Marker.prototype.options.icon = DefaultIcon;
-
-function ChangeView({
-  center,
-  zoom,
-}: {
-  center: [number, number];
-  zoom: number;
-}) {
-  const map = useMap();
-  map.setView(center, zoom);
-  return null;
-}
+// Dynamically define ChangeView to handle useMap
+const ChangeView = dynamic(
+  () =>
+    import("react-leaflet").then((mod) => {
+      const Component: React.FC<{ center: [number, number]; zoom: number }> = ({
+        center,
+        zoom,
+      }) => {
+        const map = mod.useMap();
+        map.setView(center, zoom);
+        return null;
+      };
+      return Component;
+    }),
+  { ssr: false }
+);
 
 interface Props {
   location: string | undefined;
@@ -42,9 +54,29 @@ const PropertyLocation = ({ location }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [mapType, setMapType] = useState<"satellite" | "street">("satellite");
 
+  // Dynamically load Leaflet and configure icons on client side
   useEffect(() => {
+    import("leaflet").then((L) => {
+      // Fix for marker icons
+      const DefaultIcon = L.icon({
+        iconUrl: "/images/marker-icon.png",
+        iconRetinaUrl: "/images/marker-icon-2x.png",
+        shadowUrl: "/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      // Set default icon globally
+      L.Marker.prototype.options.icon = DefaultIcon;
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("Location prop:", location); // Debug log
     if (location) {
-      geocodeLocation(location); // Changed from hardcoded "Vanasthali, Kathmandu" to use the prop
+      geocodeLocation(location);
     }
   }, [location]);
 
@@ -72,7 +104,7 @@ const PropertyLocation = ({ location }: Props) => {
     } catch (err) {
       setError("Failed to fetch location data. Please try again.");
       setPosition(null);
-      console.error(err);
+      console.error("Geocoding error:", err);
     } finally {
       setLoading(false);
     }
@@ -83,8 +115,6 @@ const PropertyLocation = ({ location }: Props) => {
 
   return (
     <div className="pl-10 h-[600px] w-[90%] relative mt-10">
-      {" "}
-      {/* Increased height from 400px to 600px */}
       {loading && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
           <p className="text-white">Searching for location...</p>
@@ -127,22 +157,21 @@ const PropertyLocation = ({ location }: Props) => {
           <>
             <TileLayer
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-              attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+              attribution="Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
               maxZoom={19}
             />
             <TileLayer
               url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-              attribution="Tiles &copy; Esri &mdash; Source: Esri"
+              attribution="Tiles © Esri — Source: Esri"
               maxZoom={19}
             />
           </>
         ) : (
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
         )}
-
         {position && (
           <Marker position={position}>
             <Popup>{location}</Popup>

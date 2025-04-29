@@ -31,15 +31,15 @@ const Page = () => {
 
   return (
     <div>
-      <div className="flex justify-center py-10">
-        <div className="flex gap-5">
+      <div className="flex justify-center py-6 md:py-10 px-4">
+        <div className="flex flex-wrap justify-center gap-3 md:gap-5 w-full max-w-4xl">
           {filterButtons.map((b, i) => (
             <Button
-              className={`${
+              className={`text-sm sm:text-base px-4 sm:px-6 md:px-8 lg:px-10 min-w-[120px] md:min-w-[150px] transition-all ${
                 b.index === index
-                  ? "bg-blue-400 text-white border  px-10  hover:bg-blue-500"
-                  : "bg-white text-black border border-gray-200 px-10  hover:bg-gray-50"
-              } `}
+                  ? "bg-blue-400 text-white hover:bg-blue-500"
+                  : "bg-white text-black border-gray-200 hover:bg-gray-50"
+              } border shadow-sm hover:shadow-md`}
               key={i}
               onClick={() => setIndex(b.index)}
             >
@@ -48,6 +48,8 @@ const Page = () => {
           ))}
         </div>
       </div>
+
+      {/* Content sections remain the same */}
       {index === 1 && <Rooms />}
       {index === 2 && <Shop />}
       {index === 3 && <Apartment />}

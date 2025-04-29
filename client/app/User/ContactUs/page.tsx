@@ -8,27 +8,40 @@ import { FaPhone } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
 const Page = () => {
-  const [first, setFirst] = useState<string>("");
-  const [last, setLast] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
+  const [formData, setFormData] = useState({
+    first: "",
+    last: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
 
-  const sendMessage = async (e: Event) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const { first, last, email, phone, message } = formData;
+
       if (!first || !last || !email) {
-        toast.error("Fill all the details");
+        toast.error("Please fill all required fields");
         return;
       }
 
-      if (phone.length < 10) {
-        toast.error("Phone Number must be of 10 digits");
+      if (phone && phone.length < 10) {
+        toast.error("Phone number must be 10 digits");
         return;
       }
 
       if (message.length < 10) {
-        toast.error("Enter message of at least 1- characters");
+        toast.error("Message must be at least 10 characters");
         return;
       }
 
@@ -36,116 +49,122 @@ const Page = () => {
         "http://localhost:4000/api/ContactUs/send/message",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            first,
-            last,
-            email,
-            phone,
-            message,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         }
       );
-      const data = await response.json();
-      console.log(data);
-      if (response.status === 200) {
-        toast.success(data.message);
 
-        setFirst("");
-        setLast("");
-        setPhone("");
-        setEmail("");
-        setMessage("");
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message);
+        setFormData({
+          first: "",
+          last: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Error sending message");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Submission error:", error);
+      toast.error("Failed to send message");
     }
   };
 
   return (
-    <div>
-      <div className="flex justify-center py-10">
-        <div className="w-5/6 border rounded-md">
-          <h1 className="w-full bg-blue-400 text text-white text-center px-4 py-3 font-bold text-2xl rounded-t-xl">
+    <div className="min-h-screen bg-gray-50">
+      {/* Contact Info Section */}
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="mx-auto max-w-4xl bg-white rounded-lg shadow-sm">
+          <h1 className="bg-blue-400 text-white text-xl md:text-2xl font-bold text-center p-4 md:p-6 rounded-t-lg">
             Get in touch with us
           </h1>
 
-          <div className="flex flex-col justify-center mt-3 mb-3">
-            <div className="flex gap-2 justify-center text-center items-center">
-              <FaPhone className="text-blue-500 " />
-              <p className="text-base text-gray-500">Phone: +977 9876543210</p>
+          <div className="space-y-4 p-6 md:p-8">
+            <div className="flex items-center gap-3 text-gray-600">
+              <FaPhone className="flex-shrink-0 text-blue-500" />
+              <span className="text-sm md:text-base">+977 9876543210</span>
             </div>
-
-            <div className="flex gap-2 justify-center text-center items-center">
-              <IoMail className="text-blue-500 text-xl" />
-              <p className="text-base text-gray-500">
-                Email: RoomFinder@gmail.com
-              </p>
+            <div className="flex items-center gap-3 text-gray-600">
+              <IoMail className="flex-shrink-0 text-blue-500 text-lg" />
+              <span className="text-sm md:text-base">RoomFinder@gmail.com</span>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex justify-center mb-10">
-        <div className="w-2/3 shadow-md rounded-md">
-          <h1 className="w-full bg-blue-400 text text-white text-center px-4 py-3 font-bold text-3xl rounded-t-xl">
+
+      {/* Contact Form Section */}
+      <div className="container mx-auto px-4 pb-12">
+        <div className="mx-auto max-w-4xl bg-white rounded-lg shadow-sm">
+          <h2 className="bg-blue-400 text-white text-xl md:text-2xl font-bold text-center p-4 md:p-6 rounded-t-lg">
             Contact Us
-          </h1>
-          <p className="py-3 px-6 text-gray-500">
-            Have questions or need assistance? We are here to help! Reach out to
-            our friendly team through our Contact Us page. Whether you are
-            looking for more information, have feedback, or need support, we are
-            just a message away. Fill out the form below, and we will get back
-            to you promptly. Your satisfaction is our priority!
-          </p>
-          <hr className="mb-5 mt-2 w-full" />
-          <form className="mb-2 px-10 py-5 space-y-6">
-            <div className="flex gap-5">
-              <Input
-                placeholder="First Name"
-                className="h-10"
-                value={first}
-                onChange={(e) => setFirst(e.target.value)}
+          </h2>
+
+          <div className="p-6 md:p-8">
+            <p className="text-gray-600 text-sm md:text-base mb-6">
+              Have questions or need assistance? We are here to help! Reach out
+              to our friendly team through our Contact Us page. Whether you are
+              looking for information, have feedback, or need support, we are
+              just a message away.
+            </p>
+
+            <form onSubmit={sendMessage} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  name="first"
+                  placeholder="First Name"
+                  value={formData.first}
+                  onChange={handleChange}
+                  className="h-12"
+                  required
+                />
+                <Input
+                  name="last"
+                  placeholder="Last Name"
+                  value={formData.last}
+                  onChange={handleChange}
+                  className="h-12"
+                  required
+                />
+                <Input
+                  name="phone"
+                  placeholder="Mobile No. (optional)"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="h-12"
+                />
+                <Input
+                  name="email"
+                  placeholder="Email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="h-12"
+                  required
+                />
+              </div>
+
+              <Textarea
+                name="message"
+                placeholder="Enter your message here"
+                value={formData.message}
+                onChange={handleChange}
+                className="min-h-[150px]"
+                required
               />
-              <Input
-                placeholder="Last Name"
-                className="h-10"
-                value={last}
-                onChange={(e) => setLast(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-5">
-              <Input
-                placeholder="Mobile No."
-                className="h-10"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-              <Input
-                placeholder="Email"
-                className="h-10"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <Textarea
-              placeholder="Enter you message here"
-              className="h-24"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <Button
-              type="submit"
-              className="w-full bg-blue-400 hover:bg-blue-500 "
-              onClick={(e) => sendMessage(e)}
-            >
-              Send Message
-            </Button>
-          </form>
+
+              <Button
+                type="submit"
+                className="w-full h-12 bg-blue-400 hover:bg-blue-500 text-lg"
+              >
+                Send Message
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

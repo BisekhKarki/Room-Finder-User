@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import axios from "axios";
+import { base_url } from "@/constants/BaseUrl";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState<string>("");
@@ -13,7 +14,7 @@ const VerifyEmail = () => {
   const onSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/register",
+        `${base_url}/user/register`,
         {
           code,
         },
@@ -29,36 +30,43 @@ const VerifyEmail = () => {
       } else {
         toast.error("Failed to register account, please try again");
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error: unknown) {
+      toast.error(String(error) || "An error occurred");
     }
   };
 
   return (
-    <div className="flex justify-center py-40">
-      <div className=" flex flex-col gap-3 border b py-8 px-12 items-center rounded-md shadow-xl">
-        <h1 className="font-bold text-2xl">Verify Your Account</h1>
-        <p className="text-gray-400 text-xs">
-          A verification code has been sent to your mail <br /> Enter the code
-          below
+    <div className="flex justify-center py-20 md:py-40 px-4">
+      <div className="flex flex-col gap-4 md:gap-6 border border-gray-200 py-6 px-6 md:py-8 md:px-8 items-center rounded-lg shadow-lg w-full max-w-md bg-white">
+        <h1 className="font-bold text-xl md:text-2xl text-center">
+          Verify Your Account
+        </h1>
+
+        <p className="text-gray-500 text-sm md:text-base text-center">
+          A verification code has been sent to your email
+          <br className="hidden sm:block" />
+          Enter the code below
         </p>
+
         <Input
-          className="w-64"
+          className="w-full max-w-xs"
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          placeholder="Enter verification code"
         />
-        <div className="flex flex-row gap-2">
+
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
           <Button
-            className="mt-1 w-20 bg-blue-400 hover:bg-blue-600"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
             onClick={() => onSubmit()}
           >
             Verify
           </Button>
+
           <Button
-            className="mt-1 w-20 bg-gray-200 hover:bg-gray-400 text-black border border-gray-300 shadow-md"
-            onClick={() => {
-              router.push("/signup");
-            }}
+            variant="outline"
+            className="w-full border-gray-300 hover:bg-gray-50 text-gray-700"
+            onClick={() => router.push("/signup")}
           >
             Cancel
           </Button>

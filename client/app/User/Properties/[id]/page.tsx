@@ -44,7 +44,7 @@ export interface FeaturesData {
 }
 
 export interface LocationData {
-  Province: string;
+  province?: string;
   city: string;
   landmark: string;
   region: string;
@@ -130,14 +130,14 @@ const PropertiesSection = () => {
   }, [getToken]);
 
   return (
-    <div className="mt-10 py-10">
-      <div className="text-2xl mb-5 flex items-center gap-1 ml-8">
+    <div className="mt-4 md:mt-10 py-4 md:py-10">
+      <div className="text-xl md:text-2xl mb-3 md:mb-5 flex items-center gap-1 ml-4 md:ml-8">
         <IoIosArrowRoundBack
-          className=" text-gray-800 cursor-pointer"
+          className="text-gray-800 cursor-pointer"
           onClick={() => router.push("/user/properties")}
         />
         <p
-          className="text-base cursor-pointer"
+          className="text-sm md:text-base cursor-pointer"
           onClick={() => router.push("/user/properties")}
         >
           Back
@@ -146,28 +146,28 @@ const PropertiesSection = () => {
       <div className="">
         {property && property.images && property.images.length > 0 && (
           <div className="relative">
-            <div className="px-8">
+            <div className="px-4 md:px-8">
               <Image
                 src={property?.images[0]}
                 alt="room images"
                 width={1500}
                 height={1300}
-                className="h-full rounded-md hover:shadow-lg cursor-pointer"
+                className="h-full w-full object-cover rounded-md hover:shadow-lg cursor-pointer"
               />
             </div>
           </div>
         )}
       </div>
-      <hr className="mt-10" />
-      <div className="flex px-10 gap-5">
+      <hr className="mt-6 md:mt-10" />
+      <div className="flex flex-wrap gap-2 md:gap-5 px-2 md:px-10">
         {viewComponentButtons.map((btn, index) => (
           <Button
             key={index}
-            className={` ${
+            className={`${
               btn.index === buttonIndex
                 ? "bg-blue-400 text-white hover:bg-blue-500"
-                : "bg-white hover:bg-gray-50  text-black"
-            }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+                : "bg-white hover:bg-gray-50 text-black"
+            } mt-4 md:mt-10 px-4 md:px-20 py-2 md:py-5 text-sm md:text-base border border-gray-300 shadow-md transition-all duration-200 ease-in-out w-full sm:w-auto`}
             onClick={() => setButtonIndex(btn.index)}
           >
             {btn.label}
@@ -176,25 +176,25 @@ const PropertiesSection = () => {
       </div>
 
       {buttonIndex === 1 && property && (
-        <div className="flex flex-row gap-5 px-5">
-          <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
+        <div className="flex flex-col md:flex-row gap-5 px-2 md:px-5">
+          <div className="py-3 md:py-5 border w-full mt-4 md:mt-10 px-4 md:px-10 rounded-md border-gray-300">
             <Overview basic={property.basic} />
             <Description description={property.basic.description} />
             <Features features={property.features} />
             <Location location={property.location} />
-            <div className="mb-16">
-              <h1 className="font-bold text-3xl mb-3 font-sans">
+            <div className="mb-8 md:mb-16">
+              <h1 className="font-bold text-xl md:text-3xl mb-2 md:mb-3 font-sans">
                 Landlord Contact Details
               </h1>
               <hr />
-              <div className=" flex  justify-between mt-5">
-                <p className="text-gray-500 text-base">
+              <div className="flex flex-col md:flex-row justify-between gap-2 mt-3 md:mt-5">
+                <p className="text-gray-500 text-sm md:text-base">
                   Name: {property.contact.username}
                 </p>
-                <p className="text-gray-500 text-base">
+                <p className="text-gray-500 text-sm md:text-base">
                   Email: {property.contact.email}
                 </p>
-                <p className="text-gray-500 text-base">
+                <p className="text-gray-500 text-sm md:text-base">
                   Phone: {property.contact.phone}
                 </p>
               </div>

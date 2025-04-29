@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { RxArrowLeft, RxArrowRight } from "react-icons/rx";
-import { Input } from "../ui/input";
-import { CldImage, CldUploadWidget } from "next-cloudinary";
+// import { Input } from "../ui/input";
+import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
@@ -46,8 +46,9 @@ const Images = ({ counter, setCounter }: Props) => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="px-4 md:px-0 space-y-8">
+      <div className="space-y-6">
+        {/* Upload Button - Color maintained */}
         <CldUploadWidget
           uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
           onSuccess={({ event, info }) => {
@@ -58,50 +59,61 @@ const Images = ({ counter, setCounter }: Props) => {
         >
           {({ open }) => (
             <Button
-              className="bg-blue-600 hover:bg-blue-700"
               type="button"
+              className="bg-blue-600 hover:bg-blue-700"
               onClick={() => open()}
             >
               Upload Image
             </Button>
           )}
         </CldUploadWidget>
-        <div className="flex gap-10 flex-wrap mt-10">
-          {images &&
-            images.length > 0 &&
-            images.map((url, index) => (
-              <div key={index} className="relative">
-                <Image src={url} width={500} height={100} alt="Room Images" />
+
+        {/* Image Grid */}
+        {images.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-10">
+            {images.map((url, index) => (
+              <div key={url} className="relative aspect-square group">
+                <Image
+                  src={url}
+                  fill
+                  alt="Property images"
+                  className="rounded-md object-cover"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                />
+                {/* Delete button color maintained */}
                 <Button
-                  className="bg-red-600 hover:bg-red-700 absolute top-2 right-1 "
+                  className="bg-red-600 hover:bg-red-700 absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
                   onClick={() => deleteImages(index)}
                 >
-                  <FaTrash />
+                  <FaTrash className="h-4 w-4" />
                 </Button>
               </div>
             ))}
-        </div>
+          </div>
+        )}
       </div>
-      <div className="flex justify-center gap-10 mt-10">
+
+      {/* Navigation Buttons - Colors maintained */}
+      <div className="flex flex-col-reverse md:flex-row justify-center gap-5 mt-10">
         <Button
           type="button"
-          className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
-          onClick={() => {
-            setRoomImages();
-            localStorage.setItem("Last_Page", JSON.stringify(counter + 1));
-          }}
-        >
-          Next <RxArrowRight />
-        </Button>
-        <Button
-          type="button"
-          className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
+          className="bg-blue-400 hover:bg-blue-500 w-full md:w-32"
           onClick={() => {
             setCounter(counter - 1);
             localStorage.setItem("Last_Page", JSON.stringify(counter - 1));
           }}
         >
-          <RxArrowLeft /> Previous
+          <RxArrowLeft className="mr-2" /> Previous
+        </Button>
+        <Button
+          type="button"
+          className="bg-blue-400 hover:bg-blue-500 w-full md:w-32"
+          onClick={() => {
+            setRoomImages();
+            localStorage.setItem("Last_Page", JSON.stringify(counter + 1));
+          }}
+        >
+          Next <RxArrowRight className="ml-2" />
         </Button>
       </div>
     </div>

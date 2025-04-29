@@ -126,8 +126,14 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           localStorage.removeItem("Post_Images");
           localStorage.removeItem("Post_Location");
           localStorage.removeItem("Post_Features");
+          setUserName("");
+          setEmail("");
+          setPhone("");
           router.push("/landlord/PendingRooms");
         } else {
+          setUserName("");
+          setEmail("");
+          setPhone("");
           toast.error(val.message);
         }
       }
@@ -137,64 +143,57 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
   };
 
   return (
-    <div>
-      <div className="flex gap-5 mb-5">
+    <div className="px-4 md:px-0 space-y-4">
+      {/* Name & Contact Number */}
+      <div className="flex flex-col md:flex-row gap-4">
         <Input
           placeholder="Your Name"
-          className="h-12"
+          className="h-12 w-full"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
         />
         <Input
-          placeholder="Your contact Number"
-          className="h-12"
+          placeholder="Your Contact Number"
+          className="h-12 w-full"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
       </div>
-      <div className="flex gap-5 mb-5">
+
+      {/* Email */}
+      <div className="w-full">
         <Input
           placeholder="Email"
-          className="h-12"
+          className="h-12 w-full"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      <div className="flex gap-5 justify-center">
+
+      {/* Buttons */}
+      <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
         <Button
           type="button"
-          className="mt-5 bg-blue-400 hover:bg-blue-500 w-32"
+          className="bg-blue-400 hover:bg-blue-500 w-full md:w-32"
           onClick={() => {
             if (!userName || !phone || !email) {
-              toast.error("Fill all the details to procced next");
+              toast.error("Fill all the details to proceed");
+              return;
             }
-            dispatch(
-              contactDetails({
-                username: userName,
-                phone,
-                email,
-              })
-            );
+            dispatch(contactDetails({ username: userName, phone, email }));
             setCounter(counter - 1);
             localStorage.setItem("Last_Page", JSON.stringify(counter - 1));
           }}
         >
-          <RxArrowLeft /> Previous
+          <RxArrowLeft className="mr-2" /> Previous
         </Button>
         <Button
           type="button"
-          className="mt-5 bg-green-600 hover:bg-green-700 w-32"
+          className="bg-green-600 hover:bg-green-700 w-full md:w-32"
           onClick={() => sendForApproval()}
         >
-          <BsSave /> Save
+          <BsSave className="mr-2" /> Save
         </Button>
-        {/* <Button
-          type="button"
-          className="mt-5 bg-purple-600 hover:bg-purple-700 w-36"
-          onClick={() => setUserContact()}
-        >
-          <FaMoneyBill /> Make Payment
-        </Button> */}
       </div>
     </div>
   );

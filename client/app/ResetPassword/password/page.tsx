@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { base_url } from "@/constants/BaseUrl";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -16,83 +17,91 @@ const Page = () => {
     try {
       if (!code) {
         setLoading(false);
-        return toast.error("Enter you code");
+        return toast.error("Please enter your verification code");
       }
 
-      const response = await fetch(
-        "http://localhost:4000/api/user/pass/verify/code",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ code }),
-        }
-      );
+      const response = await fetch(`${base_url}/user/pass/verify/code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      });
 
       const val = await response.json();
 
       if (!val.success) {
-        setLoading(false);
-        return toast.error("Invalid code\nPlease try again");
+        toast.error("Invalid code\nPlease try again");
       } else {
-        setLoading(false);
-        toast.success("Code verified");
+        toast.success("Code verified successfully");
         router.push("/ResetPassword/password/reset");
-        return;
       }
-    } catch (error: any) {
-      return toast.error("Internal Sever Error");
+    } catch (error: unknown) {
+      toast.error(String(error));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center py-40">
-      <div className=" flex flex-col gap-3 border b py-8 px-12 items-center rounded-md shadow-xl">
-        <h1 className="font-bold text-2xl">Reset Your Password</h1>
-        <p className="text-gray-400 text-xs">
-          A verification code has been sent to your mail <br /> Enter the code
-          below to reset your password
+    <div className="flex justify-center py-20 md:py-40 px-4">
+      <div className="flex flex-col gap-4 md:gap-6 border py-8 px-6 md:px-12 items-center rounded-md shadow-xl w-full max-w-md bg-white">
+        <h1 className="font-bold text-xl md:text-2xl text-center">
+          Reset Your Password
+        </h1>
+
+        <p className="text-gray-500 text-sm md:text-base text-center">
+          A verification code has been sent to your email
+          <br />
+          Enter the code below to reset your password
         </p>
+
         <Input
-          className="w-64"
+          className="w-full max-w-xs"
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          placeholder="Enter verification code"
         />
-        <div className="flex flex-row gap-2">
+
+        <div className="flex flex-col md:flex-row gap-3 w-full max-w-xs">
           <Button
-            className="mt-1 w-24 bg-blue-400 hover:bg-blue-600"
-            onClick={() => verifyingCode()}
+            onClick={verifyingCode}
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           >
             {loading ? (
-              <div role="status">
+              <div className="flex items-center gap-2">
                 <svg
-                  aria-hidden="true"
-                  className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                  viewBox="0 0 100 101"
-                  fill="none"
+                  className="animate-spin h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
                 >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
                   <path
-                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    className="opacity-75"
                     fill="currentColor"
-                  />
-                  <path
-                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                    fill="currentFill"
-                  />
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
-                <span className="sr-only">Loading...</span>
+                <span>Verifying...</span>
               </div>
             ) : (
               "Verify Code"
             )}
           </Button>
+
           <Button
-            className="mt-1 w-20 bg-gray-200 hover:bg-gray-400 text-black border border-gray-300 shadow-md"
-            onClick={() => {
-              router.push("/login");
-            }}
+            onClick={() => router.push("/login")}
+            variant="outline"
+            className="w-full border-gray-300 hover:bg-gray-50 text-gray-700"
           >
             Cancel
           </Button>

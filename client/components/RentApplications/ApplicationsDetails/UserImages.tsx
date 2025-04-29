@@ -13,43 +13,45 @@ interface Props {
 
 const UserImages = ({ images }: Props) => {
   return (
-    <div className="mt-3 mb-3">
-      <h1 className="text-3xl font-bold mb-5">
-        Citizenship and Personal Photo
+    <div className="space-y-4">
+      <h1 className="text-2xl md:text-3xl font-semibold mb-3 md:mb-4">
+        Identity Documents
       </h1>
-      <hr className="mb-4" />
-      <div>
-        {images && (
-          <div className="space-y-6 flex justify-between items-center">
-            <div className="space-y-3">
-              <p className="font-bold text-xl">Personal Photo</p>
-              <Image
-                src={images.personal_photo}
-                alt="Image"
-                width={250}
-                height={250}
-              />
-            </div>
-            <div className="space-y-3">
-              <p className="font-bold text-xl">Citizenship Front Photo</p>
-              <Image
-                src={images.citizen_front}
-                alt="Image"
-                width={250}
-                height={250}
-              />
-            </div>
-            <div className="space-y-3">
-              <p className="font-bold text-xl">Citizenship Back Photo</p>
-              <Image
-                src={images.citizen_back}
-                alt="Image"
-                width={250}
-                height={250}
-              />
-            </div>
+      <hr className="border-gray-200 mb-4" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="space-y-2">
+          <p className="font-medium text-sm md:text-base">Personal Photo</p>
+          <div className="relative aspect-square w-full">
+            <Image
+              src={images.personal_photo}
+              alt="Personal photo"
+              fill
+              className="object-cover rounded-lg"
+            />
           </div>
-        )}
+        </div>
+        <div className="space-y-2">
+          <p className="font-medium text-sm md:text-base">Citizenship Front</p>
+          <div className="relative aspect-square w-full">
+            <Image
+              src={images.citizen_front}
+              alt="Citizenship front"
+              fill
+              className="object-cover rounded-lg"
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <p className="font-medium text-sm md:text-base">Citizenship Back</p>
+          <div className="relative aspect-square w-full">
+            <Image
+              src={images.citizen_back}
+              alt="Citizenship back"
+              fill
+              className="object-cover rounded-lg"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
+"use client";
 import React, { useState } from "react";
 import { Input } from "../ui/input";
-
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
@@ -32,7 +32,7 @@ const ContactLandlord = ({ landlordEmail, landlordName }: Props) => {
       }
 
       if (message.length < 10) {
-        toast.error("Enter message of at least 1- characters");
+        toast.error("Enter message of at least 10 characters");
         return;
       }
 
@@ -69,50 +69,54 @@ const ContactLandlord = ({ landlordEmail, landlordName }: Props) => {
   };
 
   return (
-    <div className="px-10 py-10">
-      <div className="border border-gray-200 px-10 py-5 flex justify-center rounded-md">
-        <form className="mb-2 px-10 py-5 space-y-6 w-3/4">
-          <h1 className="text-center text-3xl font-bold mb-2">
+    <div className="px-4 md:px-10 py-8 md:py-10">
+      <div className="border border-gray-200 px-4 md:px-8 py-6 md:py-8 flex justify-center rounded-md">
+        <form className="mb-2 px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-6 w-full md:w-3/4">
+          <h1 className="text-center text-2xl md:text-3xl font-bold mb-4 md:mb-6">
             Send a message to {landlordName}
           </h1>
-          <div className="flex gap-5">
+
+          <div className="flex flex-col md:flex-row gap-3 md:gap-5">
             <Input
               placeholder="First Name"
-              className="h-10"
+              className="h-9 md:h-10"
               value={first}
               onChange={(e) => setFirst(e.target.value)}
             />
             <Input
               placeholder="Last Name"
-              className="h-10"
+              className="h-9 md:h-10"
               value={last}
               onChange={(e) => setLast(e.target.value)}
             />
           </div>
-          <div className="flex gap-5">
+
+          <div className="flex flex-col md:flex-row gap-3 md:gap-5">
             <Input
               placeholder="Mobile No."
-              className="h-10"
+              className="h-9 md:h-10"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
             <Input
               placeholder="Email"
-              className="h-10"
+              className="h-9 md:h-10"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
           <Textarea
-            placeholder="Enter you message here"
-            className="h-24"
+            placeholder="Enter your message here"
+            className="h-32 md:h-24"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
+
           <Button
             type="submit"
-            className="w-full bg-blue-400 hover:bg-blue-500 "
+            className="w-full bg-blue-400 hover:bg-blue-500 text-sm md:text-base"
             onClick={(e) => sendMessage(e)}
           >
             Send Message

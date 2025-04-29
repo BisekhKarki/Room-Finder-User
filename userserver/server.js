@@ -16,6 +16,7 @@ const paymentGateway = require("./Routes/PaymentRoute");
 const router = express.Router();
 const roomRouter = require("./Routes/Rooms");
 const rentedRouter = require("./Routes/Rented");
+const watchListsRouter = require("./Routes/WatchLists");
 const { scheduleUserEmails } = require("./lib/Automatic");
 
 const homeRouter = require("./Routes/HomeRoute");
@@ -59,6 +60,9 @@ app.use("/api/tenants", roomRouter);
 
 // For rented rooms
 app.use("/api/rented", rentedRouter);
+
+// For watchLists
+app.use("/api/watchlists", watchListsRouter);
 
 // Checking the server is running or not
 app.listen(PORT, () => {

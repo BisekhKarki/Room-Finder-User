@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { IoReorderThree } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-
 import { FaUser } from "react-icons/fa";
 import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slice";
@@ -16,11 +15,11 @@ const UserNavbar = () => {
   const router = useRouter();
   const pathName = usePathname();
   const [showMobileNavbar, setMobileNavbar] = useState(false);
-  const closeNavbarMobile = useRef(null);
+  const closeNavbarMobile = useRef<HTMLDivElement>(null);
   const { validToken } = useSelector((state: RootState) => state.slice);
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const logoutUser = () => {
     localStorage.removeItem("Token");
@@ -36,163 +35,201 @@ const UserNavbar = () => {
     { name: "Properties", path: "/user/properties" },
   ];
 
-  const handleClickOutside = (e: Event) => {
-    // Step 3: Close navbar if clicked outside
+  const handleClickOutside = (e: MouseEvent) => {
     if (
       closeNavbarMobile.current &&
-      !closeNavbarMobile.current.contains(e.target)
+      !closeNavbarMobile.current.contains(e.target as Node)
     ) {
       setMobileNavbar(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", (e) => handleClickOutside(e));
-    return () => {
-      document.removeEventListener("mousedown", (e) => handleClickOutside(e));
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handler);
-
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   return (
-    <div>
-      <div className="" ref={closeNavbarMobile}>
-        <div className="  flex justify-between px-5 py-5 border border-b-2 shadow ">
-          <p
-            onClick={() => router.push("/")}
-            className="md:text-xl sm:text-sm  max-sm:text-xl flex items-center gap-2 text-2xl  hover:text-[#4040c4] cursor-pointer transition-all ease-in-out duration-300 font-bold"
-          >
-            <IoHomeOutline /> Room Finder
-          </p>
-          <ul className="md:gap-3 md:text-sm sm:gap-2 sm:text-[12px] flex items-center  gap-5 cursor-pointer max-sm:hidden">
-            {navLists.map((nav, i) => {
-              return (
-                <li
-                  key={i}
-                  className={
-                    nav.path === pathName ? "text-blue-400" : "text-gray-500"
-                  }
-                  onClick={() => router.push(nav.path)}
-                >
-                  {nav.name}
-                </li>
-              );
-            })}
-          </ul>
+    <div ref={closeNavbarMobile}>
+      <div className="flex justify-between items-center px-4 md:px-6 lg:px-8 py-4 border-b-2 shadow-sm">
+        {/* Logo */}
+        <p
+          onClick={() => router.push("/")}
+          className="text-xl md:text-2xl flex items-center gap-2 hover:text-[#4040c4] cursor-pointer transition-colors duration-300 font-bold relative group"
+        >
+          <IoHomeOutline className="shrink-0" />
+          <span className="hidden sm:inline">Room Finder</span>
+          <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#4040c4] transition-all duration-300 group-hover:w-full"></span>
+        </p>
+
+        {/* Desktop Navigation */}
+        <ul className="hidden lg:flex items-center gap-4 xl:gap-6 cursor-pointer">
+          {navLists.map((nav) => (
+            <li
+              key={nav.path}
+              className={`text-sm xl:text-base relative group ${
+                nav.path === pathName ? "text-blue-400" : "text-gray-600"
+              } hover:text-blue-500 transition-colors duration-300`}
+              onClick={() => router.push(nav.path)}
+            >
+              {nav.name}
+              <span
+                className={`absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full ${
+                  nav.path === pathName ? "w-full bg-blue-400" : ""
+                }`}
+              ></span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Auth Section */}
+        <div className="flex items-center gap-3">
           {validToken ? (
-            <div className="relative" ref={menuRef}>
+            <div className="hidden lg:block relative" ref={menuRef}>
               <FaUser
-                size={27}
-                className="cursor-pointer text-blue-400"
+                size={24}
+                className="cursor-pointer text-blue-400 hover:text-blue-500 transition-colors relative group"
                 onClick={() => setOpen(!open)}
               />
+              <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               {open && (
-                <div className="absolute w-32 top-4 right-4 border border-gray-200 rounded-md bg-blue-400 text-white  shadow-xl">
-                  <ul>
-                    <li className="text-sm px-5 py-1 cursor-pointer">
-                      My Profile
-                    </li>
-                    <hr />
-                    <li className="text-sm px-5 py-1 cursor-pointer">
-                      Setting
-                    </li>
-                    <hr />
+                <div className="absolute right-0 top-8 w-48 border border-gray-200 rounded-lg bg-white shadow-xl z-50">
+                  <ul className="py-2">
+                    {[
+                      { name: "My Profile", path: "/user/profile" },
+                      { name: "History", path: "/user/history" },
+                      { name: "My WatchLists", path: "/user/watchlists" },
+                      { name: "Rented Rooms", path: "/user/rentedRooms" },
+                    ].map((item) => (
+                      <React.Fragment key={item.path}>
+                        <li
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm relative group"
+                          onClick={() => router.push(item.path)}
+                        >
+                          {item.name}
+                          <span className="absolute left-0 bottom-0 w-full h-[1px] bg-blue-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                        </li>
+                        <hr />
+                      </React.Fragment>
+                    ))}
                     <li
-                      className="text-sm px-5 py-1 cursor-pointer"
-                      onClick={() => router.push("/user/rentedRooms")}
-                    >
-                      Rented Rooms
-                    </li>
-                    <hr />
-                    <li
-                      className="text-sm px-5 py-1 cursor-pointer"
-                      onClick={() => logoutUser()}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-red-500 relative group"
+                      onClick={logoutUser}
                     >
                       Logout
+                      <span className="absolute left-0 bottom-0 w-full h-[1px] bg-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                     </li>
                   </ul>
                 </div>
               )}
             </div>
           ) : (
-            <div className="flex justify-center gap-3 relative">
-              <Button
-                className=" md:w-20 sm:w-14 w-24 max-sm:hidden  bg-[#5151FF] hover:bg-[#4040c4]"
-                onClick={() => router.push("/login")}
-              >
-                Login
-              </Button>
-              <Button
-                className="sm:hidden bg-[#5151FF] hover:bg-[#4040c4] text-white"
-                onClick={() => setMobileNavbar(!showMobileNavbar)}
-              >
-                <IoReorderThree />
-              </Button>
-              {/* Navbar for mobile */}
-              {showMobileNavbar && (
-                <div
-                  className={`${
-                    showMobileNavbar ? "-translate-x-0" : "-translate-x-full"
-                  } absolute -right-6 -top-5 shadow-xl h-screen bg-white  w-64 sm:hidden transition-transform duration-300 ease-in-out `}
-                >
-                  <div className="px-5 py-5">
-                    <div className="flex gap-2 ">
-                      <Button
-                        className=" md:w-20 sm:w-14 w-24 max-sm:w-14  bg-[#5151FF] hover:bg-[#4040c4]"
-                        onClick={() => {
-                          router.push("/login");
-                          setMobileNavbar(!showMobileNavbar);
-                        }}
-                      >
-                        Login
-                      </Button>
-                      <Button
-                        className="bg-[#5151FF] hover:bg-[#4040c4]"
-                        onClick={() => setMobileNavbar(!showMobileNavbar)}
-                      >
-                        <RxCross2 />
-                      </Button>
-                    </div>
-                    <div className=" bg-white list-none flex flex-col gap-3 mt-5">
-                      {navLists.map((nav, i) => {
-                        return (
-                          <li
-                            key={i}
-                            className={
-                              nav.path === pathName
-                                ? "text-blue-400"
-                                : "text-gray-500"
-                            }
-                            onClick={() => {
-                              router.push(nav.path);
-                              setMobileNavbar(!showMobileNavbar);
-                            }}
-                          >
-                            {nav.name}
-                          </li>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <Button
+              className="hidden lg:inline-flex bg-[#5151FF] hover:bg-[#4040c4] text-sm px-6 py-2 relative group overflow-hidden"
+              onClick={() => router.push("/login")}
+            >
+              <span className="relative z-10">Login</span>
+              <span className="absolute inset-0 w-0 bg-[#4040c4] transition-all duration-300 group-hover:w-full"></span>
+            </Button>
           )}
+
+          {/* Mobile Menu Button */}
+          <Button
+            className="lg:hidden bg-[#5151FF] hover:bg-[#4040c4] p-2 relative overflow-hidden"
+            onClick={() => setMobileNavbar(true)}
+          >
+            <IoReorderThree className="text-xl text-white relative z-10" />
+            <span className="absolute inset-0 w-0 bg-[#4040c4] transition-all duration-300 group-hover:w-full"></span>
+          </Button>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      {showMobileNavbar && (
+        <div className="fixed inset-0 bg-black/50 z-50 lg:hidden">
+          <div className="absolute right-0 top-0 h-full w-64 bg-white shadow-xl transform transition-transform duration-300">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-8">
+                {!validToken && (
+                  <Button
+                    className="bg-[#5151FF] hover:bg-[#4040c4] px-6 relative overflow-hidden group"
+                    onClick={() => {
+                      router.push("/login");
+                      setMobileNavbar(false);
+                    }}
+                  >
+                    <span className="relative z-10">Login</span>
+                    <span className="absolute inset-0 w-0 bg-[#4040c4] transition-all duration-300 group-hover:w-full"></span>
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  className="p-2 hover:bg-gray-100"
+                  onClick={() => setMobileNavbar(false)}
+                >
+                  <RxCross2 className="text-xl" />
+                </Button>
+              </div>
+              <ul className="space-y-4">
+                {navLists.map((nav) => (
+                  <li
+                    key={nav.path}
+                    className={`text-base relative group ${
+                      nav.path === pathName ? "text-blue-400" : "text-gray-600"
+                    } hover:text-blue-500 transition-colors duration-300`}
+                    onClick={() => {
+                      router.push(nav.path);
+                      setMobileNavbar(false);
+                    }}
+                  >
+                    {nav.name}
+                    <span
+                      className={`absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full ${
+                        nav.path === pathName ? "w-full bg-blue-400" : ""
+                      }`}
+                    ></span>
+                  </li>
+                ))}
+                {validToken && (
+                  <>
+                    <li
+                      className="text-base text-gray-600 hover:text-blue-500 cursor-pointer relative group transition-colors duration-300"
+                      onClick={() => {
+                        router.push("/user/profile");
+                        setMobileNavbar(false);
+                      }}
+                    >
+                      My Profile
+                      <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                    </li>
+                    {/* Repeat similar pattern for other mobile menu items */}
+                    <li
+                      className="text-base text-red-500 hover:text-red-600 cursor-pointer relative group transition-colors duration-300"
+                      onClick={() => {
+                        logoutUser();
+                        setMobileNavbar(false);
+                      }}
+                    >
+                      Logout
+                      <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

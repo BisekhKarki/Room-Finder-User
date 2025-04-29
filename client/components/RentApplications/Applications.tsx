@@ -103,7 +103,7 @@ const Applications = ({ roomId, landlordId }: Props) => {
   // console.log(showSingle);
 
   return (
-    <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
+    <div className="py-4 md:py-6 lg:py-8 border w-full mt-4 md:mt-6 px-4 md:px-6 lg:px-8 rounded-lg border-gray-200 shadow-sm">
       {showSingle ? (
         <SingleApplication
           Application={singleDetails}
@@ -114,37 +114,54 @@ const Applications = ({ roomId, landlordId }: Props) => {
           landlordId={landlordId}
         />
       ) : (
-        <div className="flex gap-5 flex-wrap">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {applications && applications.length > 0 ? (
             applications.map((a, index) => (
-              <div key={index} className="">
-                <div className="">
-                  <div className="w-full border px-10 py-5 shadow-md rounded-md space-y-2 hover:shadow-xl cursor-pointer transition-all duration-150 ease-in-out">
-                    <p>Name: {a.personalDetails?.fullName}</p>
-                    <p>Name: {a.personalDetails?.email}</p>
-                    <p>Age: {a.personalDetails?.age}</p>
-                    <p>
-                      Number of Renters: {a.personalDetails?.numberOfRenters}
-                    </p>
-                    <p>
-                      Permanent Address: {a.personalDetails?.permanentAddress}
-                    </p>
-                    <p>Previous stay: {a.rental_history?.previous_address}</p>
-                    <Button
-                      onClick={() => {
-                        setSingleDetails(a);
-                        setShowSingle(true);
-                      }}
-                      className="w-full bg-blue-500 hover:bg-blue-600 transition-all ease-in-out duration-200"
-                    >
-                      Show Full Details
-                    </Button>
-                  </div>
+              <div
+                key={index}
+                className="border p-4 md:p-6 rounded-lg hover:shadow-lg transition-shadow duration-200 bg-white"
+              >
+                <div className="space-y-2 md:space-y-3">
+                  <p className="text-sm md:text-base">
+                    <span className="font-medium">Name:</span>{" "}
+                    {a.personalDetails?.fullName}
+                  </p>
+                  <p className="text-sm md:text-base">
+                    <span className="font-medium">Email:</span>{" "}
+                    {a.personalDetails?.email}
+                  </p>
+                  <p className="text-sm md:text-base">
+                    <span className="font-medium">Age:</span>{" "}
+                    {a.personalDetails?.age}
+                  </p>
+                  <p className="text-sm md:text-base">
+                    <span className="font-medium">Renters:</span>{" "}
+                    {a.personalDetails?.numberOfRenters}
+                  </p>
+                  <p className="text-sm md:text-base line-clamp-1">
+                    <span className="font-medium">Address:</span>{" "}
+                    {a.personalDetails?.permanentAddress}
+                  </p>
+                  <p className="text-sm md:text-base line-clamp-1">
+                    <span className="font-medium">Previous Stay:</span>{" "}
+                    {a.rental_history?.previous_address}
+                  </p>
+                  <Button
+                    onClick={() => {
+                      setSingleDetails(a);
+                      setShowSingle(true);
+                    }}
+                    className="w-full mt-3 md:mt-4 bg-blue-600 hover:bg-blue-700 text-xs md:text-sm py-2"
+                  >
+                    Show Full Details
+                  </Button>
                 </div>
               </div>
             ))
           ) : (
-            <div>No Applications till now</div>
+            <div className="col-span-full text-center py-8 text-gray-500 text-lg md:text-xl">
+              No Applications Found
+            </div>
           )}
         </div>
       )}

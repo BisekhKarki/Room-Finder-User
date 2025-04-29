@@ -3,7 +3,7 @@
 import { checkToken } from "@/store/slice";
 import { AppDispatch } from "@/store/store";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Room from "../../../assets/Room.jpg";
 import FeaturedRooms from "@/components/User/FeaturedRooms";
@@ -13,10 +13,16 @@ import CategoriesBox from "@/components/User/CategoriesBox";
 import PropertiesSection from "@/components/User/PropertiesSection";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { FeaturedRoom } from "../watchlists/page";
+import { base_url } from "@/constants/BaseUrl";
+import { GetToken } from "@/constants/GetToken";
 
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const [token, setToken] = useState<string>("");
+  const [watchlistsRoom, setWatchlistsRoom] = useState<FeaturedRoom[]>([]);
+  const getToken = GetToken();
   useEffect(() => {
     const token = localStorage.getItem("Token");
 
@@ -28,46 +34,102 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
+  useEffect(() => {
+    if (getToken) {
+      setToken(getToken);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchIng();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const fetchIng = async () => {
+    const response = await fetch(`${base_url}/watchlists/get`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      setWatchlistsRoom(data.message);
+    }
+  };
   return (
-    <div className="py-10 px-2">
-      <div className="flex justify-center gap-44 items-center">
-        <div className="space-y-5">
-          <h1 className="text-4xl font-bold">Welcome To Room Finder</h1>
-          <p className="text-gray-500 leading-7">
+    <div className="py-10 px-2 md:px-4">
+      <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 lg:gap-24 items-center px-4">
+        <div className="space-y-5 text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold">
+            Welcome To Room Finder
+          </h1>
+          <p className="text-gray-500 leading-7 text-sm md:text-base">
             Explore, Buy, Sell & Research <br /> Find rooms, apartments, shops,
             office based on your <br /> interest in Nepal easily
           </p>
-          <Button
-            className="bg-blue-500 hover:bg-blue-600"
-            onClick={() => router.push("/user/properties")}
-          >
-            Explore Properties
-          </Button>
+          <div className="flex justify-center md:justify-start">
+            <Button
+              className="bg-blue-500 hover:bg-blue-600 text-sm md:text-base"
+              onClick={() => router.push("/user/properties")}
+            >
+              Explore Properties
+            </Button>
+          </div>
         </div>
-        <Image src={Room} alt="Room" width={450} className="rounded" />
+        <Image
+          src={Room}
+          alt="Room"
+          width={450}
+          height={300}
+          className="rounded w-full max-w-xs md:max-w-sm lg:max-w-md"
+        />
       </div>
       <hr className="mt-10" />
 
-      <FeaturedRooms />
+      <FeaturedRooms
+        watchlistsRoom={watchlistsRoom}
+        setWatchlistsRoom={setWatchlistsRoom}
+      />
       <hr className="mt-10" />
       <CategoriesBox />
       <hr className="mt-10" />
-      <div className="flex items-center px-20 justify-between py-10 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 lg:px-20 gap-8 py-10">
         {data.map((val, index) => (
           <div
             key={index}
-            className="shadow-md px-10 py-5 border h-96 flex flex-col items-center justify-cente hover:shadow-lg cursor-pointer"
+            className="shadow-md border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col"
           >
-            <Image src={val.picture} alt={`${val.title}`} />
-            <h3 className="text-2xl mb-2 font-bold mt-3">{val.title}</h3>
-            <p className="text-base w-80 text-start text-gray-500 mt-4">
-              {val.description}
-            </p>
+            <div className="relative aspect-video w-full">
+              <Image
+                src={val.picture}
+                alt={val.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+            </div>
+
+            <div className="p-4 md:p-6 flex-1">
+              <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3">
+                {val.title}
+              </h3>
+              <p className="text-gray-500 text-sm md:text-base leading-relaxed">
+                {val.description}
+              </p>
+            </div>
           </div>
         ))}
       </div>
       <hr className="mt-10" />
-      <PropertiesSection />
+      <PropertiesSection
+        watchlistsRoom={watchlistsRoom}
+        setWatchlistsRoom={setWatchlistsRoom}
+      />
     </div>
   );
 };

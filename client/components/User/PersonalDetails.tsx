@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Input } from "../ui/input";
 import {
@@ -30,26 +29,24 @@ const PersonalDetails = ({
   setMartialStatus,
 }: PersonalDetailsProps) => {
   return (
-    <div className="space-y-3 w-full">
-      <p>Personal Details</p>
+    <div className="space-y-4 w-full">
+      <p className="text-sm md:text-base font-medium">Personal Details</p>
 
-      <div className="flex gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Input
-          className=""
           placeholder="Age"
           value={age}
           onChange={(e) => setAge(e.target.value)}
         />
         <Input
-          className=""
-          placeholder="Number of people to rent"
+          placeholder="Number of renters"
           value={renters}
           onChange={(e) => setRenters(e.target.value)}
         />
       </div>
 
       <Select value={martialStatus} onValueChange={setMartialStatus}>
-        <SelectTrigger className="w-[500px]">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Martial Status" />
         </SelectTrigger>
         <SelectContent>

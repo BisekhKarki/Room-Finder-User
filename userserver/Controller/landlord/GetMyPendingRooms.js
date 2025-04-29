@@ -15,9 +15,13 @@ const getMyPendingRooms = async (req, res) => {
       });
     }
 
+    const filterPendingRooms = findMyRooms.filter(
+      (p) => !p.payment || !p.isVerified
+    );
+
     return res.status(200).json({
       success: true,
-      message: findMyRooms,
+      message: filterPendingRooms,
     });
   } catch (error) {
     return res.status(500).json({

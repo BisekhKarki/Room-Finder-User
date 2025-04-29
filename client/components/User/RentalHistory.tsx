@@ -8,7 +8,6 @@ interface RentalHistoryProps {
   setHistory: (value: string) => void;
   length: string;
   setLength: (value: string) => void;
-
   reason: string;
   setReason: (value: string) => void;
 }
@@ -18,32 +17,29 @@ const RentalHistory = ({
   setHistory,
   length,
   setLength,
-
   reason,
   setReason,
 }: RentalHistoryProps) => {
   return (
-    <div className="space-y-3">
-      <p>Rental History</p>
-      <div className="flex gap-5">
+    <div className="space-y-4">
+      <p className="text-sm md:text-base font-medium">Rental History</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Input
-          className=""
-          placeholder="Previous Rental Address"
+          placeholder="Previous Address"
           value={history}
           onChange={(e) => setHistory(e.target.value)}
         />
-
         <Input
-          className=""
-          placeholder="Length of Stay at Previous Address"
+          placeholder="Length of Stay"
           value={length}
           onChange={(e) => setLength(e.target.value)}
         />
       </div>
 
       <Textarea
-        className=""
-        placeholder="Reason for Leaving Previous Rental"
+        className="min-h-[100px]"
+        placeholder="Reason for Leaving"
         value={reason}
         onChange={(e) => setReason(e.target.value)}
       />

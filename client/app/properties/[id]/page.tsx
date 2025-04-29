@@ -55,6 +55,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchSingleRooms();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
@@ -155,8 +156,17 @@ const Page = () => {
             landlordName={property.contact.username}
           />
         )}
-        {buttonIndex === 4 && <PropertyLocation />}
-        {buttonIndex === 5 && <PropertyImages />}
+        {buttonIndex === 4 && (
+          <PropertyLocation
+            location={
+              ((property?.location.region as string) +
+                property?.location.city) as string
+            }
+          />
+        )}
+        {buttonIndex === 5 && (
+          <PropertyImages propertyImage={property?.images} />
+        )}
       </div>
       <Footer />
     </div>

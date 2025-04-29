@@ -20,6 +20,7 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import logo from "@/public/assets/Logo.png";
+import { base_url } from "@/constants/BaseUrl";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "Enter at least 1 character"),
@@ -59,24 +60,21 @@ const SignupPage = () => {
       if (values.password !== values.confirmPassword) {
         toast.error("Passwords do not match");
       } else {
-        const response = await fetch(
-          "http://localhost:4000/api/user/verify/code",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              FirstName: values.firstName,
-              LastName: values.lastName,
-              Email: values.email,
-              Phone: values.phone,
-              Address: values.address,
-              UserType: values.user,
-              Password: values.password,
-            }),
-          }
-        );
+        const response = await fetch(`${base_url}/user/verify/code`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            FirstName: values.firstName,
+            LastName: values.lastName,
+            Email: values.email,
+            Phone: values.phone,
+            Address: values.address,
+            UserType: values.user,
+            Password: values.password,
+          }),
+        });
         const val = await response.json();
         if (response.status !== 200) {
           toast.error(val.message || "Please Try again");
@@ -92,7 +90,7 @@ const SignupPage = () => {
 
   const google = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/user/google");
+      const response = await axios.get(`${base_url}/user/google`);
       if (response.status === 200 && response.data.url) {
         window.location.href = response.data.url;
         toast.success("Logged in successfully");

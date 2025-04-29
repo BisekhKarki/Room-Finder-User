@@ -3,9 +3,8 @@
 import React from "react";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
-import khalti from "../../assets/Khalti.jpg";
-import Image from "next/image";
 import { GetToken } from "@/constants/GetToken";
+import { base_url } from "@/constants/BaseUrl";
 
 interface Props {
   name: string;
@@ -20,22 +19,19 @@ const Khalti = ({ name, id, amount, roomId }: Props) => {
 
   const makePayment = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/payment/landlord/khalti",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name,
-            id,
-            amount,
-            roomId,
-          }),
-        }
-      );
+      const response = await fetch(`${base_url}/payment/landlord/khalti`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name,
+          id,
+          amount,
+          roomId,
+        }),
+      });
       const url = await response.json();
 
       if (url.success) {
@@ -52,13 +48,6 @@ const Khalti = ({ name, id, amount, roomId }: Props) => {
         className="mb-2 mt-5 bg-[#5C2E91] hover:bg-[#542985] text-white w-full h-10"
         onClick={() => makePayment()}
       >
-        <Image
-          src={khalti}
-          alt="Khalti Payment"
-          width={50}
-          height={50}
-          className="bg-transparent"
-        />{" "}
         khalti Payment
       </Button>
     </div>

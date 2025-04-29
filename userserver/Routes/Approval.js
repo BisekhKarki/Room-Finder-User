@@ -18,6 +18,7 @@ const protectRoute = require("../middleware/ProtectionRoute");
 const {
   application,
   getApprovedApplications,
+  checkRentedRoom,
 } = require("../Controller/Tenants/Rent/Applications");
 
 // For approval posting router
@@ -61,5 +62,7 @@ router.post(
   protectRoute,
   declineApproval
 );
+
+router.get("/user/rented/already", protectRoute, checkRentedRoom);
 
 module.exports = router;

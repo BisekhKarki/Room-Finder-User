@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Input } from "../ui/input";
 
@@ -30,46 +29,42 @@ const OtherDetails = ({
 }: OtherDetailsProps) => {
   return (
     <div className="space-y-6 w-full">
-      <div className="space-y-3">
-        <p>Employment & Income Details</p>
-        <div className="flex gap-5">
+      <div className="space-y-4">
+        <p className="text-sm md:text-base font-medium">Employment & Income</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Input
-            className=""
             placeholder="Current Job"
             value={job}
             onChange={(e) => setJob(e.target.value)}
           />
           <Input
-            className=""
             placeholder="Monthly Income"
             value={income}
             onChange={(e) => setIncome(e.target.value)}
           />
         </div>
       </div>
-      <div className="space-y-3">
-        <p>Emergency Contact Details</p>
-        <div className="flex gap-5">
+
+      <div className="space-y-4">
+        <p className="text-sm md:text-base font-medium">Emergency Contact</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Input
-            className=""
-            placeholder="Name of the person"
+            placeholder="Contact Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <Input
-            className=""
-            placeholder="Contact Number"
+            placeholder="Phone Number"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-        </div>
-        <div className="flex gap-5">
-          <Input
-            className=""
-            placeholder="Relationship to the person"
-            value={relationship}
-            onChange={(e) => setRelationship(e.target.value)}
-          />
+          <div className="md:col-span-2">
+            <Input
+              placeholder="Relationship"
+              value={relationship}
+              onChange={(e) => setRelationship(e.target.value)}
+            />
+          </div>
         </div>
       </div>
     </div>

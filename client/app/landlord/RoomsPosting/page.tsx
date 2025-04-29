@@ -39,41 +39,46 @@ const Page = () => {
 
   return (
     <>
-      <div className="m-6">
-        <div className=" py-4 px-6 rounded-md">
-          <h1 className="text-3xl font-bold">Post Your Property</h1>
-          <p className="mt-3 text-gray-500">
-            Easily list, manage, and promote your rental properties, connect
-            with potential tenants, and streamline your leasing process—all in
-            one place. Maximize your property visibility and minimize the
-            hassle!
-          </p>
-        </div>
-        <hr className=" w-full  mt-5" />
+      <div className="flex-1 min-h-screen">
+        <div className="m-4 md:m-6">
+          <div className="py-4 px-4 md:px-6 rounded-md">
+            <h1 className="text-2xl md:text-3xl font-bold">
+              Post Your Property
+            </h1>
+            <p className="mt-3 text-sm md:text-base text-gray-500">
+              Easily list, manage, and promote your rental properties, connect
+              with potential tenants, and streamline your leasing process—all in
+              one place. Maximize your property visibility and minimize the
+              hassle!
+            </p>
+          </div>
 
-        <div className="mt-10">
-          <Stepper
-            items={steps}
-            activeItem={counter}
-            setActiveItem={setCounter}
-          />
-          <div className="shadow-md py-4 px-6 border border-gray-300 mt-5 rounded-md">
-            {counter === 0 && (
-              <BasicDetails counter={counter} setCounter={setCounter} />
-            )}
-            {counter === 1 && (
-              <Location counter={counter} setCounter={setCounter} />
-            )}
-            {counter === 2 && (
-              <Features counter={counter} setCounter={setCounter} />
-            )}
-            {counter === 3 && (
-              <Images counter={counter} setCounter={setCounter} />
-            )}
+          <hr className="w-full mt-5" />
 
-            {counter === 4 && (
-              <ContactDeatils counter={counter} setCounter={setCounter} />
-            )}
+          <div className="mt-6 md:mt-10">
+            <Stepper
+              items={steps}
+              activeItem={counter}
+              setActiveItem={setCounter}
+            />
+            <div className="shadow-md py-3 px-4 md:py-4 md:px-6 border border-gray-300 mt-5 rounded-md max-w-6xl mx-auto bg-white">
+              {" "}
+              {counter === 0 && (
+                <BasicDetails counter={counter} setCounter={setCounter} />
+              )}
+              {counter === 1 && (
+                <Location counter={counter} setCounter={setCounter} />
+              )}
+              {counter === 2 && (
+                <Features counter={counter} setCounter={setCounter} />
+              )}
+              {counter === 3 && (
+                <Images counter={counter} setCounter={setCounter} />
+              )}
+              {counter === 4 && (
+                <ContactDeatils counter={counter} setCounter={setCounter} />
+              )}
+            </div>
           </div>
         </div>
       </div>

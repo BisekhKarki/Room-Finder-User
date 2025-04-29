@@ -67,80 +67,88 @@ const Page = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center py-10">
-        <div className="w-5/6 border rounded-md">
-          <h1 className="w-full bg-blue-400 text text-white text-center px-4 py-3 font-bold text-2xl rounded-t-xl">
+    <div className="min-h-screen">
+      {/* Contact Info Section */}
+      <div className="flex justify-center py-6 md:py-10 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-4xl border rounded-md shadow-sm">
+          <h1 className="w-full bg-blue-400 text-white text-center px-4 py-3 font-bold text-xl md:text-2xl lg:text-3xl rounded-t-md">
             Get in touch with us
           </h1>
 
-          <div className="flex flex-col justify-center mt-3 mb-3">
-            <div className="flex gap-2 justify-center text-center items-center">
-              <FaPhone className="text-blue-500 " />
-              <p className="text-base text-gray-500">Phone: +977 9876543210</p>
+          <div className="flex flex-col space-y-3 md:space-y-4 mt-4 mb-4 px-4 md:px-6">
+            <div className="flex gap-2 justify-center items-center">
+              <FaPhone className="text-blue-500 text-lg md:text-xl" />
+              <p className="text-sm md:text-base text-gray-600">
+                +977 9876543210
+              </p>
             </div>
 
-            <div className="flex gap-2 justify-center text-center items-center">
-              <IoMail className="text-blue-500 text-xl" />
-              <p className="text-base text-gray-500">
-                Email: RoomFinder@gmail.com
+            <div className="flex gap-2 justify-center items-center">
+              <IoMail className="text-blue-500 text-lg md:text-xl" />
+              <p className="text-sm md:text-base text-gray-600 break-all">
+                RoomFinder@gmail.com
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex justify-center mb-10">
-        <div className="w-2/3 shadow-md rounded-md">
-          <h1 className="w-full bg-blue-400 text text-white text-center px-4 py-3 font-bold text-3xl rounded-t-xl">
+
+      {/* Contact Form Section */}
+      <div className="flex justify-center mb-10 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-4xl shadow-md rounded-md">
+          <h1 className="w-full bg-blue-400 text-white text-center px-4 py-3 font-bold text-xl md:text-2xl lg:text-3xl rounded-t-md">
             Contact Us
           </h1>
-          <p className="py-3 px-6 text-gray-500">
-            Have questions or need assistance? We are here to help! Reach out to
-            our friendly team through our Contact Us page. Whether you are
-            looking for more information, have feedback, or need support, we are
-            just a message away. Fill out the form below, and we will get back
-            to you promptly. Your satisfaction is our priority!
+
+          <p className="py-3 px-4 md:px-6 text-sm md:text-base text-gray-600">
+            Have questions or need assistance? We are here to help! Reach out
+            through our form below and we will respond promptly.
           </p>
-          <hr className="mb-5 mt-2 w-full" />
-          <form className="mb-2 px-10 py-5 space-y-6">
-            <div className="flex gap-5">
+
+          <hr className="mb-4 mt-2" />
+
+          <form className="mb-2 px-4 md:px-6 lg:px-8 py-4 md:py-6 space-y-4 md:space-y-6">
+            <div className="flex flex-col md:flex-row gap-3 md:gap-5">
               <Input
                 placeholder="First Name"
-                className="h-10"
+                className="h-10 md:h-12"
                 value={first}
                 onChange={(e) => setFirst(e.target.value)}
               />
               <Input
                 placeholder="Last Name"
-                className="h-10"
+                className="h-10 md:h-12"
                 value={last}
                 onChange={(e) => setLast(e.target.value)}
               />
             </div>
-            <div className="flex gap-5">
+
+            <div className="flex flex-col md:flex-row gap-3 md:gap-5">
               <Input
                 placeholder="Mobile No."
-                className="h-10"
+                className="h-10 md:h-12"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
               <Input
                 placeholder="Email"
-                className="h-10"
+                className="h-10 md:h-12"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <Textarea
-              placeholder="Enter you message here"
-              className="h-24"
+              placeholder="Enter your message here"
+              className="h-32 md:h-40"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
+
             <Button
               type="submit"
-              className="w-full bg-blue-400 hover:bg-blue-500 "
+              className="w-full bg-blue-400 hover:bg-blue-500 h-12 text-sm md:text-base"
               onClick={(e: React.FormEvent) => sendMessage(e)}
             >
               Send Message

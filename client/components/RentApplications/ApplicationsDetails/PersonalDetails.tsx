@@ -15,19 +15,35 @@ interface Props {
 
 const PersonalDetails = ({ Personal_Details }: Props) => {
   return (
-    <div className="">
-      <h1 className="text-3xl font-bold mb-5">Personal Details</h1>
-      <hr className="mb-4" />
-      <div className="flex flex-col space-y-4">
-        <div className="flex justify-between">
-          <p>Name: {Personal_Details?.fullName}</p>
-          <p>Email: {Personal_Details?.email}</p>
-          <p>Age: {Personal_Details?.age}</p>
+    <div className="space-y-4">
+      <h1 className="text-2xl md:text-3xl font-semibold mb-3 md:mb-4">
+        Personal Details
+      </h1>
+      <hr className="border-gray-200 mb-4" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm md:text-base">
+        <div className="space-y-1">
+          <p className="font-medium">Name:</p>
+          <p>{Personal_Details?.fullName}</p>
         </div>
-        <div className="flex justify-between">
-          <p>Marital Status: {Personal_Details?.marital_status}</p>
-          <p>Permanent Address: {Personal_Details?.permanentAddress}</p>
-          <p>Number of renters: {Personal_Details?.numberOfRenters}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Email:</p>
+          <p>{Personal_Details?.email}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Age:</p>
+          <p>{Personal_Details?.age}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Marital Status:</p>
+          <p>{Personal_Details?.marital_status}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Permanent Address:</p>
+          <p className="line-clamp-2">{Personal_Details?.permanentAddress}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium">Number of Renters:</p>
+          <p>{Personal_Details?.numberOfRenters}</p>
         </div>
       </div>
     </div>

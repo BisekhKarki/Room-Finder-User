@@ -38,6 +38,7 @@ const Page = () => {
     if (token) {
       savePurchaseDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   const savePurchaseDetails = async () => {
     try {
@@ -60,28 +61,55 @@ const Page = () => {
   };
 
   return (
-    <div className="">
-      <div className="flex items-center justify-center">
-        <div
-          className="flex flex-col justify-center items-center rounded  border-gray-900 px-10 py-20 m-10 w-1/2
-         gap-2 shadow-2xl relative"
-        >
-          <h1 className="text-4xl font-bold">Success</h1>
-          <div className=" flex flex-col justify-center items-center">
-            <Image src={success} alt="Correct" />
-            <div className="flex flex-col justify-center items-center">
-              <h2 className="font-bold text-2xl m-2">Payment Successful</h2>
-              <p className="m-1 text-gray-400">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
+      <div className="w-full max-w-2xl">
+        <div className="relative bg-white rounded-xl border border-gray-200 shadow-lg p-6 sm:p-8 md:p-12 transition-all duration-300 hover:shadow-xl">
+          {/* Close Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-red-500 hover:bg-red-50 rounded-full p-1.5"
+            onClick={() => router.push("/user/properties")}
+          >
+            <ImCross className="h-4 w-4 sm:h-5 sm:w-5" />
+          </Button>
+
+          {/* Content Container */}
+          <div className="flex flex-col items-center space-y-6 md:space-y-8">
+            {/* Title */}
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+              Success
+            </h1>
+
+            {/* Image Section */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64">
+              <Image
+                src={success}
+                alt="Payment Successful"
+                layout="fill"
+                objectFit="contain"
+                className="animate-pulse"
+              />
+            </div>
+
+            {/* Status Section */}
+            <div className="text-center space-y-3">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                Payment Successful
+              </h2>
+              <p className="text-gray-500 text-sm sm:text-base max-w-md">
                 Your transaction was completed successfully.
               </p>
             </div>
+
+            {/* Action Button */}
+            <Button
+              className="w-full sm:w-auto px-8 py-4 text-base font-medium"
+              onClick={() => router.push("/user/properties")}
+            >
+              View Your Properties
+            </Button>
           </div>
-          <Button
-            className="absolute top-5 right-4 bg-red-500 hover:bg-red-600 border-none"
-            onClick={() => router.push("/user/properties")}
-          >
-            <ImCross />
-          </Button>
         </div>
       </div>
     </div>

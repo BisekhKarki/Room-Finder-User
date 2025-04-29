@@ -1,3 +1,4 @@
+"use client";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
@@ -12,9 +13,15 @@ const CitizenshipFront = ({ setCitizenshipFront }: Props) => {
   const [uploading, setUploading] = useState<boolean>(false);
 
   return (
-    <div>
+    <div className="w-full space-y-3">
       {publicId && (
-        <CldImage src={publicId} alt={publicId} width={"500"} height={"500"} />
+        <CldImage
+          src={publicId}
+          alt="Citizenship Front"
+          width={500}
+          height={300}
+          className="w-full h-auto rounded-md border"
+        />
       )}
       <CldUploadWidget
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
@@ -28,17 +35,22 @@ const CitizenshipFront = ({ setCitizenshipFront }: Props) => {
       >
         {({ open }) => (
           <Button
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white flex items-center gap-2 px-6 py-3 rounded-lg shadow-md transition-all"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center gap-2 px-4 py-2 text-xs md:text-sm"
             type="button"
-            onClick={() => open()}
+            onClick={() => {
+              setUploading(true);
+              open();
+            }}
           >
             {uploading ? (
               <>
-                <Loader2 className="animate-spin " /> uploadng...
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Uploading...
               </>
             ) : (
               <>
-                <Upload /> Upload citizenship front
+                <Upload className="w-4 h-4" />
+                <span className="hidden xs:inline">Citizenship Front</span>
               </>
             )}
           </Button>

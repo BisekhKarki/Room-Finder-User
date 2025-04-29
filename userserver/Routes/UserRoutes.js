@@ -19,6 +19,12 @@ const {
 const changePass = require("../lib/ChangePassword");
 const protectRoute = require("../middleware/ProtectionRoute");
 const { getDetails } = require("../Controller/User/UserDetails");
+const {
+  getUserDetails,
+  getRentedRooms,
+  changePassword,
+  getCurrentRentedRooms,
+} = require("../Controller/User/PersonalDetails");
 
 // For User Registration Route
 router.post("/register", register);
@@ -43,4 +49,9 @@ router.post("/pass/change", changePass);
 // to get the userDetails
 router.get("/get/details/user", protectRoute, getDetails);
 
+// personal details
+router.get("/personal", protectRoute, getUserDetails);
+router.get("/room/history", protectRoute, getRentedRooms);
+router.get("/room/current", protectRoute, getCurrentRentedRooms);
+router.post("/password/change", protectRoute, changePassword);
 module.exports = router;

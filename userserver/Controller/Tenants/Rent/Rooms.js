@@ -1,5 +1,6 @@
 const rentedPropeerties = require("../../../Schemas/RentedRoomSchema");
 const room = require("../../../Schemas/RoomSchema");
+const roomHistory = require("../../../Schemas/Rent_History");
 
 const getRentedRoom = async (req, res) => {
   const userData = req.userData;
@@ -41,7 +42,7 @@ const getCategoryRooms = async (req, res) => {
     }
 
     const filterRooms = findRooms.filter(
-      (room) => room.basic.type === category
+      (room) => room.basic.type === category && room.show
     );
 
     if (!filterRooms) {
@@ -63,4 +64,31 @@ const getCategoryRooms = async (req, res) => {
   }
 };
 
-module.exports = { getRentedRoom, getCategoryRooms };
+const history = async (req, res) => {
+  const userData = req.userData;
+
+  try {
+    const findRoom = await roomHistory.find({
+      rented_by: userData.id,
+    });
+
+    if (!findRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "No room found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: findRoom,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { getRentedRoom, getCategoryRooms, history };
