@@ -21,13 +21,13 @@ const { scheduleUserEmails } = require("./lib/Automatic");
 
 const homeRouter = require("./Routes/HomeRoute");
 
-const FRONTEND_URL = process.env.Frontend_Url || "http://localhost:3000";
-
+const frontend_Url = process.env.FRONTEND_URL || "http://localhost:3000";
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(passport.initialize());
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: frontend_Url,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
