@@ -7,7 +7,6 @@ import {
   LocationData,
 } from "@/components/User/FeaturedRooms";
 import React, { useEffect, useState } from "react";
-import { reviewsArray } from "../../properties/[id]/page";
 import { base_url, tenant_base_url } from "@/constants/BaseUrl";
 import axios from "axios";
 import { GetToken } from "@/constants/GetToken";
@@ -35,6 +34,13 @@ const viewComponentButtons = [
   { index: 5, label: "Images" },
   { index: 6, label: "Rent Room" },
 ];
+
+interface reviewsArray {
+  comment: string;
+  rating: number;
+  _id: string;
+  created_at: Date;
+}
 
 interface PropertyDetails {
   basic: BasicData;
