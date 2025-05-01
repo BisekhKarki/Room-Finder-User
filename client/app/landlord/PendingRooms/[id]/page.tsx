@@ -20,6 +20,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { GetToken } from "@/constants/GetToken";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { base_url } from "@/constants/BaseUrl";
 
 export interface ContactData {
   email: string;
@@ -88,7 +89,7 @@ const Page = () => {
     console.log(landlordId);
     try {
       const response = await fetch(
-        `http://localhost:4000/api/rooms/myRooms/pending/single/get/${id}`,
+        `${base_url}/rooms/myRooms/pending/single/get/${id}`,
         {
           method: "POST",
           headers: {

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { GetToken } from "@/constants/GetToken";
 import { PendingRoom } from "./[id]/page";
 import { checkToken } from "@/store/slice";
+import { base_url } from "@/constants/BaseUrl";
 
 const Page = () => {
   const [pending, setPending] = useState<Array<PendingRoom> | []>([]);
@@ -52,17 +53,14 @@ const Page = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/posted/allRooms",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ landlordId: userDetail }),
-        }
-      );
+      const response = await fetch(`${base_url}/posted/allRooms`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ landlordId: userDetail }),
+      });
       const data = await response.json();
       if (response.status === 200) {
         setPending(data.message);

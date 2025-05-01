@@ -22,6 +22,7 @@ import { GetToken } from "@/constants/GetToken";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import EditRoom from "@/components/RoomPostSections/RoomEdit/EditRooms";
+import { base_url } from "@/constants/BaseUrl";
 
 export interface ContactData {
   email: string;
@@ -99,17 +100,14 @@ const Page = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/posted/SingleRoom/${id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ landlordId: landlordId }),
-        }
-      );
+      const response = await fetch(`${base_url}/posted/SingleRoom/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ landlordId: landlordId }),
+      });
       const data = await response.json();
 
       if (response.status === 200) {

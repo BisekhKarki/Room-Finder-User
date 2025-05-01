@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import toast from "react-hot-toast";
 import khalti from "../../assets/Khalti.jpg";
 import Image from "next/image";
+import { base_url } from "@/constants/BaseUrl";
 
 interface Props {
   name: string;
@@ -16,21 +17,18 @@ interface Props {
 const KhaltiPay = ({ name, id, amount, roomId }: Props) => {
   const makePayment = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/payment/landlord/khalti",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            id,
-            amount,
-            roomId,
-          }),
-        }
-      );
+      const response = await fetch(`${base_url}/payment/landlord/khalti`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          id,
+          amount,
+          roomId,
+        }),
+      });
       const url = await response.json();
 
       if (url.success) {

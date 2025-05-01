@@ -18,6 +18,7 @@ import {
   LocationData,
 } from "./[id]/page";
 import { GetToken } from "@/constants/GetToken";
+import { base_url } from "@/constants/BaseUrl";
 interface PendingRooms {
   basic: BasicData;
   features: FeaturesData;
@@ -52,17 +53,14 @@ const Page = () => {
 
     try {
       if (!token) return;
-      const response = await fetch(
-        "http://localhost:4000/api/rooms/myRooms/pending",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ landlordId: userDetail }),
-        }
-      );
+      const response = await fetch(`${base_url}/rooms/myRooms/pending`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ landlordId: userDetail }),
+      });
       const data = await response.json();
       if (response.status === 200) {
         setPending(data.message);

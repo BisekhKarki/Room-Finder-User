@@ -10,10 +10,10 @@ const passport = require("passport");
 const approval = require("./Routes/Approval");
 const roomsPosted = require("./Routes/MyRooms");
 const cookieParser = require("cookie-parser");
-const validateUser = require("./Controller/ProtectRoute");
+// const validateUser = require("./Controller/ProtectRoute");
 const ContactUs = require("./Routes/ContactUsRouter");
 const paymentGateway = require("./Routes/PaymentRoute");
-const router = express.Router();
+// const router = express.Router();
 const roomRouter = require("./Routes/Rooms");
 const rentedRouter = require("./Routes/Rented");
 const watchListsRouter = require("./Routes/WatchLists");
@@ -21,11 +21,15 @@ const { scheduleUserEmails } = require("./lib/Automatic");
 
 const homeRouter = require("./Routes/HomeRoute");
 
+const FRONTEND_URL = process.env.Frontend_Url || "http://localhost:3000";
+
 app.use(express.json());
 app.use(passport.initialize());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );

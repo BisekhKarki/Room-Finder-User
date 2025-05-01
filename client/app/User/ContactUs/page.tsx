@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { base_url } from "@/constants/BaseUrl";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPhone } from "react-icons/fa";
@@ -45,14 +46,11 @@ const Page = () => {
         return;
       }
 
-      const response = await fetch(
-        "http://localhost:4000/api/ContactUs/send/message",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${base_url}/ContactUs/send/message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
 

@@ -11,6 +11,7 @@ import { AppDispatch } from "@/store/store";
 import { contactDetails } from "@/store/form";
 // import { FaMoneyBill } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { base_url } from "@/constants/BaseUrl";
 
 interface Props {
   counter: number;
@@ -94,28 +95,25 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
 
     try {
       if (landlordId) {
-        const response = await fetch(
-          "http://localhost:4000/api/rooms/approval",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
+        const response = await fetch(`${base_url}/rooms/approval`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            basic,
+            location,
+            features,
+            images,
+            contact: {
+              username: userName,
+              email,
+              phone,
             },
-            body: JSON.stringify({
-              basic,
-              location,
-              features,
-              images,
-              contact: {
-                username: userName,
-                email,
-                phone,
-              },
-              landlordId: landlordId,
-            }),
-          }
-        );
+            landlordId: landlordId,
+          }),
+        });
 
         const val = await response.json();
         if (val.success) {
