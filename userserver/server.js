@@ -21,8 +21,9 @@ const { scheduleUserEmails } = require("./lib/Automatic");
 
 const homeRouter = require("./Routes/HomeRoute");
 
-const frontend_Url = process.env.FRONTEND_URL || "http://localhost:3000";
 app.set("trust proxy", 1);
+const frontend_Url = process.env.FRONTEND_URL || "http://localhost:3000";
+
 app.use(express.json());
 app.use(passport.initialize());
 app.use(
