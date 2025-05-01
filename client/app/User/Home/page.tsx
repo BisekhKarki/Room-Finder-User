@@ -13,9 +13,55 @@ import CategoriesBox from "@/components/User/CategoriesBox";
 import PropertiesSection from "@/components/User/PropertiesSection";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { FeaturedRoom } from "../watchlists/page";
+
 import { base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
+
+interface ContactData {
+  email: string;
+  phone: string;
+  username: string;
+}
+
+interface BasicData {
+  description: string;
+  name: string;
+  price: string;
+  type: string;
+}
+
+interface FeaturesData {
+  Kitchen: string;
+  balcony: string;
+  category: string;
+  direction: string;
+  floor: string;
+  parking: string;
+  waterfacility: string;
+}
+
+interface LocationData {
+  province?: string;
+  city: string;
+  landmark: string;
+  region: string;
+  street: string;
+  zip: string;
+}
+
+interface FeaturedRoom {
+  basic: BasicData;
+  features: FeaturesData;
+  images: string[];
+  isVerified: boolean;
+  landlordId: string;
+  location: LocationData;
+  contact: ContactData;
+  payment: boolean;
+  roomId?: string;
+  __v: number;
+  _id: string;
+}
 
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();

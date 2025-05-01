@@ -22,20 +22,20 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { base_url } from "@/constants/BaseUrl";
 
-export interface ContactData {
+interface ContactData {
   email: string;
   phone: string;
   username: string;
 }
 
-export interface BasicData {
+interface BasicData {
   description: string;
   name: string;
   price: string;
   type: string;
 }
 
-export interface FeaturesData {
+interface FeaturesData {
   Kitchen: string;
   balcony: string;
   category: string;
@@ -45,7 +45,7 @@ export interface FeaturesData {
   waterfacility: string;
 }
 
-export interface LocationData {
+interface LocationData {
   province: string;
   city: string;
   landmark: string;
@@ -54,7 +54,7 @@ export interface LocationData {
   zip: string;
 }
 
-export interface PendingRoom {
+interface PendingRoom {
   basic: BasicData;
   features: FeaturesData;
   images: string[];

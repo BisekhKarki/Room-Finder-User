@@ -16,20 +16,20 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export interface ContactData {
+interface ContactData {
   email: string;
   phone: string;
   username: string;
 }
 
-export interface BasicData {
+interface BasicData {
   description: string;
   name: string;
   price: string;
   type: string;
 }
 
-export interface FeaturesData {
+interface FeaturesData {
   Kitchen: string;
   balcony: string;
   category: string;
@@ -39,7 +39,7 @@ export interface FeaturesData {
   waterfacility: string;
 }
 
-export interface LocationData {
+interface LocationData {
   Province: string;
   city: string;
   landmark: string;
@@ -48,14 +48,14 @@ export interface LocationData {
   zip: string;
 }
 
-export interface PropertyReviews {
+interface PropertyReviews {
   _id: string;
   comment: string;
   rating: number;
   created_at: Date;
 }
 
-export interface PropertyDetails {
+interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
   images: string[];

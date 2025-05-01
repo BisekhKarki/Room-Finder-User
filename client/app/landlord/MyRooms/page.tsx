@@ -12,9 +12,54 @@ import ClipLoader from "react-spinners/ClipLoader";
 // import { GrFormPrevious } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 import { GetToken } from "@/constants/GetToken";
-import { PendingRoom } from "./[id]/page";
+
 import { checkToken } from "@/store/slice";
 import { base_url } from "@/constants/BaseUrl";
+
+interface ContactData {
+  email: string;
+  phone: string;
+  username: string;
+}
+
+interface BasicData {
+  description: string;
+  name: string;
+  price: string;
+  type: string;
+}
+
+interface FeaturesData {
+  Kitchen: string;
+  balcony: string;
+  category: string;
+  direction: string;
+  floor: string;
+  parking: string;
+  waterfacility: string;
+}
+
+interface LocationData {
+  province: string;
+  city: string;
+  landmark: string;
+  region: string;
+  street: string;
+  zip: string;
+}
+
+interface PendingRoom {
+  basic: BasicData;
+  features: FeaturesData;
+  images: string[];
+  isVerified: boolean;
+  landlordId: string;
+  location: LocationData;
+  contact: ContactData;
+  payment: boolean;
+  __v: number;
+  _id: string;
+}
 
 const Page = () => {
   const [pending, setPending] = useState<Array<PendingRoom> | []>([]);

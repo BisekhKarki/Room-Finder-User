@@ -1,6 +1,5 @@
 "use client";
 
-import { PropertyDetails } from "../../../app/user/rentedRooms/page";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Description from "@/components/RoomView/Description";
@@ -26,6 +25,63 @@ const viewComponentButtons = [
   { index: 4, label: "Location" },
   { index: 5, label: "Images" },
 ];
+
+interface ContactData {
+  email: string;
+  phone: string;
+  username: string;
+}
+
+interface BasicData {
+  description: string;
+  name: string;
+  price: string;
+  type: string;
+}
+
+interface FeaturesData {
+  Kitchen: string;
+  balcony: string;
+  category: string;
+  direction: string;
+  floor: string;
+  parking: string;
+  waterfacility: string;
+}
+
+interface LocationData {
+  Province: string;
+  city: string;
+  landmark: string;
+  region: string;
+  street: string;
+  zip: string;
+}
+
+interface PropertyReviews {
+  _id: string;
+  comment: string;
+  rating: number;
+  created_at: Date;
+}
+
+interface PropertyDetails {
+  basic: BasicData;
+  features: FeaturesData;
+  images: string[];
+  isVerified: boolean;
+  landlordId: string;
+  location: LocationData;
+  contact: ContactData;
+  payment: boolean;
+  __v: number;
+  _id: string;
+  reviews: Array<PropertyReviews>;
+  rented_date: Date;
+  rented_by: string;
+  rented_user_name: string;
+  room_id: string;
+}
 
 const Page = () => {
   const params = useParams();

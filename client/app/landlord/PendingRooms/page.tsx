@@ -11,14 +11,42 @@ import { useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 // import { GrFormPrevious } from "react-icons/gr";
 import { useRouter } from "next/navigation";
-import {
-  BasicData,
-  ContactData,
-  FeaturesData,
-  LocationData,
-} from "./[id]/page";
+
 import { GetToken } from "@/constants/GetToken";
 import { base_url } from "@/constants/BaseUrl";
+
+interface ContactData {
+  email: string;
+  phone: string;
+  username: string;
+}
+
+interface BasicData {
+  description: string;
+  name: string;
+  price: string;
+  type: string;
+}
+
+interface FeaturesData {
+  Kitchen: string;
+  balcony: string;
+  category: string;
+  direction: string;
+  floor: string;
+  parking: string;
+  waterfacility: string;
+}
+
+interface LocationData {
+  province: string;
+  city: string;
+  landmark: string;
+  region: string;
+  street: string;
+  zip: string;
+}
+
 interface PendingRooms {
   basic: BasicData;
   features: FeaturesData;

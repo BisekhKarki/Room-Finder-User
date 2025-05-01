@@ -19,20 +19,20 @@ import React, { useEffect, useState } from "react";
 
 import { IoIosArrowRoundBack } from "react-icons/io";
 
-export interface ContactData {
+interface ContactData {
   email: string;
   phone: string;
   username: string;
 }
 
-export interface BasicData {
+interface BasicData {
   description: string;
   name: string;
   price: string;
   type: string;
 }
 
-export interface FeaturesData {
+interface FeaturesData {
   Kitchen: string;
   balcony: string;
   category: string;
@@ -42,7 +42,7 @@ export interface FeaturesData {
   waterfacility: string;
 }
 
-export interface LocationData {
+interface LocationData {
   province: string;
   city: string;
   landmark: string;
@@ -51,14 +51,14 @@ export interface LocationData {
   zip: string;
 }
 
-export interface reviewsArray {
+interface reviewsArray {
   comment: string;
   rating: number;
   _id: string;
   created_at: Date;
 }
 
-export interface PropertyProps {
+interface PropertyProps {
   basic: BasicData;
   features: FeaturesData;
   images: string[];
