@@ -1,6 +1,6 @@
 "use client";
 
-import { PropertyDetails } from "@/app/user/rentedRooms/page";
+import { PropertyDetails } from "../../../app/user/rentedRooms/page";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Description from "@/components/RoomView/Description";
