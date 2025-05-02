@@ -18,8 +18,9 @@ const roomRouter = require("./Routes/Rooms");
 const rentedRouter = require("./Routes/Rented");
 const watchListsRouter = require("./Routes/WatchLists");
 const { scheduleUserEmails } = require("./lib/Automatic");
+const homeCategory = require("./Routes/HomeRoute");
 
-const homeRouter = require("./Routes/HomeRoute");
+const home = require("./Routes/NonUser");
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
@@ -43,7 +44,7 @@ scheduleUserEmails();
 
 // Validate User
 // for home router
-app.use("/api", homeRouter);
+app.use("/api", homeCategory);
 
 // For user Routes
 app.use("/api/user", userRouter);
@@ -67,6 +68,9 @@ app.use("/api/rented", rentedRouter);
 
 // For watchLists
 app.use("/api/watchlists", watchListsRouter);
+
+// For home page
+app.use("/api/categories", home);
 
 // Checking the server is running or not
 app.listen(PORT, () => {

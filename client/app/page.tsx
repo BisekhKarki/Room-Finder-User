@@ -82,7 +82,10 @@ const Page = () => {
             <br className="hidden md:block" />
             interest in Nepal easily
           </p>
-          <Button className="bg-blue-500 hover:bg-blue-600 mx-auto lg:mx-0">
+          <Button
+            className="bg-blue-500 hover:bg-blue-600 mx-auto lg:mx-0"
+            onClick={() => router.push("/properties")}
+          >
             Explore Properties
           </Button>
         </div>

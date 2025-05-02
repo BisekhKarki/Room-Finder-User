@@ -122,11 +122,11 @@ const Page = () => {
         <div className="text-2xl mb-5 flex items-center gap-1 ml-4 md:ml-8">
           <IoIosArrowRoundBack
             className="text-gray-800 cursor-pointer"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/categories")}
           />
           <p
             className="text-base cursor-pointer"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/categories")}
           >
             Back
           </p>

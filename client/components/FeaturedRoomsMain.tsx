@@ -21,7 +21,9 @@ const FeaturedRoomsMain = () => {
           "Content-Type": "application/json",
         },
       });
+
       const data = await response.json();
+      console.log(data);
       if (response.status === 200) {
         setFeatured(data.message);
       }

@@ -5,7 +5,7 @@ import { FeaturedRoom } from "./User/FeaturedRooms";
 import { base_url } from "@/constants/BaseUrl";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { FaAngleRight } from "react-icons/fa";
+
 import { useRouter } from "next/navigation";
 
 const HomeProperties = () => {
@@ -41,10 +41,6 @@ const HomeProperties = () => {
           <h1 className="mb-4 md:mb-0 text-2xl md:text-3xl lg:text-4xl font-bold text-center md:text-left">
             Properties
           </h1>
-          <div className="text-blue-500 flex items-center gap-1">
-            <p className="underline cursor-pointer">View more </p>
-            <FaAngleRight className="cursor-pointer" />
-          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 xl:gap-24 px-4 md:px-8 lg:px-20">
