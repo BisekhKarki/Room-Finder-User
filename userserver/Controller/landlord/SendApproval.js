@@ -194,7 +194,6 @@ const getApproval = async (req, res) => {
 const updateRoomApproval = async (req, res) => {
   const { status, landlordId, roomId } = req.body;
 
-  console.log(roomId, status, landlordId);
   try {
     const findRoom = await ApprovalSchema.findOne({ _id: roomId });
     // console.log(findRoom);

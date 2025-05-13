@@ -62,7 +62,7 @@ const LoginPage = () => {
         toast.success(data.message);
         localStorage.setItem("Token", data.token);
         router.push(data.redirect);
-      } else {
+      } else if (response.status !== 200) {
         toast.error(data.message);
       }
     } catch (error: unknown) {

@@ -18,7 +18,7 @@ interface PurchaseDetails {
   room_id: string;
   seller_name: string;
   landlord_id: string;
-  tenant_id: string;
+  tenant_id?: string;
 }
 
 const Page = () => {
@@ -28,18 +28,22 @@ const Page = () => {
     useState<PurchaseDetails | null>(null);
 
   useEffect(() => {
-    const getItems = localStorage.getItem("Rent_Purchase_Details");
-    if (getItems) {
-      setPurchaseDetails(JSON.parse(getItems));
+    if (typeof window !== "undefined") {
+      const getItems = localStorage.getItem("Rent_Purchase_Details");
+      console.log("From localStorage:", getItems);
+      if (getItems) {
+        setPurchaseDetails(JSON.parse(getItems));
+      }
     }
   }, []);
   const token = GetToken();
   useEffect(() => {
-    if (token) {
+    console.log(purchaseDetails);
+    if (token && purchaseDetails) {
       savePurchaseDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, purchaseDetails]);
   const savePurchaseDetails = async () => {
     try {
       const response = await fetch(
@@ -101,14 +105,6 @@ const Page = () => {
                 Your transaction was completed successfully.
               </p>
             </div>
-
-            {/* Action Button */}
-            <Button
-              className="w-full sm:w-auto px-8 py-4 text-base font-medium"
-              onClick={() => router.push("/user/properties")}
-            >
-              View Your Properties
-            </Button>
           </div>
         </div>
       </div>

@@ -97,6 +97,9 @@ const RentDetails = ({ rentDate, token, room }: Rent) => {
         </p>
       </div>
 
+      {/* Rented Room  */}
+      <div>Yo part baki xa</div>
+
       <Button
         className="mt-10 w-52 bg-red-500 hover:bg-red-600"
         onClick={() => setPopup(true)}

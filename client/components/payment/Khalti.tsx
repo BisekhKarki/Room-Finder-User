@@ -33,6 +33,7 @@ const Khalti = ({ name, id, amount, roomId }: Props) => {
         }),
       });
       const url = await response.json();
+      console.log(url);
 
       if (url.success) {
         window.location.href = url.message;

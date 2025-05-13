@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { GoStarFill } from "react-icons/go";
 import toast from "react-hot-toast";
 import { base_url } from "@/constants/BaseUrl";
+import { useRouter } from "next/navigation";
 
 interface Props {
   setPopup: (value: boolean) => void;
@@ -16,12 +17,7 @@ interface Props {
 const DeletePopup = ({ setPopup, token, landlordId, roomId }: Props) => {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-
-  console.log({
-    token,
-    landlordId,
-    roomId,
-  });
+  const router = useRouter();
 
   const leaveRoom = async () => {
     try {
@@ -42,6 +38,7 @@ const DeletePopup = ({ setPopup, token, landlordId, roomId }: Props) => {
 
       if (response.status === 200) {
         toast.success(data.message);
+        router.push("/user/home");
       } else {
         toast.error(data.message);
       }

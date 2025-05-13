@@ -104,6 +104,26 @@ const acceptApproval = async (req, res) => {
     findApproval.status = "accepted";
     await findApproval.save();
 
+    const otherApplications = await rentApproval.find({
+      roomId: roomId,
+      _id: { $ne: findApproval._id },
+    });
+
+    for (const application of otherApplications) {
+      sendDeclineEmailToTenant(
+        application.personalDetails.email,
+        roomId,
+        application.tenantId,
+        application.landlordId
+      );
+    }
+
+    // Delete all other applications
+    await rentApproval.deleteMany({
+      roomId: roomId,
+      _id: { $ne: findApproval._id },
+    });
+
     sendEmailToTenant(
       findApproval.personalDetails.email,
       roomId,
@@ -298,11 +318,18 @@ const sendEmailToTenant = async (email, roomId, landlordId, FullName) => {
   }
 };
 
-const sendeclineEmailToTenant = async (email, roomId, landlordId, FullName) => {
+const sendDeclineEmailToTenant = async (
+  email,
+  roomId,
+  tenantId,
+  landlordId
+) => {
   try {
-    const findUser = await user.findById(landlordId);
+    const findUser = await user.findById(tenantId);
+    const landlordUser = await user.findById(landlordId);
 
-    const landlordName = findUser.FirstName + " " + findUser.LastName;
+    const tenantName = findUser.FirstName + " " + findUser.LastName;
+    const landlordName = landlordUser.FirstName + " " + landlordUser.LastName;
 
     const getRoom = await room.findById(roomId);
 
@@ -404,7 +431,7 @@ const sendeclineEmailToTenant = async (email, roomId, landlordId, FullName) => {
     <div class="email-container">
         <div class="header">Room Application Declined</div>
 
-        <p><strong>Dear ${FullName},</strong></p>
+        <p><strong>Dear ${tenantName},</strong></p>
         <p>Your application for <strong>${roomName}</strong> has been declined. You can find other rooms that are near to the given rooms locations.</p>
 
         <div class="info">

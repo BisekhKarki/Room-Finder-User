@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Label } from "../ui/label";
+import { useRouter } from "next/navigation";
 
 interface UserTransaction {
   _id: string;
@@ -97,6 +98,8 @@ const SingleApplication = ({
 }: Props) => {
   const [popup, setPopup] = useState<boolean>(false);
   const [done, setDone] = useState<string>("");
+  const router = useRouter();
+  console.log(Application);
 
   const approveApplication = async () => {
     try {
@@ -118,6 +121,7 @@ const SingleApplication = ({
       const data = await response.json();
       if (response.status === 200) {
         toast.success(data.message);
+        router.push(`/landlord/MyRooms/${Application?.roomId}`);
       } else {
         toast.error(data.message);
       }
@@ -128,6 +132,7 @@ const SingleApplication = ({
 
   const [applicationStatus, setApplicationStatus] =
     useState<UserTransaction | null>(null);
+  console.log(applicationStatus);
 
   useEffect(() => {
     if (token) {
@@ -139,7 +144,7 @@ const SingleApplication = ({
   const getTransactionsDetails = async () => {
     try {
       const response = await fetch(
-        `${base_url}/payment/tenants/cashOnHand/status/${roomId}/${landlordId}`,
+        `${base_url}/payment/landlord/cashOnHand/status/${roomId}/${landlordId}`,
         {
           method: "POST",
           headers: {

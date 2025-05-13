@@ -7,6 +7,13 @@ const room = require("../../Schemas/RoomSchema");
 const user = require("../../Schemas/UserModel");
 const nodemailer = require("nodemailer");
 
+const puppeteer = require("puppeteer");
+const receiptHtml = require("../../ReceiptTemplate");
+
+const path = require("path");
+
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -19,24 +26,19 @@ const transporter = nodemailer.createTransport({
 
 const userkhaltiPayment = async (req, res) => {
   const {
-    purchase_type,
     room_id,
     buyer_name,
-    seller_name,
+
     purchase_amount,
-    purchase_date,
-    payment_type,
-    landlord_id,
-    tenant_id,
   } = req.body;
   const convertedAmount = String(purchase_amount);
   try {
-    const findPayment = await purchaseSchema.findOne({
-      buyer_name,
-      seller_name,
-      room_id,
-      purchase_type,
-    });
+    // const findPayment = await purchaseSchema.findOne({
+    //   buyer_name,
+    //   seller_name,
+    //   room_id,
+    //   purchase_type,
+    // });
 
     const response = await fetch(
       "https://a.khalti.com/api/v2/epayment/initiate/",
@@ -47,8 +49,8 @@ const userkhaltiPayment = async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          return_url: `http://localhost:3000/successfull/user`,
-          website_url: `http://localhost:3000/successfull/user`,
+          return_url: `${FRONTEND_URL}/user/verify`,
+          website_url: `${FRONTEND_URL}/user/home`,
 
           amount: convertedAmount,
           purchase_order_id: room_id,
@@ -69,6 +71,30 @@ const userkhaltiPayment = async (req, res) => {
       success: false,
       message: error,
     });
+  }
+};
+
+const checkuserPaymentStatus = async (req, res) => {
+  const { pidx } = req.body;
+  try {
+    const response = await fetch(
+      "https://a.khalti.com/api/v2/epayment/lookup/",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pidx: pidx }),
+      }
+    );
+
+    const data = await response.json();
+    return res.status(200).json({
+      message: data,
+    });
+  } catch (error) {
+    console.error("Error checking payment status:", error);
   }
 };
 
@@ -102,7 +128,6 @@ const saveDetails = async (req, res) => {
       purchase_amount,
       purchase_date,
       landlord_id,
-      landlord_id,
       payment_method,
       payment_status: "completed",
       buyer_id: userData.id,
@@ -128,6 +153,12 @@ const saveDetails = async (req, res) => {
 
     await saveRoomToRented.save();
 
+    saveRoomPayement({
+      room: saveRoomToRented,
+      purchase_amount: purchase_amount,
+      renter: userData.id,
+    });
+
     const findRoomById = await room.findById(room_id);
     findRoomById.show = false;
     await findRoomById.save();
@@ -141,6 +172,68 @@ const saveDetails = async (req, res) => {
       success: false,
       message: error,
     });
+  }
+};
+
+const saveRoomPayement = async ({ room, purchase_amount, renter }) => {
+  try {
+    console.log(renter);
+    const tenant = await user.findById(renter);
+    console.log(tenant);
+
+    const data = {
+      name: room.rented_user_name,
+      amount: Number(purchase_amount),
+      roomName: room.basic.name,
+    };
+
+    console.log(data);
+
+    const receiptPath = await generateReceipt(data);
+
+    await transporter.sendMail({
+      from: "RoomFinderNepal@np.nepal",
+      to: tenant.Email,
+      subject: "Room Payment Receipt",
+      html: `
+        <p>Hello ${data.name},</p>
+        <p>Thank you for your payment. Attached is your official payment receipt.</p>
+        <p><strong>Status:</strong> Completed</p>
+        <p><strong>Amount:</strong> Rs. ${Number(purchase_amount)}</p>
+        <p>Regards,<br>Room Finder Nepal</p>
+      `,
+      // text: w"Attached is your payment receipt.",
+      attachments: [
+        {
+          filename: "RoomPaymentReceipt.pdf",
+          path: receiptPath,
+        },
+      ],
+    });
+
+    await transporter.sendMail({
+      from: "RoomFinderNepal@np.nepal",
+      to: room.contact.email,
+      subject: "Tenant Room Payment Receipt",
+      html: `
+        <p>Hello ${room.contact.username},</p>
+        <p>A user has completed the payment process and has booked you room you can see the details in you rooms</p>
+        <p><strong>Status:</strong>Payment Completed</p>
+        <p><strong>Amount:</strong> Rs. ${Number(purchase_amount)}</p>
+        <p>Regards,<br>Room Finder Nepal</p>
+      `,
+      // text: w"Attached is your payment receipt.",
+      attachments: [
+        {
+          filename: "RoomPaymentReceipt.pdf",
+          path: receiptPath,
+        },
+      ],
+    });
+
+    return receiptPath;
+  } catch (error) {
+    return error.message;
   }
 };
 
@@ -165,7 +258,6 @@ const saveCashDetails = async (req, res) => {
       purchase_amount,
       purchase_date,
       payment_status: "pending",
-      landlord_id,
       landlord_id,
       payment_method,
       buyer_id: userData.id,
@@ -195,7 +287,7 @@ const getCashOnHandStatus = async (req, res) => {
     });
 
     if (!findUserPurchase) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "No transaction found",
       });
@@ -459,6 +551,35 @@ const sendDeclineEmail = async (buyer_name, roomId, roomName, email) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const generateReceipt = async (data) => {
+  const fileName = `receipt_${Date.now()}.pdf`;
+  const filePath = path.join(__dirname, `../../receipts/${fileName}`);
+
+  const html = receiptHtml({
+    name: data.name,
+    amount: data.amount,
+    date: new Date().toLocaleDateString(),
+    roomName: data.roomName,
+    status: "Completed",
+  });
+
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+
+  const page = await browser.newPage();
+
+  await page.setContent(html, { waitUntil: "domcontentloaded" });
+  await page.pdf({
+    path: filePath,
+    format: "A4",
+    printBackground: true,
+  });
+  await browser.close();
+  return filePath;
 };
 
 module.exports = {

@@ -80,7 +80,12 @@ const EditBasicDetails = ({ counter, setCounter }: Props) => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-5 md:gap-10 mb-8">
-        <Input placeholder="Price" className="w-full h-12" value={price} />
+        <Input
+          placeholder="Price"
+          className="w-full h-12"
+          value={price}
+          readOnly
+        />
       </div>
 
       <Textarea

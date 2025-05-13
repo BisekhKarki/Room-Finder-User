@@ -51,7 +51,7 @@ const KhaltiPay = ({ name, id, amount, roomId }: Props) => {
           width={50}
           height={50}
           className="bg-transparent"
-        />{" "}
+        />
         khalti Payment
       </Button>
     </div>

@@ -154,13 +154,14 @@ const Page = () => {
       {/* Main Image Section */}
       <div className="relative">
         <div className="flex flex-col lg:flex-row px-2 sm:px-4 md:px-8 gap-2 md:gap-3">
-          <div className="w-full lg:w-2/3 h-48 sm:h-64 md:h-80 lg:h-96">
+          <div className="">
             {property?.images?.[0] && (
               <Image
                 src={property?.images[0]}
                 alt="room images"
-                fill
-                className="object-cover rounded-md hover:shadow-lg cursor-pointer"
+                width={1500}
+                height={900}
+                className="object-cover w-full rounded-md hover:shadow-lg cursor-pointer"
               />
             )}
           </div>
@@ -221,7 +222,7 @@ const Page = () => {
         )}
 
         {property && buttonIndex === 3 && (
-          <div className="mt-4 md:mt-8 max-w-2xl mx-auto">
+          <div className="mt-4 md:mt-8  mx-auto">
             <ContactLandlord
               landlordEmail={property.contact.email}
               landlordName={property.contact.username}

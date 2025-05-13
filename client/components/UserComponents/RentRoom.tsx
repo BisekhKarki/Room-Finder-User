@@ -378,7 +378,8 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
                       type="checkbox"
                       className="w-4 h-4 mt-1"
                       checked={checked}
-                      onClick={() => setChecked(!checked)}
+                      // onClick={() => setChecked(!checked)}
+                      onChange={(e) => setChecked(e.target.checked)}
                     />
                     <p className="text-xs md:text-sm">
                       I hereby agree that all the details I have provided are

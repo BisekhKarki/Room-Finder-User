@@ -39,6 +39,7 @@ const leaveRent = async (req, res) => {
         landlordId: findRoom.landlordId,
         rented_by: userData.id,
         rent_leave_date: new Date(),
+        rented_date: findRoom.rented_date,
         rented: false,
         _id: roomId,
       });

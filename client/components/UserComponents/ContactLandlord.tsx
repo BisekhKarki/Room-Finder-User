@@ -71,7 +71,7 @@ const ContactLandlord = ({ landlordEmail, landlordName }: Props) => {
   return (
     <div className="px-4 md:px-10 py-8 md:py-10">
       <div className="border border-gray-200 px-4 md:px-8 py-6 md:py-8 flex justify-center rounded-md">
-        <form className="mb-2 px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-6 w-full md:w-3/4">
+        <form className="mb-2 px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-6 w-full lg:w-3/4">
           <h1 className="text-center text-2xl md:text-3xl font-bold mb-4 md:mb-6">
             Send a message to {landlordName}
           </h1>

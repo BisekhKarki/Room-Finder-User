@@ -160,52 +160,6 @@ export default function UserProfile() {
     setConfirmPassword("");
   };
 
-  const calculateDuration = (createdAt: string, rentLeaveDate: string) => {
-    const start = new Date(createdAt);
-    const end = new Date(rentLeaveDate);
-
-    // Calculate time difference in milliseconds
-    // const timeDiff = end.getTime() - start.getTime();
-
-    // Calculate days
-    // const days = Math.floor(timeDiff / (1000 * 3600 * 24));
-
-    // Calculate months and years
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-
-    let months = 0;
-    let years = 0;
-
-    // Year difference
-    years = endDate.getFullYear() - startDate.getFullYear();
-
-    // Month difference
-    months = endDate.getMonth() - startDate.getMonth();
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-
-    // Day difference
-    let daysDiff = endDate.getDate() - startDate.getDate();
-    if (daysDiff < 0) {
-      const tempDate = new Date(endDate);
-      tempDate.setMonth(endDate.getMonth() - 1);
-      daysDiff = Math.floor(
-        (endDate.getTime() - tempDate.getTime()) / (1000 * 3600 * 24)
-      );
-    }
-
-    // Format the output
-    const parts = [];
-    if (years > 0) parts.push(`${years} year${years !== 1 ? "s" : ""}`);
-    if (months > 0) parts.push(`${months} month${months !== 1 ? "s" : ""}`);
-    if (daysDiff > 0) parts.push(`${daysDiff} day${daysDiff !== 1 ? "s" : ""}`);
-
-    return parts.join(" ") || "0 days";
-  };
-
   return (
     <div className="bg-white min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto">
@@ -272,8 +226,8 @@ export default function UserProfile() {
               <thead>
                 <tr className="text-left text-sm text-gray-600 border-b">
                   <th className="pb-3 pr-4">Room</th>
-                  <th className="pb-3 px-4">Date</th>
-                  <th className="pb-3 px-4">Duration</th>
+                  <th className="pb-3 px-4">Rented Date</th>
+                  <th className="pb-3 px-4">Rent Leave Date</th>
                   <th className="pb-3 pl-4">Status</th>
                 </tr>
               </thead>
@@ -283,13 +237,7 @@ export default function UserProfile() {
                     <tr key={index} className="text-sm text-gray-800 border-b">
                       <td className="py-4 pr-4">{room.basic.name}</td>
                       <td className="px-4">{room.createdAt.split("T")[0]}</td>
-                      <td className="px-4">
-                        {" "}
-                        {calculateDuration(
-                          room.createdAt,
-                          room.rented_leave_date
-                        )}
-                      </td>
+                      <td className="px-4">{room.rented_leave_date}</td>
                       <td className="pl-4">
                         <span
                           className={`text-sm ${

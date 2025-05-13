@@ -7,6 +7,8 @@ const nodemailer = require("nodemailer");
 const puppeteer = require("puppeteer");
 const receiptHtml = require("../../ReceiptTemplate");
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
@@ -27,8 +29,8 @@ const khaltiPayment = async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          return_url: `http://localhost:3000/successfull/landlord`,
-          website_url: `http://localhost:3000/successfull/landlord`,
+          return_url: `${FRONTEND_URL}/landlord/verify`,
+          website_url: `${FRONTEND_URL}/landlord/MyRooms`,
 
           amount: validAmount,
           purchase_order_id: id,
@@ -36,9 +38,9 @@ const khaltiPayment = async (req, res) => {
         }),
       }
     );
+    const data = await response.json();
 
     if (response.ok) {
-      const data = await response.json();
       return res.status(200).json({
         success: true,
         message: data.payment_url,
@@ -49,6 +51,30 @@ const khaltiPayment = async (req, res) => {
       success: false,
       message: error,
     });
+  }
+};
+
+const checkPaymentStatus = async (req, res) => {
+  const { pidx } = req.body;
+  try {
+    const response = await fetch(
+      "https://a.khalti.com/api/v2/epayment/lookup/",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pidx: pidx }),
+      }
+    );
+
+    const data = await response.json();
+    return res.status(200).json({
+      message: data,
+    });
+  } catch (error) {
+    console.error("Error checking payment status:", error);
   }
 };
 
@@ -98,7 +124,7 @@ const generateReceipt = async (data) => {
     name: data.name,
     amount: data.amount,
     date: new Date().toLocaleDateString(),
-    roomId: data.roomId,
+    roomName: data.roomName,
     status: data.status,
   });
 
@@ -147,7 +173,7 @@ const saveRoomPostPayement = async (req, res) => {
     const data = {
       name: room.contact.username,
       amount: Number(convertedAmount),
-      roomId,
+      roomName: room.basic.name,
       status,
     };
 
@@ -200,4 +226,5 @@ module.exports = {
   khaltiPayment,
   //  StripePayment
   saveRoomPostPayement,
+  checkPaymentStatus,
 };

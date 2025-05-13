@@ -133,7 +133,7 @@ const PaymentSuccessContent = () => {
             <div className="w-full mt-6 space-y-4">
               <Button
                 className="w-full md:w-auto px-8 py-4 text-base md:text-lg"
-                onClick={() => router.push("/landlord/MyRooms")}
+                onClick={() => savePaymentDetails()}
               >
                 View My Rooms
               </Button>

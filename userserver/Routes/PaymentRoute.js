@@ -2,7 +2,9 @@ const express = require("express");
 const {
   khaltiPayment,
   saveRoomPostPayement,
+  // verifyKhaltiPayment,
   // StripePayment,
+  checkPaymentStatus,
 } = require("../Controller/Payment/LandlordPayment");
 const protectRoute = require("../middleware/ProtectionRoute");
 const {
@@ -12,6 +14,7 @@ const {
   getCashOnHandStatus,
   getCashOnHandStatusForLandlord,
   accpetPayment,
+
   declinePayment,
 } = require("../Controller/Payment/UserPayment");
 const router = express.Router();
@@ -30,10 +33,13 @@ router.get(
   getCashOnHandStatus
 );
 router.post(
-  "/tenants/cashOnHand/status/:roomId/:landlordId",
+  "/landlord/cashOnHand/status/:roomId/:landlordId",
   protectRoute,
   getCashOnHandStatusForLandlord
 );
+
+router.post("/verify/landlord", checkPaymentStatus);
+router.post("/verify/user", checkPaymentStatus);
 
 router.post("/tenants/approval/cashOnHand", protectRoute, accpetPayment);
 router.post("/tenants/decline/cashOnHand", protectRoute, declinePayment);

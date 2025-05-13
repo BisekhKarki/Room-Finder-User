@@ -1,5 +1,5 @@
 // utils/receiptTemplate.ts
-const receiptTemplate = ({ name, amount, date, roomId, status }) => {
+const receiptTemplate = ({ name, amount, date, roomName, status }) => {
   const newDate = date || new Date().toLocaleDateString();
   return `
 <!DOCTYPE html>
@@ -157,9 +157,9 @@ const receiptTemplate = ({ name, amount, date, roomId, status }) => {
             <div class="section">
                 <span class="label">
                     <i class="fas fa-door-open"></i>
-                    Room ID
+                    Room Name
                 </span>
-                <span class="value">${roomId} </span>
+                <span class="value">${roomName} </span>
             </div>
 
             <div class="section">

@@ -193,6 +193,7 @@ const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
                   name="purchase_type"
                   value={formData.purchase_type}
                   required
+                  readOnly
                 />
               </div>
 
@@ -206,6 +207,7 @@ const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
                   value={formData.room_id}
                   placeholder="Enter Room ID"
                   required
+                  readOnly
                 />
               </div>
 
@@ -233,6 +235,7 @@ const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
                   value={formData.seller_name}
                   placeholder="Enter Seller Name"
                   required
+                  readOnly
                 />
               </div>
 
@@ -247,6 +250,7 @@ const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
                   onChange={handleChange}
                   placeholder="Enter Purchase Amount"
                   required
+                  readOnly
                 />
               </div>
 
