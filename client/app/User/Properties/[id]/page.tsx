@@ -89,7 +89,7 @@ const viewComponentButtons = [
   { index: 6, label: "Rent Room" },
 ];
 
-const PropertiesSection = () => {
+const Page = () => {
   const params = useParams();
   const [id, setId] = useState<string>("");
   const [getToken, setToken] = useState<string>("");
@@ -226,4 +226,4 @@ const PropertiesSection = () => {
   );
 };
 
-export default PropertiesSection;
+export default Page;

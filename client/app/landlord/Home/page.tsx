@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const HomePage = () => {
+const Page = () => {
   // const { validToken } = useSelector((state: RootState) => state.slice);
   const router = useRouter();
 
@@ -25,4 +25,4 @@ const HomePage = () => {
   return <div>Landlord Page</div>;
 };
 
-export default HomePage;
+export default Page;

@@ -70,7 +70,7 @@ interface FeaturedRoom {
   pinnedLocation: PropertyPinnedLocation;
 }
 
-const HomePage = () => {
+const Page = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [token, setToken] = useState<string>("");
@@ -187,4 +187,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Page;

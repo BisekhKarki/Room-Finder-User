@@ -33,7 +33,7 @@ interface UserDetails {
   _id: string;
 }
 
-export default function UserProfile() {
+export default function Page() {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [rentedRooms, setRentedRooms] = useState<Array<RentedRoom> | []>([]);
   const [currentRooms, setCurrentRooms] = useState<Array<RentedRoom> | []>([]);

@@ -62,7 +62,7 @@ interface FeaturedRoom {
   pinnedLocation: PropertyPinnedLocation;
 }
 
-const PropertiesSection = () => {
+const Page = () => {
   const [properties, setProperties] = useState<FeaturedRoom[]>([]);
   const [originalProperties, setOriginalProperties] = useState<FeaturedRoom[]>(
     []
@@ -382,4 +382,4 @@ const PropertiesSection = () => {
   );
 };
 
-export default PropertiesSection;
+export default Page;
