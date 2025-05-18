@@ -6,8 +6,8 @@ import { resetPass } from "@/store/slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
 
 const Page = () => {
   const [email, setEmail] = useState<string>("");

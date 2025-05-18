@@ -6,10 +6,10 @@ import { base_url } from "@/constants/BaseUrl";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { BsEye } from "react-icons/bs";
 import { IoIosEyeOff } from "react-icons/io";
 import { useSelector } from "react-redux";
-import { toast } from "sonner";
 
 const Page = () => {
   const [confirmPass, setConfirmPass] = useState<string>("");

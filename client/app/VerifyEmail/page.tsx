@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Input } from "../../components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
 import axios from "axios";
 import { base_url } from "@/constants/BaseUrl";
+import toast from "react-hot-toast";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState<string>("");
