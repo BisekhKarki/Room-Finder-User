@@ -114,6 +114,7 @@ const MonthlyPayment = ({
 
   const submitCash = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (
       !formData.buyer_name ||
       !formData.purchase_date ||
@@ -166,7 +167,6 @@ const MonthlyPayment = ({
     };
     getPaymentStatus();
   }, [landlord_id, roomId, token]);
-  console.log(status);
 
   return (
     <>

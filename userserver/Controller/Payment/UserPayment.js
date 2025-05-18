@@ -49,8 +49,8 @@ const userkhaltiPayment = async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          return_url: `${FRONTEND_URL}/user/verify`,
-          website_url: `${FRONTEND_URL}/user/home`,
+          return_url: `${FRONTEND_URL}/User/verify`,
+          website_url: `${FRONTEND_URL}/User/Home`,
 
           amount: convertedAmount,
           purchase_order_id: room_id,
@@ -125,9 +125,14 @@ const saveDetails = async (req, res) => {
     });
     await newPurchaseDetails.save();
 
-    const findRentedRooms = await roomSchema.findById(room_id);
+    const findRentedRooms = await roomSchema.findOne({
+      _id: room_id,
+    });
 
-    const findRented = await rentedProperties.findById(room_id);
+    const findRented = await rentedProperties.findOne({
+      room_id: room_id,
+      landlordId: findRentedRooms.landlordId,
+    });
     if (findRented) {
       findRented.last_payment = new Date();
       await findRented.save();
@@ -192,14 +197,23 @@ const saveRoomPayement = async ({ room, purchase_amount, renter }) => {
       roomName: room.basic.name,
     };
 
-    console.log(data);
+    const pdfBuffer = await generateReceipt(data); // not path, it's a buffer
 
-    const receiptPath = await generateReceipt(data);
+    const mailOptions = {
+      from: "RoomFinderNepal@np.nepal",
+      subject: "Room Payment Receipt",
+      attachments: [
+        {
+          filename: "RoomPaymentReceipt.pdf",
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
+    };
 
     await transporter.sendMail({
-      from: "RoomFinderNepal@np.nepal",
+      ...mailOptions,
       to: tenant.Email,
-      subject: "Room Payment Receipt",
       html: `
         <p>Hello ${data.name},</p>
         <p>Thank you for your payment. Attached is your official payment receipt.</p>
@@ -207,37 +221,23 @@ const saveRoomPayement = async ({ room, purchase_amount, renter }) => {
         <p><strong>Amount:</strong> Rs. ${Number(purchase_amount)}</p>
         <p>Regards,<br>Room Finder Nepal</p>
       `,
-      // text: w"Attached is your payment receipt.",
-      attachments: [
-        {
-          filename: "RoomPaymentReceipt.pdf",
-          path: receiptPath,
-        },
-      ],
     });
 
     await transporter.sendMail({
-      from: "RoomFinderNepal@np.nepal",
+      ...mailOptions,
       to: room.contact.email,
-      subject: "Tenant Room Payment Receipt",
       html: `
         <p>Hello ${room.contact.username},</p>
-        <p>A user has completed the payment process and has booked you room you can see the details in you rooms</p>
-        <p><strong>Status:</strong>Payment Completed</p>
+        <p>A user has completed the payment process and has booked your room. You can see the details in your dashboard.</p>
+        <p><strong>Status:</strong> Payment Completed</p>
         <p><strong>Amount:</strong> Rs. ${Number(purchase_amount)}</p>
         <p>Regards,<br>Room Finder Nepal</p>
       `,
-      // text: w"Attached is your payment receipt.",
-      attachments: [
-        {
-          filename: "RoomPaymentReceipt.pdf",
-          path: receiptPath,
-        },
-      ],
     });
 
-    return receiptPath;
+    return "Emails sent with PDF receipt.";
   } catch (error) {
+    console.error("Error sending email:", error);
     return error.message;
   }
 };
@@ -367,7 +367,7 @@ const accpetPayment = async (req, res) => {
 
     purchase.payment_status = "completed";
     await purchase.save();
-    console.log(purchase);
+
     savePaymentDetails(roomId, purchase.buyer_name, buyerId);
 
     return res.status(200).json({
@@ -388,12 +388,10 @@ const savePaymentDetails = async (room_id, buyer_name, tenantId) => {
       room_id: room_id,
       rented_by: tenantId,
     });
-    console.log(findAlreadyRented);
+    if (findAlreadyRented) console.log(true);
+    else console.log(false);
 
-    if (findAlreadyRented) {
-      findAlreadyRented.last_payment = new Date();
-      await findAlreadyRented.save();
-    } else {
+    if (!findAlreadyRented) {
       const findRentedRooms = await roomSchema.findById(room_id);
       const saveRoomToRented = await rentedProperties({
         basic: findRentedRooms.basic,
@@ -414,6 +412,9 @@ const savePaymentDetails = async (room_id, buyer_name, tenantId) => {
       const findRoomById = await room.findById(room_id);
       findRoomById.show = false;
       await findRoomById.save();
+    } else {
+      findAlreadyRented.last_payment = new Date();
+      await findAlreadyRented.save();
     }
 
     return;
@@ -583,10 +584,36 @@ const sendDeclineEmail = async (buyer_name, roomId, roomName, email) => {
   }
 };
 
-const generateReceipt = async (data) => {
-  const fileName = `receipt_${Date.now()}.pdf`;
-  const filePath = path.join(__dirname, `../../receipts/${fileName}`);
+// const generateReceipt = async (data) => {
+//   const fileName = `receipt_${Date.now()}.pdf`;
+//   const filePath = path.join(__dirname, `../../receipts/${fileName}`);
 
+//   const html = receiptHtml({
+//     name: data.name,
+//     amount: data.amount,
+//     date: new Date().toLocaleDateString(),
+//     roomName: data.roomName,
+//     status: "Completed",
+//   });
+
+//   const browser = await puppeteer.launch({
+//     headless: "new",
+//     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+//   });
+
+//   const page = await browser.newPage();
+
+//   await page.setContent(html, { waitUntil: "domcontentloaded" });
+//   await page.pdf({
+//     path: filePath,
+//     format: "A4",
+//     printBackground: true,
+//   });
+//   await browser.close();
+//   return filePath;
+// };
+
+const generateReceipt = async (data) => {
   const html = receiptHtml({
     name: data.name,
     amount: data.amount,
@@ -601,15 +628,16 @@ const generateReceipt = async (data) => {
   });
 
   const page = await browser.newPage();
-
   await page.setContent(html, { waitUntil: "domcontentloaded" });
-  await page.pdf({
-    path: filePath,
+
+  // Generate PDF as buffer
+  const pdfBuffer = await page.pdf({
     format: "A4",
     printBackground: true,
   });
+
   await browser.close();
-  return filePath;
+  return pdfBuffer;
 };
 
 module.exports = {

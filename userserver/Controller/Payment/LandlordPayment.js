@@ -117,15 +117,12 @@ const checkPaymentStatus = async (req, res) => {
 // };
 
 const generateReceipt = async (data) => {
-  const fileName = `receipt_${Date.now()}.pdf`;
-  const filePath = path.join(__dirname, `../../receipts/${fileName}`);
-
   const html = receiptHtml({
     name: data.name,
     amount: data.amount,
     date: new Date().toLocaleDateString(),
     roomName: data.roomName,
-    status: data.status,
+    status: "Completed",
   });
 
   const browser = await puppeteer.launch({
@@ -134,15 +131,16 @@ const generateReceipt = async (data) => {
   });
 
   const page = await browser.newPage();
-
   await page.setContent(html, { waitUntil: "domcontentloaded" });
-  await page.pdf({
-    path: filePath,
+
+  // Generate PDF as buffer
+  const pdfBuffer = await page.pdf({
     format: "A4",
     printBackground: true,
   });
+
   await browser.close();
-  return filePath;
+  return pdfBuffer;
 };
 
 const saveRoomPostPayement = async (req, res) => {
@@ -165,7 +163,6 @@ const saveRoomPostPayement = async (req, res) => {
       purchase_type: status,
       room_id: roomId,
       landlord_id: room.landlordId,
-
       name_of_person: room.contact.username,
       payment_amount: convertedAmount,
     });
@@ -177,12 +174,12 @@ const saveRoomPostPayement = async (req, res) => {
       status,
     };
 
-    const receiptPath = await generateReceipt(data);
+    const pdfBuffer = await generateReceipt(data);
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
-      secure: false, // true for port 465, false for other ports
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -200,21 +197,23 @@ const saveRoomPostPayement = async (req, res) => {
         <p><strong>Amount:</strong> Rs. ${convertedAmount}</p>
         <p>Regards,<br>Room Finder Nepal</p>
       `,
-      // text: w"Attached is your payment receipt.",
       attachments: [
         {
           filename: "RoomPaymentReceipt.pdf",
-          path: receiptPath,
+          content: pdfBuffer,
+          contentType: "application/pdf",
         },
       ],
     });
+
     await payment.save();
 
     return res.status(200).json({
       success: true,
-      message: "Payment done",
+      message: "Payment done and email sent.",
     });
   } catch (error) {
+    console.error("Payment email error:", error);
     return res.status(500).json({
       success: false,
       message: error.message,

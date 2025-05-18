@@ -38,7 +38,6 @@ const Page = () => {
   }, []);
   const token = GetToken();
   useEffect(() => {
-    console.log(purchaseDetails);
     if (token && purchaseDetails) {
       savePurchaseDetails();
     }
