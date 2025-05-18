@@ -20,7 +20,7 @@ const Page = () => {
               variant="ghost"
               size="sm"
               className="text-red-500 hover:bg-red-50 rounded-full p-2"
-              onClick={() => router.push("/user/home")}
+              onClick={() => router.push("/User/home")}
             >
               <ImCross className="h-5 w-5" />
             </Button>
@@ -53,7 +53,7 @@ const Page = () => {
             <div className="w-full mt-6 space-y-4">
               <Button
                 className="w-full md:w-auto px-8 py-4 text-base md:text-lg"
-                onClick={() => router.push("/user/home")}
+                onClick={() => router.push("/User/home")}
               >
                 View My Rooms
               </Button>

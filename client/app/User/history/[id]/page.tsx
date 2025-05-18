@@ -138,7 +138,7 @@ const Page = () => {
     <div className="mt-10 py-10">
       <div
         className="text-2xl mb-5 flex items-center gap-1 ml-8"
-        onClick={() => router.push("/user/history")}
+        onClick={() => router.push("/User/history")}
       >
         <IoIosArrowRoundBack
           className=" text-gray-800 cursor-pointer"

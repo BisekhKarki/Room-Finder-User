@@ -141,7 +141,7 @@ const Page = () => {
       {/* Back Button */}
       <div
         className="flex items-center gap-1 mb-4 md:mb-5 ml-2 md:ml-8"
-        onClick={() => router.push("/user/watchlists")}
+        onClick={() => router.push("/User/watchlists")}
       >
         <IoIosArrowRoundBack className="text-gray-800 cursor-pointer text-2xl md:text-3xl" />
         <p className="text-xs md:text-sm cursor-pointer">Back</p>

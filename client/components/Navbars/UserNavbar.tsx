@@ -30,11 +30,11 @@ const UserNavbar = () => {
   };
 
   const navLists = [
-    { name: "Home", path: "/user/home" },
-    { name: "Our Services", path: "/user/ourservices" },
-    { name: "Categories", path: "/user/categories" },
-    { name: "Contact Us", path: "/user/contactus" },
-    { name: "Properties", path: "/user/properties" },
+    { name: "Home", path: "/User/home" },
+    { name: "Our Services", path: "/User/ourservices" },
+    { name: "Categories", path: "/User/categories" },
+    { name: "Contact Us", path: "/User/contactus" },
+    { name: "Properties", path: "/User/properties" },
   ];
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -109,10 +109,10 @@ const UserNavbar = () => {
               {open && (
                 <div className="absolute right-0 top-8 w-48 border border-gray-200 rounded-lg bg-white shadow-xl z-50">
                   {[
-                    { name: "My Profile", path: "/user/profile" },
-                    { name: "History", path: "/user/history" },
-                    { name: "My WatchLists", path: "/user/watchlists" },
-                    { name: "Rented Rooms", path: "/user/rentedRooms" },
+                    { name: "My Profile", path: "/User/profile" },
+                    { name: "History", path: "/User/history" },
+                    { name: "My WatchLists", path: "/User/watchlists" },
+                    { name: "Rented Rooms", path: "/User/rentedRooms" },
                   ].map((item) => (
                     <React.Fragment key={item.path}>
                       <p
@@ -209,7 +209,7 @@ const UserNavbar = () => {
                     <li
                       className="text-base text-gray-600 hover:text-blue-500 cursor-pointer relative group transition-colors duration-300"
                       onClick={() => {
-                        router.push("/user/profile");
+                        router.push("/User/profile");
                         setMobileNavbar(false);
                       }}
                     >

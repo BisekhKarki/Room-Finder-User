@@ -237,7 +237,7 @@ const FeaturedRooms = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
                   <Button
                     className="w-full mt-3 md:mt-5 bg-blue-500 hover:bg-blue-600 text-sm md:text-base"
                     onClick={() =>
-                      router.push(`/user/properties/${property._id}`)
+                      router.push(`/User/properties/${property._id}`)
                     }
                   >
                     View Details

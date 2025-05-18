@@ -186,7 +186,7 @@ const Shop = () => {
                 <Button
                   className="w-full mt-3 md:mt-5 text-sm md:text-base bg-blue-500 hover:bg-blue-600 py-2 md:py-4"
                   onClick={() =>
-                    router.push(`/user/categories/${property._id}`)
+                    router.push(`/User/categories/${property._id}`)
                   }
                 >
                   View Details

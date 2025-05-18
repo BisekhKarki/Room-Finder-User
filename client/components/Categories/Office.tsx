@@ -153,7 +153,7 @@ const Office = () => {
                 <Button
                   className="w-full mt-5 bg-blue-500 hover:bg-blue-600"
                   onClick={() =>
-                    router.push(`/user/categories/${property._id}`)
+                    router.push(`/User/categories/${property._id}`)
                   }
                 >
                   View Details
