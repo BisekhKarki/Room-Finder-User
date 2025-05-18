@@ -68,6 +68,7 @@ const Apartment = () => {
       console.log(String(error));
     }
   };
+  console.log(apartment);
 
   const saveToWatchLists = async (prop: FeaturedRoom) => {
     try {
@@ -87,6 +88,7 @@ const Apartment = () => {
           location: prop.location,
           contact: prop.contact,
           payment: prop.payment,
+          pinnedLocation: prop.pinnedLocation,
         }),
       });
       const data = await response.json();

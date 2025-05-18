@@ -80,6 +80,17 @@ const user_WatchLists = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  pinnedLocation: {
+    locationName: {
+      type: String,
+    },
+    latitude: {
+      type: Number,
+    },
+    longitude: {
+      type: Number,
+    },
+  },
   roomId: {
     type: Schema.Types.ObjectId,
     ref: "Rooms",

@@ -65,6 +65,12 @@ interface PropertyReviews {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
@@ -81,6 +87,7 @@ interface PropertyDetails {
   rented_by: string;
   rented_user_name: string;
   room_id: string;
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const Page = () => {
@@ -203,10 +210,9 @@ const Page = () => {
         )}
         {buttonIndex === 4 && (
           <PropertyLocation
-            location={
-              ((property?.location.city as string) +
-                property?.location.street) as string
-            }
+            location={property?.pinnedLocation.locationName || ""}
+            longitude={property?.pinnedLocation.longitude || 0}
+            latitude={property?.pinnedLocation.latitude || 0}
           />
         )}
         {buttonIndex === 5 && (

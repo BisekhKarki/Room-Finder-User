@@ -87,6 +87,7 @@ const Office = () => {
           location: prop.location,
           contact: prop.contact,
           payment: prop.payment,
+          pinnedLocation: prop.pinnedLocation,
         }),
       });
       const data = await response.json();

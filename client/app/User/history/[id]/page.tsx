@@ -10,7 +10,7 @@ import ContactLandlord from "@/components/UserComponents/ContactLandlord";
 import History from "@/components/UserComponents/History";
 import PropertyImages from "@/components/UserComponents/PropertyImages";
 import PropertyLocation from "@/components/UserComponents/PropertyLocation";
-import { tenant_base_url } from "@/constants/BaseUrl";
+import { base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 import axios from "axios";
 import Image from "next/image";
@@ -58,6 +58,12 @@ interface reviewsArray {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyProps {
   basic: BasicData;
   features: FeaturesData;
@@ -70,6 +76,7 @@ interface PropertyProps {
   __v: number;
   _id: string;
   reviews: Array<reviewsArray> | [];
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const viewComponentButtons = [
@@ -103,7 +110,7 @@ const Page = () => {
   const fetchSingleRooms = async () => {
     try {
       const response = await axios.get(
-        `${tenant_base_url}/rooms/property/details/single/${id}`,
+        `${base_url}/rented/tenant/room/history/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -144,31 +151,26 @@ const Page = () => {
           Back
         </p>
       </div>
-      <div className="">
-        {property && property.images && property.images.length > 0 && (
-          <div className="relative">
-            <div className="px-8">
-              <Image
-                src={property?.images[0]}
-                alt="room images"
-                width={1500}
-                height={1300}
-                className="h-full rounded-md hover:shadow-lg cursor-pointer"
-              />
-            </div>
-          </div>
-        )}
-      </div>
+      {property && property?.images?.length > 0 && (
+        <div className="relative h-48 md:h-96 w-full">
+          <Image
+            src={property.images[0]}
+            alt="room images"
+            fill
+            className="rounded-md object-cover"
+          />
+        </div>
+      )}
       <hr className="mt-10" />
-      <div className="flex px-10 gap-5">
+      <div className="flex flex-wrap gap-2 md:gap-5 px-2 md:px-10">
         {viewComponentButtons.map((btn, index) => (
           <Button
             key={index}
-            className={` ${
+            className={`${
               btn.index === buttonIndex
                 ? "bg-blue-400 text-white hover:bg-blue-500"
-                : "bg-white hover:bg-gray-50  text-black"
-            }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+                : "bg-white hover:bg-gray-50 text-black"
+            } mt-4 md:mt-10 px-4 md:px-20 py-2 md:py-5 text-sm md:text-base border border-gray-300 shadow-md transition-all duration-200 ease-in-out w-full sm:w-auto`}
             onClick={() => setButtonIndex(btn.index)}
           >
             {btn.label}
@@ -212,7 +214,9 @@ const Page = () => {
       )}
       {buttonIndex === 4 && (
         <PropertyLocation
-          location={property?.location.street + ", " + property?.location.city}
+          location={property?.pinnedLocation?.locationName || ""}
+          longitude={property?.pinnedLocation?.longitude || 0}
+          latitude={property?.pinnedLocation?.latitude || 0}
         />
       )}
       {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}

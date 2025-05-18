@@ -23,6 +23,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import EditRoom from "@/components/RoomPostSections/RoomEdit/EditRooms";
 import { base_url } from "@/constants/BaseUrl";
+// import DeleteRoom from "@/components/RoomPostSections/RoomEdit/DeleteRoom";
 
 interface ContactData {
   email: string;
@@ -73,6 +74,7 @@ const viewComponentButtons = [
   { index: 1, label: "Info" },
   { index: 2, label: "Rent Applications" },
   { index: 3, label: "Edit Room" },
+  // { index: 4, label: "Action" },
 ];
 
 const Page = () => {

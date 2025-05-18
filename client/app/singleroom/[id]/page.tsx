@@ -24,6 +24,7 @@ const viewComponentButtons = [
   { index: 3, label: "Contact Landlord" },
   { index: 4, label: "Location" },
   { index: 5, label: "Images" },
+  { index: 6, label: "Rent Room" },
 ];
 
 interface ContactData {
@@ -65,6 +66,12 @@ interface PropertyReviews {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
@@ -81,6 +88,7 @@ interface PropertyDetails {
   rented_by: string;
   rented_user_name: string;
   room_id: string;
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const Page = () => {
@@ -203,14 +211,18 @@ const Page = () => {
         )}
         {buttonIndex === 4 && (
           <PropertyLocation
-            location={
-              ((property?.location.city as string) +
-                property?.location.street) as string
-            }
+            location={property?.pinnedLocation.locationName || ""}
+            longitude={property?.pinnedLocation.longitude || 0}
+            latitude={property?.pinnedLocation.latitude || 0}
           />
         )}
         {buttonIndex === 5 && (
           <PropertyImages propertyImage={property?.images} />
+        )}
+        {buttonIndex === 6 && (
+          <div className="mt-5 px-10 text-3xl font-bold">
+            You need to login to apply for a room
+          </div>
         )}
       </div>
       <Footer />

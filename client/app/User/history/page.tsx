@@ -1,16 +1,13 @@
 "use client";
 
-"use client";
 import { base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { FaBookmark } from "react-icons/fa";
 
 interface ContactData {
   email: string;
@@ -59,41 +56,12 @@ interface FeaturedRoom {
 }
 
 const Page = () => {
-  const [getToken, setGetToken] = useState<string>("");
   const token = GetToken();
   const router = useRouter();
-
-  useEffect(() => {
-    if (token) {
-      setGetToken(token);
-    }
-  }, [token]);
 
   const [watchlistsRoom, setWatchlistsRoom] = useState<FeaturedRoom[]>([]);
 
   // console.log(watchlistsRoom);
-
-  const removeFromWatchLists = async (id: string) => {
-    try {
-      const response = await fetch(`${base_url}/watchlists/remove/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken}`,
-        },
-      });
-
-      const data = await response.json();
-      if (response.status === 200) {
-        setWatchlistsRoom((prev) => prev.filter((m) => m._id !== id));
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error: unknown) {
-      console.log(String(error));
-    }
-  };
 
   const fetchIng = async () => {
     const response = await fetch(`${base_url}/tenants/rooms/history`, {
@@ -134,16 +102,6 @@ const Page = () => {
                     fill
                     className="rounded-t-md object-cover transition-all duration-150 ease-in-out hover:shadow-xl"
                   />
-                  {/* Bookmark Icon */}
-                  <div className="absolute bottom-2 right-2 md:bottom-3 md:right-3">
-                    {watchlistsRoom.map((w, idx) => (
-                      <FaBookmark
-                        key={idx}
-                        className="text-blue-300 text-xl hover:text-blue-400 transition-colors"
-                        onClick={() => removeFromWatchLists(w._id)}
-                      />
-                    ))}
-                  </div>
                 </div>
 
                 {/* Content Container */}

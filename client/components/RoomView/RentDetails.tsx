@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import DeletePopup from "./DeletePopup";
+import MonthlyPayment from "../UserComponents/MonthlyPay";
+import { base_url } from "@/constants/BaseUrl";
 
 interface ContactData {
   email: string;
@@ -61,19 +63,75 @@ interface PropertyDetails {
   room_id: string;
 }
 
+interface UserDetails {
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Phone: string;
+  Address: string;
+  UserType: string;
+}
+
 interface Rent {
   rentDate: Date;
   token: string;
   room: PropertyDetails;
+  user: UserDetails;
 }
 
-const RentDetails = ({ rentDate, token, room }: Rent) => {
+const RentDetails = ({ rentDate, token, room, user }: Rent) => {
   const rentDateObj = new Date(rentDate);
 
   const nextRentDate = new Date(rentDateObj);
   nextRentDate.setDate(nextRentDate.getDate() + 30);
 
   const [popup, setPopup] = useState<boolean>(false);
+  const [paymentLast, setPaymentLast] = useState<Date | null>(null);
+
+  const checkPaymntDue = () => {
+    const today = new Date();
+
+    if (!paymentLast) {
+      return true;
+    }
+
+    const lastPaymentDate = new Date(paymentLast);
+    const diffInMs = today.getTime() - lastPaymentDate.getTime();
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+    return diffInDays >= 30;
+  };
+
+  console.log(checkPaymntDue());
+
+  useEffect(() => {
+    if (token && room) {
+      getApplicationsLastPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getApplicationsLastPayment = async () => {
+    try {
+      const response = await fetch(
+        `${base_url}/rooms/rent/tenants/last_payment/${room.room_id}/${room.rented_by}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const val = await response.json();
+      if (response.status === 200) {
+        setPaymentLast(val.message);
+        console.log(val.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="mb-16 px-10 py-10">
@@ -98,7 +156,16 @@ const RentDetails = ({ rentDate, token, room }: Rent) => {
       </div>
 
       {/* Rented Room  */}
-      <div>Yo part baki xa</div>
+      {user && checkPaymntDue() && (
+        <MonthlyPayment
+          roomId={room.room_id}
+          price={room.basic.price}
+          token={token}
+          seller={room.contact.username}
+          landlord_id={room.landlordId}
+          user={user}
+        />
+      )}
 
       <Button
         className="mt-10 w-52 bg-red-500 hover:bg-red-600"

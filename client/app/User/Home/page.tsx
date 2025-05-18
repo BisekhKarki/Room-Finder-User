@@ -49,6 +49,12 @@ interface LocationData {
   zip: string;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface FeaturedRoom {
   basic: BasicData;
   features: FeaturesData;
@@ -61,6 +67,7 @@ interface FeaturedRoom {
   roomId?: string;
   __v: number;
   _id: string;
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const HomePage = () => {

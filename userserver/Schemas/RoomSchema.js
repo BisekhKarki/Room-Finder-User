@@ -39,6 +39,17 @@ const rooms = new mongoose.Schema({
       type: String,
     },
   },
+  pinnedLocation: {
+    locationName: {
+      type: String,
+    },
+    latitude: {
+      type: Number,
+    },
+    longitude: {
+      type: Number,
+    },
+  },
   features: {
     parking: {
       type: String,

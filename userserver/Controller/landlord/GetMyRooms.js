@@ -83,7 +83,7 @@ const saveEditedRooms = async (req, res) => {
   const userData = req.userData;
   const { id } = req.params;
 
-  const updateData = req.body;
+  const newData = req.body;
   // console.log("Data: ",updateData)
 
   try {
@@ -104,7 +104,7 @@ const saveEditedRooms = async (req, res) => {
     const updatedRoom = await roomSchema.findByIdAndUpdate(
       id,
       {
-        $set: updateData,
+        $set: newData,
       },
       {
         new: true,
@@ -132,4 +132,46 @@ const saveEditedRooms = async (req, res) => {
   }
 };
 
-module.exports = { getAllRooms, getRoomById, editRoomBy, saveEditedRooms };
+const deleteRoom = async (req, res) => {
+  const { id } = req.params;
+  const userData = req.userData;
+
+  try {
+    const room = await roomSchema.findOne({
+      _id: id,
+    });
+
+    if (userData.id !== room.landlordId.toString()) {
+      return res.status(404).json({
+        success: false,
+        message: "Unauthenticated user",
+      });
+    }
+
+    const deleteRoom = await roomSchema.findByIdAndDelete(id);
+    if (!deleteRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to delete room",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Room deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+module.exports = {
+  getAllRooms,
+  getRoomById,
+  editRoomBy,
+  saveEditedRooms,
+  deleteRoom,
+};

@@ -42,6 +42,12 @@ interface reviewsArray {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
@@ -54,6 +60,7 @@ interface PropertyDetails {
   __v: number;
   _id: string;
   reviews: Array<reviewsArray> | [];
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const Page = () => {
@@ -152,21 +159,16 @@ const Page = () => {
       </div>
 
       {/* Main Image Section */}
-      <div className="relative">
-        <div className="flex flex-col lg:flex-row px-2 sm:px-4 md:px-8 gap-2 md:gap-3">
-          <div className="">
-            {property?.images?.[0] && (
-              <Image
-                src={property?.images[0]}
-                alt="room images"
-                width={1500}
-                height={900}
-                className="object-cover w-full rounded-md hover:shadow-lg cursor-pointer"
-              />
-            )}
-          </div>
+      {property && property?.images?.length > 0 && (
+        <div className="relative h-48 md:h-96 w-full">
+          <Image
+            src={property.images[0]}
+            alt="room images"
+            fill
+            className="rounded-md object-cover"
+          />
         </div>
-      </div>
+      )}
 
       <hr className="mt-6 md:mt-10" />
 
@@ -233,7 +235,9 @@ const Page = () => {
         {buttonIndex === 4 && (
           <div className="mt-4 md:mt-8">
             <PropertyLocation
-              location={`${property?.location.street}, ${property?.location.city}`}
+              location={property?.pinnedLocation.locationName || ""}
+              longitude={property?.pinnedLocation.longitude || 0}
+              latitude={property?.pinnedLocation.latitude || 0}
             />
           </div>
         )}

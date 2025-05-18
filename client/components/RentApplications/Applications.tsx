@@ -59,6 +59,7 @@ const Applications = ({ roomId, landlordId }: Props) => {
   const [applications, setApplications] = useState<
     Array<TenantApplication> | []
   >([]);
+
   const [singleDetails, setSingleDetails] = useState<TenantApplication | null>(
     null
   );
@@ -99,8 +100,6 @@ const Applications = ({ roomId, landlordId }: Props) => {
       console.log(error);
     }
   };
-
-  // console.log(showSingle);
 
   return (
     <div className="py-4 md:py-6 lg:py-8 border w-full mt-4 md:mt-6 px-4 md:px-6 lg:px-8 rounded-lg border-gray-200 shadow-sm">

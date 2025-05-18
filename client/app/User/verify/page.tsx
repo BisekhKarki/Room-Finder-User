@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { base_url } from "@/constants/BaseUrl";
 import Loading from "@/components/Loading";
 
-const Page = () => {
+const VerifyContent = () => {
   const searchParams = useSearchParams();
-  const [statusMessage, setStatusMessage] = useState("Verifying...");
   const router = useRouter();
+  const [statusMessage, setStatusMessage] = useState("Verifying...");
 
   useEffect(() => {
     const verify = async () => {
-      const pidx = searchParams.get("pidx"); // Get pidx from query params
+      const pidx = searchParams.get("pidx");
 
       if (!pidx) {
         router.push("/unsuccessfull/user");
@@ -25,7 +25,7 @@ const Page = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ pidx }), // Send pidx to your backend
+          body: JSON.stringify({ pidx }),
         });
 
         const data = await response.json();
@@ -44,10 +44,17 @@ const Page = () => {
     };
 
     verify();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   return <div>{statusMessage === "Verifying..." && <Loading />}</div>;
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <VerifyContent />
+    </Suspense>
+  );
 };
 
 export default Page;

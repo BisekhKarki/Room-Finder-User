@@ -55,6 +55,12 @@ interface PropertyReviews {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
@@ -69,8 +75,10 @@ interface PropertyDetails {
   reviews: Array<PropertyReviews>;
   rented_date: Date;
   rented_by: string;
+  last_payment: Date;
   rented_user_name: string;
   room_id: string;
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const viewComponentButtons = [
@@ -81,15 +89,26 @@ const viewComponentButtons = [
   { index: 6, label: "Rent Details" },
 ];
 
+interface UserDetails {
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Phone: string;
+  Address: string;
+  UserType: string;
+}
+
 const Page = () => {
   const [myroom, setMyRoom] = useState<PropertyDetails | null>(null);
   const [buttonIndex, setButtonIndex] = useState<number>(1);
+  const [user, setUser] = useState<UserDetails | null>(null);
 
   const token = GetToken();
 
   useEffect(() => {
     if (token) {
       fetchRoomDetails();
+      fetchUserDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
@@ -112,27 +131,38 @@ const Page = () => {
     }
   };
 
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch(`${base_url}/user/personal`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setUser(data.message);
+      }
+    } catch (error: unknown) {
+      toast.error(String(error));
+    }
+  };
+
   return (
     <div className="mt-10 md:mt-20 mb-10 md:mb-14 px-4 sm:px-6 lg:px-8">
       {myroom ? (
         <div>
-          <div className="">
-            {myroom && myroom.images && myroom.images.length > 0 && (
-              <div className="relative">
-                <div className="flex items-center justify-center">
-                  <div className="w-full ">
-                    <Image
-                      src={myroom?.images[0]}
-                      alt="room images"
-                      width={1200}
-                      height={1300}
-                      className="h-full w-full rounded-md object-cover aspect-video"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          {myroom && myroom?.images?.length > 0 && (
+            <div className="relative h-48 md:h-96 w-full">
+              <Image
+                src={myroom.images[0]}
+                alt="room images"
+                fill
+                className="rounded-md object-cover"
+              />
+            </div>
+          )}
           <hr className="mt-6 md:mt-10" />
           <div className="flex flex-wrap gap-3 md:gap-5 mt-6 md:mt-10">
             {viewComponentButtons.map((btn, index) => (
@@ -187,7 +217,9 @@ const Page = () => {
           {buttonIndex === 4 && (
             <div className="mt-6 md:mt-10 px-4 md:px-8">
               <PropertyLocation
-                location={`${myroom?.location.city}, ${myroom?.location.Province}`}
+                location={myroom?.pinnedLocation.locationName || ""}
+                longitude={myroom?.pinnedLocation.longitude || 0}
+                latitude={myroom?.pinnedLocation.latitude || 0}
               />
             </div>
           )}
@@ -196,12 +228,13 @@ const Page = () => {
               <PropertyImages propertyImage={myroom.images} />
             </div>
           )}
-          {myroom && buttonIndex === 6 && (
+          {myroom && user && buttonIndex === 6 && (
             <div className="mt-6 md:mt-10 px-4 md:px-8">
               <RentDetails
                 room={myroom}
-                rentDate={myroom?.rented_date}
+                rentDate={myroom?.last_payment}
                 token={token}
+                user={user}
               />
             </div>
           )}

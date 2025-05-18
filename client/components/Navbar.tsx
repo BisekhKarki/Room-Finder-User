@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { IoHomeOutline } from "react-icons/io5";
+
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { IoReorderThree } from "react-icons/io5";
@@ -9,6 +9,8 @@ import { RxCross2 } from "react-icons/rx";
 import { useSelector } from "react-redux";
 import { FaUser } from "react-icons/fa";
 import { RootState } from "@/store/store";
+import logo from "@/public/assets/Logo.png";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
@@ -63,14 +65,15 @@ const Navbar = () => {
     <div ref={closeNavbarMobile}>
       <div className="flex justify-between items-center px-4 md:px-6 lg:px-8 py-4 border-b-2 shadow-sm">
         {/* Logo */}
-        <p
+        <Image
+          src={logo}
           onClick={() => router.push("/")}
-          className="text-xl md:text-2xl flex items-center gap-2 hover:text-[#4040c4] cursor-pointer transition-colors duration-300 font-bold relative group"
-        >
-          <IoHomeOutline className="shrink-0" />
-          <span className="hidden sm:inline">Room Finder</span>
-          <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#4040c4] transition-all duration-300 group-hover:w-full"></span>
-        </p>
+          alt="Company Logo"
+          className="w-16 h-12 md:w-14 md:h-12 flex-shrink-0"
+          width={50}
+          height={50}
+          priority
+        />
 
         {/* Desktop Navigation */}
         <ul className="hidden lg:flex items-center gap-4 xl:gap-6 cursor-pointer">

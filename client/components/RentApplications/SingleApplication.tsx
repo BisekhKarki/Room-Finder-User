@@ -99,7 +99,6 @@ const SingleApplication = ({
   const [popup, setPopup] = useState<boolean>(false);
   const [done, setDone] = useState<string>("");
   const router = useRouter();
-  console.log(Application);
 
   const approveApplication = async () => {
     try {
@@ -132,7 +131,7 @@ const SingleApplication = ({
 
   const [applicationStatus, setApplicationStatus] =
     useState<UserTransaction | null>(null);
-  console.log(applicationStatus);
+  const [paymentLast, setPaymentLast] = useState<Date | null>(null);
 
   useEffect(() => {
     if (token) {
@@ -187,10 +186,40 @@ const SingleApplication = ({
       const val = await response.json();
       if (response.status === 200) {
         setApplicationStatus(val.message);
+        router.push("/landlord/MyRooms");
         console.log(val.message);
       }
     } catch (error: unknown) {
       toast.error(String(error));
+    }
+  };
+
+  useEffect(() => {
+    if (token && Application) {
+      getApplicationsLastPayment();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getApplicationsLastPayment = async () => {
+    try {
+      const response = await fetch(
+        `${base_url}/rooms/rent/tenants/last_payment/${roomId}/${Application?.tenantId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const val = await response.json();
+      if (response.status === 200) {
+        setPaymentLast(val.message);
+        console.log(val.message);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -266,10 +295,8 @@ const SingleApplication = ({
         <div className="mt-4 md:mt-6 space-y-2 md:space-y-3">
           <div>
             <p className="text-lg md:text-xl font-semibold">
-              Last Rent Given by the user on: {""}
-              <span className="block md:inline text-sm md:text-base font-normal">
-                {/* Add date here */}
-              </span>
+              Last Rent Given by the user on:{" "}
+              {paymentLast && new Date(paymentLast).toISOString().split("T")[0]}
             </p>
           </div>
         </div>

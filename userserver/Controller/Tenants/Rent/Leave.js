@@ -40,6 +40,7 @@ const leaveRent = async (req, res) => {
         rented_by: userData.id,
         rent_leave_date: new Date(),
         rented_date: findRoom.rented_date,
+        pinnedLocation: findRoom.pinnedLocation,
         rented: false,
         _id: roomId,
       });
@@ -97,4 +98,32 @@ const leaveRent = async (req, res) => {
   }
 };
 
-module.exports = { leaveRent };
+const getRoomHistory = async (req, res) => {
+  const userData = req.userData;
+  const { id } = req.params;
+  try {
+    const findRoom = await history.findOne({
+      _id: id,
+      rented_by: userData.id,
+    });
+
+    if (!findRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "No room found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: findRoom,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { leaveRent, getRoomHistory };

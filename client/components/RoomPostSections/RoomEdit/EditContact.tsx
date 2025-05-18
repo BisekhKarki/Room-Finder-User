@@ -15,6 +15,12 @@ interface Props {
   setCounter: (index: number) => void;
 }
 
+interface PinnedLocationProps {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 const EditContactDeatils = ({ counter, setCounter }: Props) => {
   const [userName, setUserName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -35,6 +41,8 @@ const EditContactDeatils = ({ counter, setCounter }: Props) => {
   const [location, setLocation] = useState<Array<string>>([]);
   const [features, setFeatures] = useState<Array<string>>([]);
   const [images, setImages] = useState<Array<string>>([]);
+  const [pinnedLocation, setPinnedLocation] =
+    useState<PinnedLocationProps | null>(null);
   const { id } = useParams();
 
   useEffect(() => {
@@ -42,17 +50,30 @@ const EditContactDeatils = ({ counter, setCounter }: Props) => {
     const locationDetails = localStorage.getItem("Edit_Post_location");
     const featureDetails = localStorage.getItem("Edit_Post_features");
     const imageDetails = localStorage.getItem("Edit_Post_images");
+    const pinnedLocationMap = localStorage.getItem("Edit_Pinned_Location");
 
-    if (basicDetails && locationDetails && featureDetails && imageDetails) {
+    if (
+      basicDetails &&
+      locationDetails &&
+      featureDetails &&
+      imageDetails &&
+      pinnedLocationMap
+    ) {
       const getBasic = JSON.parse(basicDetails);
       const getLocation = JSON.parse(locationDetails);
       const getFeatures = JSON.parse(featureDetails);
       const getImages = JSON.parse(imageDetails);
+      const getPinned = JSON.parse(pinnedLocationMap);
 
       setBasic(getBasic);
       setLocation(getLocation);
       setFeatures(getFeatures);
       setImages(getImages);
+      setPinnedLocation({
+        locationName: getPinned.pinned_Location,
+        latitude: getPinned.latitude,
+        longitude: getPinned.longitude,
+      });
     }
   }, []);
 
@@ -104,6 +125,7 @@ const EditContactDeatils = ({ counter, setCounter }: Props) => {
               email,
               phone,
             },
+            pinnedLocation,
           }),
         }
       );

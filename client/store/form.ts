@@ -38,12 +38,19 @@ export interface ImagesProps {
   url: Array<string>[];
 }
 
+export interface locationPinned {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface FormState {
   Basic: Basic;
   Location: Location;
   Features: Features;
   Contact: Contact;
   ImagesProps: ImagesProps;
+  pinnedLocation: locationPinned;
 }
 
 const initialState: FormState = {
@@ -79,6 +86,11 @@ const initialState: FormState = {
   ImagesProps: {
     url: [],
   },
+  pinnedLocation: {
+    locationName: "",
+    latitude: 0,
+    longitude: 0,
+  },
 };
 
 const formSlice = createSlice({
@@ -108,6 +120,13 @@ const formSlice = createSlice({
       state.ImagesProps = action.payload;
       localStorage.setItem("Post_Images", JSON.stringify(state.ImagesProps));
     },
+    pinnedLocationDetail: (state, action) => {
+      state.pinnedLocation = action.payload;
+      localStorage.setItem(
+        "Post_Pinned_Location",
+        JSON.stringify(state.pinnedLocation)
+      );
+    },
   },
 });
 
@@ -117,6 +136,7 @@ export const {
   featureDetails,
   contactDetails,
   imageDetails,
+  pinnedLocationDetail,
 } = formSlice.actions;
 
 export default formSlice.reducer;

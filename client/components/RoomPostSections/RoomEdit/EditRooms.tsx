@@ -11,13 +11,16 @@ import EditLocation from "./EditLocation";
 import EditFeatures from "./EditFeatures";
 import EditImages from "./EditImages";
 import EditContactDeatils from "./EditContact";
-
+import EditLocationPinMap from "./EditPinLocation";
 const steps = [
   {
     label: "Basic",
   },
   {
     label: "Location",
+  },
+  {
+    label: "Pin Location",
   },
   {
     label: "Features",
@@ -122,12 +125,15 @@ const EditRoom = () => {
                 <EditLocation counter={counter} setCounter={setCounter} />
               )}
               {counter === 2 && (
-                <EditFeatures counter={counter} setCounter={setCounter} />
+                <EditLocationPinMap counter={counter} setCounter={setCounter} />
               )}
               {counter === 3 && (
-                <EditImages counter={counter} setCounter={setCounter} />
+                <EditFeatures counter={counter} setCounter={setCounter} />
               )}
               {counter === 4 && (
+                <EditImages counter={counter} setCounter={setCounter} />
+              )}
+              {counter === 5 && (
                 <EditContactDeatils counter={counter} setCounter={setCounter} />
               )}
             </div>

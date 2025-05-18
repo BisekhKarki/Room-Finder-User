@@ -78,6 +78,17 @@ const rented_properties = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    pinnedLocation: {
+      locationName: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+      },
+      longitude: {
+        type: Number,
+      },
+    },
     rented_by: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -107,6 +118,10 @@ const rented_properties = new mongoose.Schema(
     ],
     rented_date: {
       type: Date,
+    },
+    last_payment: {
+      type: Date,
+      default: Date.now,
     },
     rented: {
       type: Boolean,

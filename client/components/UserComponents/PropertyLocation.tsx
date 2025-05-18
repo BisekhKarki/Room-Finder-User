@@ -4,30 +4,22 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
 
-// Dynamically import react-leaflet components
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
 });
 const TileLayer = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
-// Dynamically define ChangeView to handle useMap
 const ChangeView = dynamic(
   () =>
     import("react-leaflet").then((mod) => {
@@ -46,85 +38,42 @@ const ChangeView = dynamic(
 
 interface Props {
   location: string | undefined;
+  longitude: number;
+  latitude: number;
 }
 
-const PropertyLocation = ({ location }: Props) => {
+const PropertyLocation = ({ location, longitude, latitude }: Props) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [mapType, setMapType] = useState<"satellite" | "street">("satellite");
 
-  // Dynamically load Leaflet and configure icons on client side
   useEffect(() => {
+    // Import Leaflet and set the marker icon inside useEffect
     import("leaflet").then((L) => {
-      // Fix for marker icons
-      const DefaultIcon = L.icon({
-        iconUrl: "/images/marker-icon.png",
-        iconRetinaUrl: "/images/marker-icon-2x.png",
-        shadowUrl: "/images/marker-shadow.png",
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+        iconUrl:
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
         shadowSize: [41, 41],
       });
-
-      // Set default icon globally
-      L.Marker.prototype.options.icon = DefaultIcon;
     });
   }, []);
 
   useEffect(() => {
-    console.log("Location prop:", location); // Debug log
-    if (location) {
-      geocodeLocation(location);
+    if (location && latitude && longitude) {
+      setPosition([longitude, latitude]);
     }
-  }, [location]);
+  }, [location, longitude, latitude]);
 
-  const geocodeLocation = async (address: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-          address + ", Nepal"
-        )}&format=json&addressdetails=1&limit=1`
-      );
-
-      const data = await response.json();
-
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat);
-        const lon = parseFloat(data[0].lon);
-        setPosition([lat, lon]);
-      } else {
-        setError("Location not found. Please try a different address.");
-        setPosition(null);
-      }
-    } catch (err) {
-      setError("Failed to fetch location data. Please try again.");
-      setPosition(null);
-      console.error("Geocoding error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Default to Kathmandu if no position
   const defaultPosition: [number, number] = [27.7172, 85.324];
 
   return (
     <div className="pl-10 h-[600px] w-[90%] relative mt-10">
-      {loading && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-          <p className="text-white">Searching for location...</p>
-        </div>
-      )}
-      {error && (
-        <div className="absolute inset-0 bg-red-100 bg-opacity-90 flex items-center justify-center z-10 p-4">
-          <p className="text-red-700">{error}</p>
-        </div>
-      )}
       <div className="absolute top-2 right-2 z-[1000] flex gap-2">
         <button
           onClick={() => setMapType("satellite")}
@@ -149,7 +98,7 @@ const PropertyLocation = ({ location }: Props) => {
       </div>
       <MapContainer
         center={position || defaultPosition}
-        zoom={position ? 16 : 13}
+        zoom={15}
         style={{ height: "100%", width: "100%", zIndex: 0 }}
       >
         {position && <ChangeView center={position} zoom={16} />}

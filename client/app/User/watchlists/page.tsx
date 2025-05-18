@@ -135,13 +135,10 @@ const Page = () => {
                   />
                   {/* Bookmark Icon */}
                   <div className="absolute bottom-2 right-2 md:bottom-3 md:right-3">
-                    {watchlistsRoom.map((w, idx) => (
-                      <FaBookmark
-                        key={idx}
-                        className="text-blue-300 text-xl hover:text-blue-400 transition-colors"
-                        onClick={() => removeFromWatchLists(w._id)}
-                      />
-                    ))}
+                    <FaBookmark
+                      className="text-blue-300 text-xl hover:text-blue-400 transition-colors"
+                      onClick={() => removeFromWatchLists(property._id)}
+                    />
                   </div>
                 </div>
 

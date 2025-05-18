@@ -18,6 +18,12 @@ interface Props {
   setCounter: (index: number) => void;
 }
 
+interface PinnedLocationProps {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 const ContactDeatils = ({ counter, setCounter }: Props) => {
   const [userName, setUserName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -45,23 +51,38 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
   const [location, setLocation] = useState<Array<string>>([]);
   const [features, setFeatures] = useState<Array<string>>([]);
   const [images, setImages] = useState<Array<string>>([]);
+  const [pinnedLocation, setPinnedLocation] =
+    useState<PinnedLocationProps | null>(null);
 
   useEffect(() => {
     const basicDetails = localStorage.getItem("Post_Basic");
     const locationDetails = localStorage.getItem("Post_Location");
     const featureDetails = localStorage.getItem("Post_Features");
     const imageDetails = localStorage.getItem("Post_Images");
+    const pinnedLocation = localStorage.getItem("Post_Pinned_Location");
 
-    if (basicDetails && locationDetails && featureDetails && imageDetails) {
+    if (
+      basicDetails &&
+      locationDetails &&
+      featureDetails &&
+      imageDetails &&
+      pinnedLocation
+    ) {
       const getBasic = JSON.parse(basicDetails);
       const getLocation = JSON.parse(locationDetails);
       const getFeatures = JSON.parse(featureDetails);
       const getImages = JSON.parse(imageDetails);
+      const getPinned = JSON.parse(pinnedLocation);
 
       setBasic(getBasic);
       setLocation(getLocation);
       setFeatures(getFeatures);
       setImages(getImages);
+      setPinnedLocation({
+        locationName: getPinned.locationName,
+        latitude: getPinned.latitude,
+        longitude: getPinned.longitude,
+      });
     }
   }, []);
 
@@ -112,6 +133,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
               phone,
             },
             landlordId: landlordId,
+            pinnedLocation,
           }),
         });
 
@@ -124,6 +146,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           localStorage.removeItem("Post_Images");
           localStorage.removeItem("Post_Location");
           localStorage.removeItem("Post_Features");
+          localStorage.removeItem("Post_Pinned_Location");
           setUserName("");
           setEmail("");
           setPhone("");

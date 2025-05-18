@@ -15,6 +15,64 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const getUserDetail = async (req, res) => {
+  const userData = req.userData;
+  console.log(userData);
+  try {
+    const users = await user
+      .findOne({
+        _id: userData.id,
+      })
+      .select("-Password");
+    console.log(users);
+    if (!users) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const reviewInfo = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const users = await user
+      .findOne({
+        _id: id,
+      })
+      .select("-Password");
+    console.log("Hellop", users);
+    if (!users) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const sendApprovalRent = async (req, res) => {
   const userData = req.userData; // Tenant ID from auth middleware
 
@@ -31,13 +89,13 @@ const sendApprovalRent = async (req, res) => {
 
     const User = await user.findById(userData.id);
 
-    const userDetails = {
-      fullName: User.FirstName + User.LastName,
-      email: User.Email,
-      phone: User.Phone,
-      address: User.Address,
-      personalDetails,
-    };
+    // const userDetails = {
+    //   fullName: User.FirstName + User.LastName,
+    //   email: User.Email,
+    //   phone: User.Phone,
+    //   address: User.Address,
+    //   personalDetails,
+    // };
 
     const findExistingApproval = await rentApproval.findOne({
       roomId,
@@ -52,7 +110,7 @@ const sendApprovalRent = async (req, res) => {
     }
 
     const approvalValues = new rentApproval({
-      personalDetails: userDetails,
+      personalDetails,
       employment_and_income,
       emergency_contact_details,
       rental_history,
@@ -461,4 +519,10 @@ const sendDeclineEmailToTenant = async (
   }
 };
 
-module.exports = { sendApprovalRent, acceptApproval, declineApproval };
+module.exports = {
+  sendApprovalRent,
+  acceptApproval,
+  declineApproval,
+  getUserDetail,
+  reviewInfo,
+};

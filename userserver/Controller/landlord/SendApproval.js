@@ -140,7 +140,15 @@ const sendEmailToLandord = async (email, locationRoom, FullName, roomName) => {
 };
 
 const getApproval = async (req, res) => {
-  const { basic, location, features, images, contact, landlordId } = req.body;
+  const {
+    basic,
+    location,
+    features,
+    images,
+    contact,
+    landlordId,
+    pinnedLocation,
+  } = req.body;
 
   try {
     const user = await userSchema.findOne({ _id: landlordId });
@@ -158,7 +166,6 @@ const getApproval = async (req, res) => {
       landlordId: landlordId,
       "contact.phone": contact.phone,
     });
-    console.log(findRoomExists);
 
     if (findRoomExists) {
       return res.status(400).json({
@@ -173,7 +180,7 @@ const getApproval = async (req, res) => {
 
     sendEmailToLandord(
       user.Email,
-      Approving.location,
+      Approving.pinnedLocation.locationName,
       user.firstName + user.LastName,
       Approving.basic.name
     );

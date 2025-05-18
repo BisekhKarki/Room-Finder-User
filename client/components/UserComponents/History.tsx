@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GoStarFill } from "react-icons/go";
 import user from "@/assets/user.png";
 import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
+
+import { base_url } from "@/constants/BaseUrl";
 
 export interface Review {
   comment: string;
@@ -13,10 +14,54 @@ export interface Review {
 }
 
 interface Props {
-  review: Array<Review> | [];
+  review: Review[] | [];
+}
+
+interface userDetails {
+  Address: string;
+  Email: string;
+  FirstName: string;
+  LastName: string;
+  Phone: string;
+  UserType: string;
 }
 
 const History = ({ review }: Props) => {
+  // Keyed by review ID instead of user ID
+  const [userMap, setUserMap] = useState<Record<string, userDetails>>({});
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const newMap: Record<string, userDetails> = {};
+      await Promise.all(
+        review.map(async (r) => {
+          try {
+            const response = await fetch(
+              `${base_url}/rooms/tenant/review/info/${r._id}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const data = await response.json();
+            newMap[r._id] = data.message; // Assuming backend sends user info in `message`
+          } catch (error) {
+            console.error("Error fetching user for review:", r._id, error);
+          }
+        })
+      );
+      setUserMap(newMap);
+    };
+    console.log(userMap);
+
+    if (review.length > 0) {
+      fetchUsers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [review]);
+
   return (
     <div className="px-4 xs:px-5 sm:px-6 lg:px-8">
       <div className="py-4 sm:py-6 border w-full mt-6 sm:mt-8 px-4 sm:px-6 rounded-lg border-gray-200 shadow-sm">
@@ -43,7 +88,7 @@ const History = ({ review }: Props) => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xs sm:text-sm font-medium text-gray-800">
-                      Anonymous User
+                      {userMap[r._id]?.FirstName} {userMap[r._id]?.LastName}
                     </h3>
                     <div className="flex items-center mt-1">
                       <div className="flex">
@@ -67,12 +112,6 @@ const History = ({ review }: Props) => {
 
                 <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 flex-grow">
                   {r.comment}
-                </p>
-
-                <p className="text-[10px] xs:text-xs text-gray-400 text-right mt-auto">
-                  {formatDistanceToNow(new Date(r.created_at), {
-                    addSuffix: true,
-                  })}
                 </p>
               </div>
             ))}

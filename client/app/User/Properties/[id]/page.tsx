@@ -59,6 +59,12 @@ interface reviewsArray {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyProps {
   basic: BasicData;
   features: FeaturesData;
@@ -71,6 +77,7 @@ interface PropertyProps {
   __v: number;
   _id: string;
   reviews: Array<reviewsArray> | [];
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const viewComponentButtons = [
@@ -143,21 +150,16 @@ const PropertiesSection = () => {
           Back
         </p>
       </div>
-      <div className="">
-        {property && property.images && property.images.length > 0 && (
-          <div className="relative">
-            <div className="px-4 md:px-8">
-              <Image
-                src={property?.images[0]}
-                alt="room images"
-                width={1500}
-                height={1300}
-                className="h-full w-full object-cover rounded-md hover:shadow-lg cursor-pointer"
-              />
-            </div>
-          </div>
-        )}
-      </div>
+      {property && property?.images?.length > 0 && (
+        <div className="relative h-48 md:h-96 w-full">
+          <Image
+            src={property.images[0]}
+            alt="room images"
+            fill
+            className="rounded-md object-cover"
+          />
+        </div>
+      )}
       <hr className="mt-6 md:mt-10" />
       <div className="flex flex-wrap gap-2 md:gap-5 px-2 md:px-10">
         {viewComponentButtons.map((btn, index) => (
@@ -211,7 +213,9 @@ const PropertiesSection = () => {
       )}
       {buttonIndex === 4 && (
         <PropertyLocation
-          location={property?.location.street + ", " + property?.location.city}
+          location={property?.pinnedLocation.locationName || ""}
+          longitude={property?.pinnedLocation.longitude || 0}
+          latitude={property?.pinnedLocation.latitude || 0}
         />
       )}
       {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}

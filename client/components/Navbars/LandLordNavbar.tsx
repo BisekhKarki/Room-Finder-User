@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaUser } from "react-icons/fa";
 import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slice";
+import Image from "next/image";
+import logo from "@/public/assets/Logo.png";
 
 const LandlordNavbar = () => {
   const router = useRouter();
@@ -67,12 +69,14 @@ const LandlordNavbar = () => {
     <div ref={closeNavbarMobile}>
       <div className="flex justify-between items-center px-4 md:px-6 lg:px-8 py-4 border-b-2 shadow-sm">
         {/* Logo */}
-        <p
-          onClick={() => router.push("/")}
-          className="text-xl md:text-2xl flex items-center gap-2 hover:text-[#4040c4] cursor-pointer transition-colors duration-300 font-bold"
-        >
-          Room Finder
-        </p>
+        <Image
+          src={logo}
+          alt="Company Logo"
+          className="w-16 h-12 md:w-14 md:h-12 flex-shrink-0"
+          width={50}
+          height={50}
+          priority
+        />
 
         {/* Desktop Navigation */}
         <ul className="hidden lg:flex items-center gap-4 xl:gap-6">
@@ -102,21 +106,19 @@ const LandlordNavbar = () => {
               />
               {open && (
                 <div className="absolute right-0 top-8 w-40 border border-gray-200 rounded-lg bg-white shadow-xl z-50">
-                  <ul className="py-2">
-                    <li
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm rounded-md transition-colors"
-                      onClick={() => router.push("/landlord/MyProfile")}
-                    >
-                      My Profile
-                    </li>
-                    <hr />
-                    <li
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-red-500 rounded-md transition-colors"
-                      onClick={logoutUser}
-                    >
-                      Logout
-                    </li>
-                  </ul>
+                  <p
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm rounded-md transition-colors"
+                    onClick={() => router.push("/landlord/MyProfile")}
+                  >
+                    My Profile
+                  </p>
+                  <hr />
+                  <p
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-red-500 rounded-md transition-colors"
+                    onClick={logoutUser}
+                  >
+                    Logout
+                  </p>
                 </div>
               )}
             </div>

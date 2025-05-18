@@ -74,6 +74,17 @@ const rented_history = new mongoose.Schema(
         type: String,
       },
     },
+    pinnedLocation: {
+      locationName: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+      },
+      longitude: {
+        type: Number,
+      },
+    },
     landlordId: {
       type: Schema.Types.ObjectId,
       ref: "User",

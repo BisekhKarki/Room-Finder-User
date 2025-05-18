@@ -26,6 +26,34 @@ const application = async (req, res) => {
   }
 };
 
+const getUserLastPayment = async (req, res) => {
+  const { id, tenantId } = req.params;
+
+  try {
+    const findApplication = await rented.findOne({
+      room_id: id,
+      rented_by: tenantId,
+    });
+
+    if (!findApplication) {
+      return res.status(400).json({
+        success: false,
+        message: "No room rented",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: findApplication.last_payment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const getApprovedApplications = async (req, res) => {
   const { roomId, landlordId } = req.params;
 
@@ -81,4 +109,9 @@ const checkRentedRoom = async (req, res) => {
   }
 };
 
-module.exports = { application, getApprovedApplications, checkRentedRoom };
+module.exports = {
+  application,
+  getApprovedApplications,
+  checkRentedRoom,
+  getUserLastPayment,
+};

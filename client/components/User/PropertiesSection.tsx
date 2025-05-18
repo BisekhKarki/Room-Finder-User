@@ -3,10 +3,10 @@ import { base_url, tenant_base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Button } from "../ui/button";
 import { FaAngleRight, FaBookmark } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 
 export interface ContactData {
   email: string;
@@ -40,18 +40,26 @@ export interface LocationData {
   zip: string;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface FeaturedRoom {
   basic: BasicData;
   features: FeaturesData;
   images: string[];
   isVerified: boolean;
   landlordId: string;
+  roomId?: string;
   location: LocationData;
   contact: ContactData;
   payment: boolean;
   __v: number;
   _id: string;
-  roomId?: string;
+  show?: boolean;
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 interface Props {
@@ -62,7 +70,7 @@ interface Props {
 }
 
 const PropertiesSection = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
-  const [properties, setProperties] = useState<Array<FeaturedRoom> | []>([]);
+  const [properties, setProperties] = useState<Array<FeaturedRoom>>([]);
   const [getToken, setGetToken] = useState<string>("");
   const token = GetToken();
   const router = useRouter();
@@ -110,12 +118,16 @@ const PropertiesSection = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
           location: prop.location,
           contact: prop.contact,
           payment: prop.payment,
+          pinnedLocation: prop.pinnedLocation,
         }),
       });
       const data = await response.json();
       if (response.status === 200) {
         toast.success(data.message);
-        setWatchlistsRoom((prev: FeaturedRoom[]) => [...prev, data.watchlists]);
+        setWatchlistsRoom((prev) => [
+          ...prev,
+          { ...prop, roomId: prop._id, _id: data.watchlists._id },
+        ]);
       } else toast.error(data.message);
     } catch (error: unknown) {
       toast.error(String(error));
@@ -137,13 +149,12 @@ const PropertiesSection = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
         toast.success(data.message);
       } else toast.error(data.message);
     } catch (error: unknown) {
-      console.log(String(error));
+      toast.error(String(error));
     }
   };
 
   return (
     <div className="mt-10">
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row items-center justify-between px-4 md:px-8 lg:px-20">
         <h1 className="mb-5 text-2xl md:text-3xl lg:text-4xl font-bold text-center">
           Properties
@@ -157,77 +168,71 @@ const PropertiesSection = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
         </div>
       </div>
 
-      {/* Properties Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-20 gap-8 md:gap-12 lg:gap-24 mt-10">
-        {properties.map((property, index) => (
-          <div
-            key={index}
-            className="cursor-pointer hover:-translate-y-2 lg:hover:-translate-y-4 transition-all ease-out duration-150 hover:shadow-xl mx-auto w-full max-w-sm md:max-w-none"
-          >
-            {/* Image Container */}
-            <div className="relative aspect-video">
-              <Image
-                src={property.images[0]}
-                alt="property image"
-                fill
-                className="rounded-t-md object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
+        {properties.map((property, index) => {
+          const isSaved = watchlistsRoom.some((w) => w.roomId === property._id);
+          const savedItem = watchlistsRoom.find(
+            (w) => w.roomId === property._id
+          );
 
-              {/* Bookmark Button */}
-              {watchlistsRoom.map((w, i) =>
-                w.roomId === property._id ? (
+          return (
+            <div
+              key={index}
+              className="cursor-pointer hover:-translate-y-2 lg:hover:-translate-y-4 transition-all ease-out duration-150 hover:shadow-xl mx-auto w-full max-w-sm md:max-w-none"
+            >
+              <div className="relative aspect-video">
+                <Image
+                  src={property.images[0]}
+                  alt="property image"
+                  fill
+                  className="rounded-t-md object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                {isSaved ? (
                   <FaBookmark
-                    key={i}
-                    className="absolute bottom-2 right-2 text-blue-300 text-xl backdrop-blur-sm"
-                    onClick={() => removeFromWatchLists(w._id)}
+                    className="absolute bottom-2 right-2 text-blue-300 text-xl backdrop-blur-sm cursor-pointer"
+                    onClick={() => removeFromWatchLists(savedItem?._id || "")}
                   />
                 ) : (
                   <FaBookmark
-                    key={i}
-                    className="absolute bottom-2 right-2 text-white text-xl hover:text-blue-200 backdrop-blur-sm"
+                    className="absolute bottom-2 right-2 text-white text-xl hover:text-blue-200 backdrop-blur-sm cursor-pointer"
                     onClick={() => saveToWatchLists(property)}
                   />
-                )
-              )}
-              {watchlistsRoom.length === 0 && (
-                <FaBookmark
-                  className="absolute bottom-2 right-2 text-white text-xl hover:text-blue-200 backdrop-blur-sm"
-                  onClick={() => saveToWatchLists(property)}
-                />
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Content Section */}
-            <div className="border px-4 py-3 md:px-6 md:py-5 rounded-b-md">
-              <h3 className="mb-1 text-gray-600 text-sm md:text-base line-clamp-1">
-                {property.basic.name}
-              </h3>
-              <div className="flex flex-col md:flex-row md:gap-10">
-                <p className="text-gray-600 text-sm md:text-base">
-                  Rs.{property.basic.price}
-                </p>
-                <p className="text-gray-600 text-sm md:text-base line-clamp-1">
-                  {property.basic.type}
-                </p>
+              <div className="border px-4 py-3 md:px-6 md:py-5 rounded-b-md">
+                <h3 className="mb-1 text-gray-600 text-sm md:text-base line-clamp-1">
+                  {property.basic.name}
+                </h3>
+                <div className="flex flex-col md:flex-row md:gap-10">
+                  <p className="text-gray-600 text-sm md:text-base">
+                    Rs.{property.basic.price}
+                  </p>
+                  <p className="text-gray-600 text-sm md:text-base line-clamp-1">
+                    {property.basic.type}
+                  </p>
+                </div>
+                <div className="flex flex-col md:flex-row md:gap-10 mt-1">
+                  <p className="text-gray-600 text-sm md:text-base line-clamp-1">
+                    {property.location.province}
+                  </p>
+                  <p className="text-gray-600 text-sm md:text-base line-clamp-1">
+                    {property.location.city}
+                  </p>
+                </div>
+                <Button
+                  className="w-full mt-3 md:mt-5 bg-blue-500 hover:bg-blue-600 text-sm md:text-base"
+                  onClick={() =>
+                    router.push(`/user/properties/${property._id}`)
+                  }
+                >
+                  View Details
+                </Button>
               </div>
-              <div className="flex flex-col md:flex-row md:gap-10 mt-1">
-                <p className="text-gray-600 text-sm md:text-base line-clamp-1">
-                  {property.location.province}
-                </p>
-                <p className="text-gray-600 text-sm md:text-base line-clamp-1">
-                  {property.location.city}
-                </p>
-              </div>
-              <Button
-                className="w-full mt-3 md:mt-5 bg-blue-500 hover:bg-blue-600 text-sm md:text-base"
-                onClick={() => router.push(`/user/properties/${property._id}`)}
-              >
-                View Details
-              </Button>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

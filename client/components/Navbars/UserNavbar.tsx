@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { IoHomeOutline } from "react-icons/io5";
+
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { IoReorderThree } from "react-icons/io5";
@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaUser } from "react-icons/fa";
 import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slice";
+import logo from "@/public/assets/Logo.png";
+import Image from "next/image";
 
 const UserNavbar = () => {
   const router = useRouter();
@@ -63,14 +65,16 @@ const UserNavbar = () => {
     <div ref={closeNavbarMobile}>
       <div className="flex justify-between items-center px-4 md:px-6 lg:px-8 py-4 border-b-2 shadow-sm">
         {/* Logo */}
-        <p
+
+        <Image
+          src={logo}
           onClick={() => router.push("/")}
-          className="text-xl md:text-2xl flex items-center gap-2 hover:text-[#4040c4] cursor-pointer transition-colors duration-300 font-bold relative group"
-        >
-          <IoHomeOutline className="shrink-0" />
-          <span className="hidden sm:inline">Room Finder</span>
-          <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#4040c4] transition-all duration-300 group-hover:w-full"></span>
-        </p>
+          alt="Company Logo"
+          className="w-16 h-12 md:w-14 md:h-12 flex-shrink-0"
+          width={50}
+          height={50}
+          priority
+        />
 
         {/* Desktop Navigation */}
         <ul className="hidden lg:flex items-center gap-4 xl:gap-6 cursor-pointer">
@@ -104,24 +108,24 @@ const UserNavbar = () => {
               <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               {open && (
                 <div className="absolute right-0 top-8 w-48 border border-gray-200 rounded-lg bg-white shadow-xl z-50">
+                  {[
+                    { name: "My Profile", path: "/user/profile" },
+                    { name: "History", path: "/user/history" },
+                    { name: "My WatchLists", path: "/user/watchlists" },
+                    { name: "Rented Rooms", path: "/user/rentedRooms" },
+                  ].map((item) => (
+                    <React.Fragment key={item.path}>
+                      <p
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm relative group"
+                        onClick={() => router.push(item.path)}
+                      >
+                        {item.name}
+                        <span className="absolute left-0 bottom-0 w-full h-[1px] bg-blue-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                      </p>
+                      <hr />
+                    </React.Fragment>
+                  ))}
                   <ul className="py-2">
-                    {[
-                      { name: "My Profile", path: "/user/profile" },
-                      { name: "History", path: "/user/history" },
-                      { name: "My WatchLists", path: "/user/watchlists" },
-                      { name: "Rented Rooms", path: "/user/rentedRooms" },
-                    ].map((item) => (
-                      <React.Fragment key={item.path}>
-                        <li
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm relative group"
-                          onClick={() => router.push(item.path)}
-                        >
-                          {item.name}
-                          <span className="absolute left-0 bottom-0 w-full h-[1px] bg-blue-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                        </li>
-                        <hr />
-                      </React.Fragment>
-                    ))}
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-red-500 relative group"
                       onClick={logoutUser}

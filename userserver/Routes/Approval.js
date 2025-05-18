@@ -13,12 +13,15 @@ const {
   sendApprovalRent,
   acceptApproval,
   declineApproval,
+  getUserDetail,
+  reviewInfo,
 } = require("../Controller/Tenants/Rent/Approval");
 const protectRoute = require("../middleware/ProtectionRoute");
 const {
   application,
   getApprovedApplications,
   checkRentedRoom,
+  getUserLastPayment,
 } = require("../Controller/Tenants/Rent/Applications");
 
 // For approval posting router
@@ -40,8 +43,16 @@ router.post(
   sendApprovalRent
 );
 
+router.get("/tenant/details/info", protectRoute, getUserDetail);
+router.get("/tenant/review/info/:id", reviewInfo);
 // For getting the approval lists
 router.get("/rent/tenants/application/:id", protectRoute, application);
+// For checking tha last payment
+router.get(
+  "/rent/tenants/last_payment/:id/:tenantId",
+  protectRoute,
+  getUserLastPayment
+);
 
 // For checking wether the application is approved or not
 router.get(

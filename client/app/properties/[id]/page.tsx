@@ -24,6 +24,7 @@ const viewComponentButtons = [
   { index: 3, label: "Contact Landlord" },
   { index: 4, label: "Location" },
   { index: 5, label: "Images" },
+  { index: 6, label: "Rent Room" },
 ];
 
 interface ContactData {
@@ -65,6 +66,12 @@ interface PropertyReviews {
   created_at: Date;
 }
 
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface PropertyDetails {
   basic: BasicData;
   features: FeaturesData;
@@ -81,6 +88,7 @@ interface PropertyDetails {
   rented_by: string;
   rented_user_name: string;
   room_id: string;
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const Page = () => {
@@ -129,40 +137,21 @@ const Page = () => {
             Back
           </p>
         </div>
-        <div className="">
+        {/* Main Image */}
+        <div className="px-5 md:px-10">
           {property && property.images && property.images.length > 0 && (
-            <div className="relative">
-              <div className="flex px-8 gap-3">
-                <div className="">
-                  <Image
-                    src={property?.images[0]}
-                    alt="room images"
-                    width={1200}
-                    height={1300}
-                    className="h-full rounded-md hover:shadow-lg cursor-pointer"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  {property.images &&
-                    property.images
-                      .slice(1)
-                      .map((img, index) => (
-                        <Image
-                          key={index}
-                          src={img}
-                          alt="room images"
-                          width={400}
-                          height={400}
-                          className="rounded-md hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out"
-                        />
-                      ))}
-                </div>
-              </div>
-            </div>
+            <Image
+              src={property?.images[0]}
+              alt="room images"
+              width={1200}
+              height={1300}
+              className="h-full rounded-md hover:shadow-lg cursor-pointer w-full object-cover"
+            />
           )}
         </div>
+
         <hr className="mt-10" />
-        <div className="flex px-10 gap-5">
+        <div className="flex px-10 gap-5 flex-wrap">
           {viewComponentButtons.map((btn, index) => (
             <Button
               key={index}
@@ -214,14 +203,18 @@ const Page = () => {
         )}
         {buttonIndex === 4 && (
           <PropertyLocation
-            location={
-              ((property?.location.region as string) +
-                property?.location.city) as string
-            }
+            location={property?.pinnedLocation.locationName || ""}
+            longitude={property?.pinnedLocation.longitude || 0}
+            latitude={property?.pinnedLocation.latitude || 0}
           />
         )}
         {buttonIndex === 5 && (
           <PropertyImages propertyImage={property?.images} />
+        )}
+        {buttonIndex === 6 && (
+          <div className="mt-5 px-10 text-3xl font-bold">
+            You need to login to apply for a room
+          </div>
         )}
       </div>
       <Footer />

@@ -111,15 +111,6 @@ const saveDetails = async (req, res) => {
   } = req.body;
   const userData = req.userData;
   try {
-    // const findPayment = await purchaseSchema.findOne({
-    //   buyer_name,
-    //   seller_name,
-    //   room_id,
-    //   purchase_type,
-    //   landlord_id,
-    //   tenant_id: userData.id,
-    // });
-
     const newPurchaseDetails = await purchaseSchema({
       purchase_type,
       room_id,
@@ -136,37 +127,53 @@ const saveDetails = async (req, res) => {
 
     const findRentedRooms = await roomSchema.findById(room_id);
 
-    const saveRoomToRented = await rentedProperties({
-      basic: findRentedRooms.basic,
-      location: findRentedRooms.location,
-      features: findRentedRooms.features,
-      images: findRentedRooms.images,
-      contact: findRentedRooms.contact,
-      landlordId: findRentedRooms.landlordId,
-      rented_by: userData.id,
-      room_id: room_id,
-      rented_user_name: buyer_name,
-      reviews: findRentedRooms.reviews,
-      rented_date: new Date(),
-      rented: true,
-    });
+    const findRented = await rentedProperties.findById(room_id);
+    if (findRented) {
+      findRented.last_payment = new Date();
+      await findRented.save();
+      console.log("Hello world");
+      saveRoomPayement({
+        room: findRented,
+        purchase_amount: purchase_amount,
+        renter: userData.id,
+      });
 
-    await saveRoomToRented.save();
+      return res.status(200).json({
+        success: true,
+        message: "Purchase successfull",
+      });
+    } else {
+      const saveRoomToRented = await rentedProperties({
+        basic: findRentedRooms.basic,
+        location: findRentedRooms.location,
+        features: findRentedRooms.features,
+        images: findRentedRooms.images,
+        contact: findRentedRooms.contact,
+        landlordId: findRentedRooms.landlordId,
+        rented_by: userData.id,
+        room_id: room_id,
+        last_payment: new Date(),
+        rented_user_name: buyer_name,
+        reviews: findRentedRooms.reviews,
+        rented_date: new Date(),
+        rented: true,
+      });
 
-    saveRoomPayement({
-      room: saveRoomToRented,
-      purchase_amount: purchase_amount,
-      renter: userData.id,
-    });
+      await saveRoomToRented.save();
+      saveRoomPayement({
+        room: saveRoomToRented,
+        purchase_amount: purchase_amount,
+        renter: userData.id,
+      });
 
-    const findRoomById = await room.findById(room_id);
-    findRoomById.show = false;
-    await findRoomById.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Purchase successfull",
-    });
+      const findRoomById = await room.findById(room_id);
+      findRoomById.show = false;
+      await findRoomById.save();
+      return res.status(200).json({
+        success: true,
+        message: "Purchase successfull",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -177,9 +184,7 @@ const saveDetails = async (req, res) => {
 
 const saveRoomPayement = async ({ room, purchase_amount, renter }) => {
   try {
-    console.log(renter);
     const tenant = await user.findById(renter);
-    console.log(tenant);
 
     const data = {
       name: room.rented_user_name,
@@ -263,6 +268,7 @@ const saveCashDetails = async (req, res) => {
       buyer_id: userData.id,
     });
     await newPurchaseDetails.save();
+
     return res.status(200).json({
       success: true,
       message: "Transaction saved",
@@ -280,11 +286,13 @@ const getCashOnHandStatus = async (req, res) => {
   const { roomId, landlordId } = req.params;
 
   try {
-    const findUserPurchase = await purchaseSchema.findOne({
-      buyer_id: userData.id,
-      room_id: roomId,
-      landlord_id: landlordId,
-    });
+    const findUserPurchase = await purchaseSchema
+      .findOne({
+        buyer_id: userData.id,
+        room_id: roomId,
+        landlord_id: landlordId,
+      })
+      .sort({ purchase_date: -1 });
 
     if (!findUserPurchase) {
       return res.status(200).json({
@@ -308,13 +316,21 @@ const getCashOnHandStatus = async (req, res) => {
 const getCashOnHandStatusForLandlord = async (req, res) => {
   const { roomId, landlordId } = req.params;
   const { userId } = req.body;
+  console.log({
+    userId,
+    roomId,
+    landlordId,
+  });
 
   try {
-    const findUserPurchase = await purchaseSchema.findOne({
-      buyer_id: userId,
-      room_id: roomId,
-      landlord_id: landlordId,
-    });
+    const findUserPurchase = await purchaseSchema
+      .findOne({
+        buyer_id: userId,
+        room_id: roomId,
+        landlord_id: landlordId,
+      })
+      .sort({ purchase_date: -1 });
+    // console.log(findUserPurchase);
 
     if (!findUserPurchase) {
       return res.status(400).json({
@@ -339,14 +355,19 @@ const accpetPayment = async (req, res) => {
   const userData = req.userData;
   const { roomId, buyerId } = req.body;
   try {
-    const purchase = await purchaseSchema.findOne({
-      room_id: roomId,
-      buyer_id: buyerId,
-      landlord_id: userData.id,
-    });
+    const purchase = await purchaseSchema
+      .findOne({
+        room_id: roomId,
+        buyer_id: buyerId,
+        landlord_id: userData.id,
+      })
+      .sort({
+        purchase_date: -1,
+      });
 
     purchase.payment_status = "completed";
     await purchase.save();
+    console.log(purchase);
     savePaymentDetails(roomId, purchase.buyer_name, buyerId);
 
     return res.status(200).json({
@@ -363,28 +384,37 @@ const accpetPayment = async (req, res) => {
 
 const savePaymentDetails = async (room_id, buyer_name, tenantId) => {
   try {
-    const findRentedRooms = await roomSchema.findById(room_id);
-
-    const saveRoomToRented = await rentedProperties({
-      basic: findRentedRooms.basic,
-      location: findRentedRooms.location,
-      features: findRentedRooms.features,
-      images: findRentedRooms.images,
-      contact: findRentedRooms.contact,
-      landlordId: findRentedRooms.landlordId,
-      rented_by: tenantId,
+    const findAlreadyRented = await rentedProperties.findOne({
       room_id: room_id,
-      rented_user_name: buyer_name,
-      reviews: findRentedRooms.reviews,
-      rented_date: new Date(),
-      rented: true,
+      rented_by: tenantId,
     });
+    console.log(findAlreadyRented);
 
-    await saveRoomToRented.save();
+    if (findAlreadyRented) {
+      findAlreadyRented.last_payment = new Date();
+      await findAlreadyRented.save();
+    } else {
+      const findRentedRooms = await roomSchema.findById(room_id);
+      const saveRoomToRented = await rentedProperties({
+        basic: findRentedRooms.basic,
+        location: findRentedRooms.location,
+        features: findRentedRooms.features,
+        images: findRentedRooms.images,
+        contact: findRentedRooms.contact,
+        landlordId: findRentedRooms.landlordId,
+        rented_by: tenantId,
+        room_id: room_id,
+        rented_user_name: buyer_name,
+        reviews: findRentedRooms.reviews,
+        rented_date: new Date(),
+        rented: true,
+      });
 
-    const findRoomById = await room.findById(room_id);
-    findRoomById.show = false;
-    await findRoomById.save();
+      await saveRoomToRented.save();
+      const findRoomById = await room.findById(room_id);
+      findRoomById.show = false;
+      await findRoomById.save();
+    }
 
     return;
   } catch (error) {

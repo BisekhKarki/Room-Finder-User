@@ -92,7 +92,9 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
   const [checked, setChecked] = useState<boolean>(false);
 
   // For personal Details
-
+  const [userName, setUserName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [userphone, setUserphone] = useState<string>("");
   const [age, setAge] = useState<string>("");
   const [renters, setRenters] = useState<string>("");
   const [martialStatus, setMartialStatus] = useState<string>("");
@@ -164,16 +166,10 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
       renters,
       martialStatus,
 
-      job,
-      income,
       name,
       phone,
       relationship,
 
-      history,
-      length,
-
-      reason,
       criminal,
     };
     if (!checked) {
@@ -203,6 +199,9 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
           },
           body: JSON.stringify({
             personalDetails: {
+              fullName: userName,
+              email: email,
+              perosonalContact: userphone,
               age: age,
               numberOfRenters: renters,
               marital_status: martialStatus,
@@ -256,7 +255,7 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
       });
 
       const data = await response.json();
-      console.log(data);
+
       if (response.status === 200) {
         setAlreadyRented(data.message);
       }
@@ -272,7 +271,7 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
           <div className="border border-gray-300 rounded px-4 py-2 space-y-2">
             <p className="text-gray-600">You cannot rent this room</p>
             <p className="text-gray-600">
-              To rent it you must leave the previous room
+              To rent it you must leave the current rented room
             </p>
           </div>
         </div>
@@ -310,6 +309,13 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
                     setRenters={setRenters}
                     martialStatus={martialStatus}
                     setMartialStatus={setMartialStatus}
+                    userName={userName}
+                    setUserName={setUserName}
+                    email={email}
+                    setEmail={setEmail}
+                    userphone={userphone}
+                    setUserphone={setUserphone}
+                    token={token}
                   />
                   <OtherDetails
                     job={job}

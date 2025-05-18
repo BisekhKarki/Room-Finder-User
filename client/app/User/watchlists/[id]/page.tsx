@@ -10,7 +10,7 @@ import ContactLandlord from "@/components/UserComponents/ContactLandlord";
 import History from "@/components/UserComponents/History";
 import PropertyImages from "@/components/UserComponents/PropertyImages";
 import PropertyLocation from "@/components/UserComponents/PropertyLocation";
-import { tenant_base_url } from "@/constants/BaseUrl";
+import { base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 import axios from "axios";
 import Image from "next/image";
@@ -58,6 +58,11 @@ interface reviewsArray {
   _id: string;
   created_at: Date;
 }
+interface PropertyPinnedLocation {
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
 
 interface PropertyProps {
   basic: BasicData;
@@ -71,6 +76,7 @@ interface PropertyProps {
   __v: number;
   _id: string;
   reviews: Array<reviewsArray> | [];
+  pinnedLocation: PropertyPinnedLocation;
 }
 
 const viewComponentButtons = [
@@ -105,7 +111,7 @@ const Page = () => {
   const fetchSingleRooms = async () => {
     try {
       const response = await axios.get(
-        `${tenant_base_url}/rooms/property/details/single/${id}`,
+        `${base_url}/watchlists/get/single/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -114,6 +120,7 @@ const Page = () => {
         }
       );
       const data = await response.data;
+
       if (response.status === 200) {
         setProperty(data.message);
       }
@@ -130,47 +137,42 @@ const Page = () => {
   }, [getToken]);
 
   return (
-    <div className="mt-10 py-10">
+    <div className="mt-4 py-4 md:py-10 px-4">
+      {/* Back Button */}
       <div
-        className="text-2xl mb-5 flex items-center gap-1 ml-8"
+        className="flex items-center gap-1 mb-4 md:mb-5 ml-2 md:ml-8"
         onClick={() => router.push("/user/watchlists")}
       >
-        <IoIosArrowRoundBack
-          className=" text-gray-800 cursor-pointer"
-          //   onClick={() => router.push("/user/properties")}
-        />
-        <p
-          className="text-base cursor-pointer"
-          //   onClick={() => router.push("/user/")}
-        >
-          Back
-        </p>
+        <IoIosArrowRoundBack className="text-gray-800 cursor-pointer text-2xl md:text-3xl" />
+        <p className="text-xs md:text-sm cursor-pointer">Back</p>
       </div>
-      <div className="">
-        {property && property.images && property.images.length > 0 && (
-          <div className="relative">
-            <div className="px-8">
-              <Image
-                src={property?.images[0]}
-                alt="room images"
-                width={1500}
-                height={1300}
-                className="h-full rounded-md hover:shadow-lg cursor-pointer"
-              />
-            </div>
-          </div>
-        )}
-      </div>
-      <hr className="mt-10" />
-      <div className="flex px-10 gap-5">
-        {viewComponentButtons.map((btn, index) => (
+
+      {/* Main Image */}
+      {property && property?.images?.length > 0 && (
+        <div className="relative h-48 md:h-96 w-full">
+          <Image
+            src={property.images[0]}
+            alt="room images"
+            fill
+            className="rounded-md object-cover"
+          />
+        </div>
+      )}
+
+      <hr className="mt-6 md:mt-10" />
+
+      {/* Navigation Buttons */}
+      <div className="grid grid-cols-3 xs:grid-cols-3 sm:grid-cols-6 gap-1 md:gap-2 mt-4 md:mt-6">
+        {viewComponentButtons.map((btn) => (
           <Button
-            key={index}
-            className={` ${
-              btn.index === buttonIndex
-                ? "bg-blue-400 text-white hover:bg-blue-500"
-                : "bg-white hover:bg-gray-50  text-black"
-            }  mt-10 px-20 py-5 text-base border border-gray-300 shadow-md  transition-all duration-200 ease-in-out`}
+            key={btn.index}
+            className={`text-xs xs:text-xs sm:text-sm md:text-base 
+              h-10 md:h-14 px-2 md:px-4 rounded-sm md:rounded-md 
+              truncate hover:bg-gray-50 transition-all ${
+                buttonIndex === btn.index
+                  ? "bg-blue-400"
+                  : "bg-white text-black"
+              }`}
             onClick={() => setButtonIndex(btn.index)}
           >
             {btn.label}
@@ -178,49 +180,66 @@ const Page = () => {
         ))}
       </div>
 
-      {buttonIndex === 1 && property && (
-        <div className="flex flex-row gap-5 px-5">
-          <div className="py-5 border w-full mt-10 px-10 rounded-md  border-gray-300">
+      {/* Content Sections */}
+      <div className="mt-6 md:mt-10">
+        {property && buttonIndex === 1 && (
+          <div className="space-y-6 md:space-y-8">
             <Overview basic={property.basic} />
             <Description description={property.basic.description} />
             <Features features={property.features} />
             <Location location={property.location} />
-            <div className="mb-16">
-              <h1 className="font-bold text-3xl mb-3 font-sans">
-                Landlord Contact Details
-              </h1>
-              <hr />
-              <div className=" flex  justify-between mt-5">
-                <p className="text-gray-500 text-base">
-                  Name: {property.contact.username}
+
+            <div className="bg-gray-50 p-4 md:p-6 rounded-lg">
+              <h2 className="text-lg md:text-2xl font-semibold mb-3">
+                Landlord Contact
+              </h2>
+              <div className="space-y-2 md:space-y-0 md:flex md:justify-between">
+                <p className="text-xs md:text-sm">
+                  <span className="font-medium">Name:</span>{" "}
+                  {property.contact.username}
                 </p>
-                <p className="text-gray-500 text-base">
-                  Email: {property.contact.email}
+                <p className="text-xs md:text-sm">
+                  <span className="font-medium">Email:</span>{" "}
+                  {property.contact.email}
                 </p>
-                <p className="text-gray-500 text-base">
-                  Phone: {property.contact.phone}
+                <p className="text-xs md:text-sm">
+                  <span className="font-medium">Phone:</span>{" "}
+                  {property.contact.phone}
                 </p>
               </div>
             </div>
           </div>
-        </div>
-      )}
-      {property && buttonIndex === 2 && <History review={property.reviews} />}
-      {property && buttonIndex === 3 && (
-        <ContactLandlord
-          landlordEmail={property?.contact.email}
-          landlordName={property.contact.username}
-        />
-      )}
-      {buttonIndex === 4 && (
-        <PropertyLocation
-          location={property?.location.street + ", " + property?.location.city}
-        />
-      )}
-      {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}
-      {buttonIndex === 6 && property && (
-        <RentRoom property={property} roomId={id} />
-      )}
+        )}
+
+        {property && buttonIndex === 2 && <History review={property.reviews} />}
+
+        {buttonIndex === 3 && property && (
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
+            <ContactLandlord
+              landlordEmail={property.contact.email}
+              landlordName={property.contact.username}
+            />
+          </div>
+        )}
+
+        {buttonIndex === 4 && property && (
+          <div className="h-64 md:h-96">
+            <PropertyLocation
+              location={property.pinnedLocation?.locationName}
+              longitude={property.pinnedLocation?.longitude}
+              latitude={property.pinnedLocation?.latitude}
+            />
+          </div>
+        )}
+
+        {buttonIndex === 5 && property && (
+          <PropertyImages propertyImage={property.images} />
+        )}
+
+        {buttonIndex === 6 && property && (
+          <RentRoom property={property} roomId={id} />
+        )}
+      </div>
     </div>
   );
 };
