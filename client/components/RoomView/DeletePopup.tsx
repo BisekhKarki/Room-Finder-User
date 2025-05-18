@@ -38,7 +38,7 @@ const DeletePopup = ({ setPopup, token, landlordId, roomId }: Props) => {
 
       if (response.status === 200) {
         toast.success(data.message);
-        router.push("/User/home");
+        router.push("/User/Home");
       } else {
         toast.error(data.message);
       }

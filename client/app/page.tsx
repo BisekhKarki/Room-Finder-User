@@ -58,7 +58,7 @@ const Page = () => {
     if (!mounted) return;
 
     if (userType === "Tenants") {
-      router.push("/User/home");
+      router.push("/User/Home");
     } else if (userType === "landlord") {
       router.push("/landlord/Home");
     }

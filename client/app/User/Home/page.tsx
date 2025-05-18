@@ -128,7 +128,7 @@ const Page = () => {
           <div className="flex justify-center md:justify-start">
             <Button
               className="bg-blue-500 hover:bg-blue-600 text-sm md:text-base"
-              onClick={() => router.push("/User/properties")}
+              onClick={() => router.push("/User/Properties")}
             >
               Explore Properties
             </Button>

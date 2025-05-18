@@ -168,7 +168,7 @@ const FeaturedRooms = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
         </h1>
         <div
           className="text-blue-500 flex items-center gap-1 mt-4 md:mt-0 cursor-pointer"
-          onClick={() => router.push("/user/properties")}
+          onClick={() => router.push("/User/Properties")}
         >
           <p className="underline text-sm md:text-base">View more</p>
           <FaAngleRight className="text-sm md:text-base" />
@@ -237,7 +237,7 @@ const FeaturedRooms = ({ watchlistsRoom, setWatchlistsRoom }: Props) => {
                   <Button
                     className="w-full mt-3 md:mt-5 bg-blue-500 hover:bg-blue-600 text-sm md:text-base"
                     onClick={() =>
-                      router.push(`/User/properties/${property._id}`)
+                      router.push(`/User/Properties/${property._id}`)
                     }
                   >
                     View Details
