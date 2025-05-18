@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
       success: true,
       message: `You have been logged in as ${findUser.UserType}`,
       redirect:
-        findUser.UserType === "Landlord" ? "/landlord/MyRooms" : "/user/home",
+        findUser.UserType === "Landlord" ? "/landlord/MyRooms" : "/User/home",
       token: token,
     });
   } catch (error) {
