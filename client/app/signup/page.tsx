@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+// import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import logo from "@/public/assets/Logo.png";
@@ -88,19 +88,19 @@ const SignupPage = () => {
     }
   };
 
-  const google = async () => {
-    try {
-      const response = await axios.get(`${base_url}/user/google`);
-      if (response.status === 200 && response.data.url) {
-        window.location.href = response.data.url;
-        toast.success("Logged in successfully");
-      } else {
-        toast.error("Failed to initiate Google login");
-      }
-    } catch (error: unknown) {
-      toast.error(String(error) || "An error occurred");
-    }
-  };
+  // const google = async () => {
+  //   try {
+  //     const response = await axios.get(`${base_url}/user/google`);
+  //     if (response.status === 200 && response.data.url) {
+  //       window.location.href = response.data.url;
+  //       toast.success("Logged in successfully");
+  //     } else {
+  //       toast.error("Failed to initiate Google login");
+  //     }
+  //   } catch (error: unknown) {
+  //     toast.error(String(error) || "An error occurred");
+  //   }
+  // };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-5 bg-gray-50 px-4">
@@ -278,14 +278,14 @@ const SignupPage = () => {
               >
                 Create Account
               </Button>
-              <Button
+              {/* <Button
                 onClick={google}
                 type="button"
                 className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-md flex items-center justify-center gap-2"
               >
                 <FcGoogle />
                 Signup with Google
-              </Button>
+              </Button> */}
             </div>
           </form>
         </Form>

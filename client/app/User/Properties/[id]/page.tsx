@@ -213,9 +213,9 @@ const Page = () => {
       )}
       {buttonIndex === 4 && (
         <PropertyLocation
-          location={property?.pinnedLocation.locationName || ""}
-          longitude={property?.pinnedLocation.longitude || 0}
-          latitude={property?.pinnedLocation.latitude || 0}
+          location={property?.pinnedLocation?.locationName || ""}
+          longitude={property?.pinnedLocation?.longitude || 0}
+          latitude={property?.pinnedLocation?.latitude || 0}
         />
       )}
       {buttonIndex === 5 && <PropertyImages propertyImage={property?.images} />}

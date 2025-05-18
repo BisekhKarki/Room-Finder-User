@@ -16,9 +16,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsEye } from "react-icons/bs";
 import { IoIosEyeOff } from "react-icons/io";
-import axios from "axios";
+// import axios from "axios";
 
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import * as z from "zod";
 import { toast } from "react-hot-toast";
 import logo from "@/public/assets/Logo.png";
@@ -70,19 +70,19 @@ const LoginPage = () => {
     }
   };
 
-  const google = async () => {
-    try {
-      const response = await axios.get(`${base_url}/user/google`);
-      if (response.status === 200 && response.data.url) {
-        window.location.href = response.data.url;
-        toast.success("Logged in successfully");
-      } else {
-        toast.error("Failed to initiate Google login");
-      }
-    } catch (error: unknown) {
-      toast.error(String(error) || "An error occurred");
-    }
-  };
+  // const google = async () => {
+  //   try {
+  //     const response = await axios.get(`${base_url}/user/google`);
+  //     if (response.status === 200 && response.data.url) {
+  //       window.location.href = response.data.url;
+  //       toast.success("Logged in successfully");
+  //     } else {
+  //       toast.error("Failed to initiate Google login");
+  //     }
+  //   } catch (error: unknown) {
+  //     toast.error(String(error) || "An error occurred");
+  //   }
+  // };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8 py-12">
@@ -181,14 +181,14 @@ const LoginPage = () => {
                 Login
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={google}
                 type="button"
                 className="w-full py-3 md:py-3.5 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-sm md:text-base font-medium"
               >
                 <FcGoogle className="text-xl mr-2" />
                 Continue with Google
-              </Button>
+              </Button> */}
             </div>
           </form>
         </Form>

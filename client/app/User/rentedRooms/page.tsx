@@ -217,9 +217,9 @@ const Page = () => {
           {buttonIndex === 4 && (
             <div className="mt-6 md:mt-10 px-4 md:px-8">
               <PropertyLocation
-                location={myroom?.pinnedLocation.locationName || ""}
-                longitude={myroom?.pinnedLocation.longitude || 0}
-                latitude={myroom?.pinnedLocation.latitude || 0}
+                location={myroom?.pinnedLocation?.locationName || ""}
+                longitude={myroom?.pinnedLocation?.longitude || 0}
+                latitude={myroom?.pinnedLocation?.latitude || 0}
               />
             </div>
           )}

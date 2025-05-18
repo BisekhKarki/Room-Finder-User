@@ -140,17 +140,16 @@ const Page = () => {
         </div>
 
         {/* Main Image */}
-        <div className="px-5 md:px-10">
-          {property && property.images && property.images.length > 0 && (
+        {property && property?.images?.length > 0 && (
+          <div className="relative h-48 md:h-96 w-full">
             <Image
-              src={property?.images[0]}
+              src={property.images[0]}
               alt="room images"
-              width={1200}
-              height={1300}
-              className="h-full rounded-md hover:shadow-lg cursor-pointer w-full object-cover"
+              fill
+              className="rounded-md object-cover"
             />
-          )}
-        </div>
+          </div>
+        )}
 
         <hr className="mt-10" />
 
