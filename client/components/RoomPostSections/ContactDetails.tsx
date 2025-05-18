@@ -138,6 +138,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
         });
 
         const val = await response.json();
+        localStorage.removeItem("Last_Page");
         if (val.success) {
           toast.success(val.message);
           localStorage.removeItem("Last_Page");

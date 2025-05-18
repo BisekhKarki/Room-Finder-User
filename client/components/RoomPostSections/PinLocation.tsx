@@ -1,53 +1,36 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
+import { useState, useRef } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  Popup,
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Button } from "../ui/button";
 import { RxArrowLeft, RxArrowRight } from "react-icons/rx";
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { pinnedLocationDetail } from "@/store/form";
-import { useMapEvents } from "react-leaflet";
-
-// Dynamically import Leaflet components with SSR disabled
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
-);
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
 
 interface Props {
   counter: number;
   setCounter: (index: number) => void;
 }
 
-// Configure Leaflet icons only on client side
-if (typeof window !== "undefined") {
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-}
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 interface MapEventsProps {
   onDoubleClick: (latlng: L.LatLng) => void;
@@ -62,30 +45,14 @@ const MapEvents = ({ onDoubleClick }: MapEventsProps) => {
   return null;
 };
 
-const DEFAULT_COORDINATES: [number, number] = [27.7172, 85.324];
+const DEFAULT_COORDINATES: [number, number] = [27.7172, 85.324]; // Kathmandu
 
-const LocationPinMap = ({ counter, setCounter }: Props) => {
+const PinLocationMap = ({ counter, setCounter }: Props) => {
   const [pinLocation, setPinLocation] = useState<[number, number] | null>(null);
   const [locationName, setLocationName] = useState<string>("");
   const [searchInput, setSearchInput] = useState<string>("");
   const [mapType, setMapType] = useState<"default" | "satellite">("default");
-  const [isClient, setIsClient] = useState(false);
   const mapRef = useRef<L.Map | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    setIsClient(true);
-    const pinned_Location = localStorage.getItem("Post_Pinned_Location");
-    if (pinned_Location) {
-      try {
-        const parsedLocation = JSON.parse(pinned_Location);
-        setLocationName(parsedLocation.locationName);
-        setPinLocation([parsedLocation.latitude, parsedLocation.longitude]);
-      } catch (error) {
-        console.error("Error parsing pinned location:", error);
-      }
-    }
-  }, []);
 
   const handleDoubleClick = async (latlng: L.LatLng) => {
     const lat = latlng.lat;
@@ -123,15 +90,13 @@ const LocationPinMap = ({ counter, setCounter }: Props) => {
           map.setView([lat, lon], 13);
         }
       } else {
-        toast.error("Location not found");
+        alert("Location not found");
       }
     } catch (error) {
       console.error("Error fetching search location:", error);
-      toast.error("Failed to find location");
+      alert("Failed to find location");
     }
   };
-
-  if (!isClient) return null;
 
   return (
     <>
@@ -167,7 +132,7 @@ const LocationPinMap = ({ counter, setCounter }: Props) => {
           zoom={13}
           style={{ height: "100%", width: "100%" }}
           doubleClickZoom={false}
-          ref={mapRef}
+          whenReady={() => {}}
         >
           {mapType === "satellite" ? (
             <>
@@ -228,24 +193,15 @@ const LocationPinMap = ({ counter, setCounter }: Props) => {
           type="button"
           className="w-full md:w-32 bg-blue-400 hover:bg-blue-500 order-1 md:order-2"
           onClick={() => {
-            if (locationName && pinLocation) {
-              dispatch(
-                pinnedLocationDetail({
-                  locationName: locationName,
-                  latitude: pinLocation[0],
-                  longitude: pinLocation[1],
-                })
-              );
+            if (pinLocation) {
               localStorage.setItem(
                 "Post_Pinned_Location",
                 JSON.stringify({
-                  locationName: locationName,
-                  latitude: pinLocation[0],
-                  longitude: pinLocation[1],
+                  pinned_Location: locationName,
+                  longitude: pinLocation[0],
+                  latitude: pinLocation[1],
                 })
               );
-            } else {
-              return toast.error("Pin the location");
             }
             setCounter(counter + 1);
           }}
@@ -257,4 +213,4 @@ const LocationPinMap = ({ counter, setCounter }: Props) => {
   );
 };
 
-export default LocationPinMap;
+export default PinLocationMap;

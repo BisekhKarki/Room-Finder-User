@@ -152,26 +152,26 @@ const Page = () => {
 
                 <div className="p-2 md:p-3 flex-1 flex flex-col">
                   <p className="text-center bg-blue-100 text-blue-800 text-xs md:text-sm py-0.5 rounded-sm mb-1">
-                    {pend.basic.type}
+                    {pend?.basic?.type}
                   </p>
 
                   <h2 className="text-sm md:text-base font-medium mb-1 line-clamp-1">
-                    {pend.basic.name}
+                    {pend?.basic?.name}
                   </h2>
 
                   <div className="flex justify-between items-center mb-1">
                     <p className="text-xs md:text-sm font-medium text-gray-800">
-                      Rs: {pend.basic.price}
+                      Rs: {pend?.basic?.price}
                     </p>
                     <span className="text-[0.65rem] md:text-xs text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">
-                      {pend.features.category}
+                      {pend?.features?.category}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-1 text-[0.65rem] md:text-xs text-gray-600 mt-auto">
                     <IoLocation className="text-red-600 shrink-0 text-xs" />
                     <p className="line-clamp-1">
-                      {pend.location.city}, {pend.location.street}
+                      {pend?.location?.city}, {pend?.location?.street}
                     </p>
                   </div>
 

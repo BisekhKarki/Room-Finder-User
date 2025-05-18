@@ -8,9 +8,10 @@ import Location from "@/components/RoomPostSections/Location";
 import dynamic from "next/dynamic";
 import Stepper from "@/components/RoomPostSections/Stepper";
 import React, { useEffect, useState } from "react";
+// import PinToLocation from "@/components/RoomPostSections/PinToLocation";
 
-const LocationPinMap = dynamic(
-  () => import("@/components/RoomPostSections/PinLocation"),
+const PinToLocation = dynamic(
+  () => import("@/components/RoomPostSections/PinToLocation"),
   { ssr: false }
 );
 
@@ -70,7 +71,7 @@ const Page = () => {
               <Location counter={counter} setCounter={setCounter} />
             )}
             {counter === 2 && (
-              <LocationPinMap counter={counter} setCounter={setCounter} />
+              <PinToLocation counter={counter} setCounter={setCounter} />
             )}
             {counter === 3 && (
               <Features counter={counter} setCounter={setCounter} />
