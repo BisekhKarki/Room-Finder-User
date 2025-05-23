@@ -25,6 +25,7 @@ import Location from "@/components/RoomView/Location";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 const viewComponentButtons = [
   { index: 1, label: "Info" },
@@ -144,6 +145,7 @@ const Page = () => {
 
   return (
     <div className="mt-6 md:mt-10 py-6 md:py-10 px-4 sm:px-6 lg:px-8">
+      <ProtectRoutePage type="Tenants" />
       {/* Back Button Section */}
       <div className="text-lg md:text-2xl mb-4 md:mb-5 flex items-center gap-1 ml-2 sm:ml-4 md:ml-8">
         <IoIosArrowRoundBack

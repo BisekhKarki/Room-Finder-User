@@ -8,6 +8,7 @@ import Location from "@/components/RoomPostSections/Location";
 import dynamic from "next/dynamic";
 import Stepper from "@/components/RoomPostSections/Stepper";
 import React, { useEffect, useState } from "react";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 // import PinToLocation from "@/components/RoomPostSections/PinToLocation";
 
 const PinToLocation = dynamic(
@@ -44,6 +45,7 @@ const Page = () => {
 
   return (
     <div className="flex-1 min-h-screen">
+      <ProtectRoutePage type="Landlord" />
       <div className="m-4 md:m-6">
         <div className="py-4 px-4 md:px-6 rounded-md">
           <h1 className="text-2xl md:text-3xl font-bold">Post Your Property</h1>

@@ -2,10 +2,12 @@
 import React from "react";
 import Image from "next/image";
 import { services } from "@/constants/Services";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 const Page = () => {
   return (
     <div className="px-10 py-10">
+      <ProtectRoutePage type="Tenants" />
       <h1 className="text-4xl font-bold">Our Services</h1>
       <p className="w-2/3 mt-7 text-gray-500">
         At Room Finder, we simplify your search for the perfect space. Whether

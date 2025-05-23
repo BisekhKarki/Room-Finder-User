@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { FaBookmark } from "react-icons/fa";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 interface ContactData {
   email: string;
@@ -229,6 +230,7 @@ const Page = () => {
 
   return (
     <>
+      <ProtectRoutePage type="Tenants" />
       <div className="mt-6 md:mt-10 px-4">
         {/* Filter Section */}
         <div className="flex justify-center">

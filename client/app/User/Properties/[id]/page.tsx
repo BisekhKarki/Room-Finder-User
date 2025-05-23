@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 
 import { IoIosArrowRoundBack } from "react-icons/io";
 import RentRoom from "@/components/UserComponents/RentRoom";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 interface ContactData {
   email: string;
@@ -138,6 +139,7 @@ const Page = () => {
 
   return (
     <div className="mt-4 md:mt-10 py-4 md:py-10">
+      <ProtectRoutePage type="Tenants" />
       <div className="text-xl md:text-2xl mb-3 md:mb-5 flex items-center gap-1 ml-4 md:ml-8">
         <IoIosArrowRoundBack
           className="text-gray-800 cursor-pointer"

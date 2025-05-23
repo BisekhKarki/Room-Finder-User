@@ -15,6 +15,7 @@ import { GetToken } from "@/constants/GetToken";
 
 import { checkToken } from "@/store/slice";
 import { base_url } from "@/constants/BaseUrl";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 interface ContactData {
   email: string;
@@ -130,6 +131,7 @@ const Page = () => {
 
   return (
     <div>
+      <ProtectRoutePage type="Landlord" />
       {loading ? (
         <div className="flex justify-center items-center h-[80vh]">
           <ClipLoader

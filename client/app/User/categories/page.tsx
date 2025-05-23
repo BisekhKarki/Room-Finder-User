@@ -4,6 +4,7 @@ import Apartment from "@/components/Categories/Apartment";
 import Office from "@/components/Categories/Office";
 import Rooms from "@/components/Categories/Rooms";
 import Shop from "@/components/Categories/Shop";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 
@@ -31,6 +32,7 @@ const Page = () => {
 
   return (
     <div>
+      <ProtectRoutePage type="Tenants" />
       <div className="flex justify-center py-6 md:py-10 px-4">
         <div className="flex flex-wrap justify-center gap-3 md:gap-5 w-full max-w-4xl">
           {filterButtons.map((b, i) => (

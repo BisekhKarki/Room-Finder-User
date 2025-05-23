@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slice";
 import Image from "next/image";
 import logo from "@/public/assets/Logo.png";
+import toast from "react-hot-toast";
 
 const LandlordNavbar = () => {
   const router = useRouter();
@@ -24,6 +25,8 @@ const LandlordNavbar = () => {
 
   const logoutUser = () => {
     localStorage.removeItem("Token");
+
+    toast.success("You have been logged out");
     dispatch(logout());
     router.push("/");
   };

@@ -23,6 +23,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import EditRoom from "@/components/RoomPostSections/RoomEdit/EditRooms";
 import { base_url } from "@/constants/BaseUrl";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 // import DeleteRoom from "@/components/RoomPostSections/RoomEdit/DeleteRoom";
 
 interface ContactData {
@@ -132,6 +133,7 @@ const Page = () => {
 
   return (
     <div className="py-6 md:py-10 px-4 md:px-6 lg:px-10">
+      <ProtectRoutePage type="Landlord" />
       {/* Back Button */}
       <div className="text-xl md:text-2xl mb-4 md:mb-5 flex items-center gap-2">
         <IoIosArrowRoundBack

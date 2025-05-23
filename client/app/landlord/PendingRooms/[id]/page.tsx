@@ -21,6 +21,7 @@ import { GetToken } from "@/constants/GetToken";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { base_url } from "@/constants/BaseUrl";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 interface ContactData {
   email: string;
@@ -121,6 +122,7 @@ const Page = () => {
 
   return (
     <div className="py-4 md:py-10 px-4 md:px-10">
+      <ProtectRoutePage type="Landlord" />
       {/* Back Button */}
       <div className="text-xl md:text-2xl mb-5 flex items-center gap-2">
         <IoIosArrowRoundBack

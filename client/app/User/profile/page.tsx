@@ -1,5 +1,6 @@
 "use client";
 
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 import { base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
 import { useEffect, useState } from "react";
@@ -162,6 +163,7 @@ export default function Page() {
 
   return (
     <div className="bg-white min-h-screen p-4 sm:p-6 lg:p-8">
+      <ProtectRoutePage type="Tenants" />
       <div className="max-w-4xl mx-auto">
         {/* Profile Header - Stack on mobile */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">

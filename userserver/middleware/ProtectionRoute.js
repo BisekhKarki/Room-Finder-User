@@ -8,6 +8,7 @@ const protectRoute = async (req, res, next) => {
 
     const splitToken = token.split(" ")[1];
     if (!token) {
+      res.redirect("/login");
       return res.status(401).json({
         success: false,
         message: "Unauthorized: No token provided",
@@ -17,6 +18,7 @@ const protectRoute = async (req, res, next) => {
     const decodeUser = jsonwebtoken.decode(splitToken, process.env.JWT_SECRET);
 
     if (!decodeUser || !decodeUser.id) {
+      res.redirect("/login");
       return res.status(400).json({
         success: false,
         message: "Invalid Token",

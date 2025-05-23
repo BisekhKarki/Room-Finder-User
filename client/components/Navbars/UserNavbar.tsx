@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slice";
 import logo from "@/public/assets/Logo.png";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const UserNavbar = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const UserNavbar = () => {
     localStorage.removeItem("Token");
     dispatch(logout());
     router.push("/");
+    toast.success("You have been logged out");
   };
 
   const navLists = [

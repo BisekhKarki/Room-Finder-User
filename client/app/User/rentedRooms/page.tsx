@@ -1,5 +1,6 @@
 "use client";
 
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 import Description from "@/components/RoomView/Description";
 import Features from "@/components/RoomView/Features";
 import Location from "@/components/RoomView/Location";
@@ -151,6 +152,7 @@ const Page = () => {
 
   return (
     <div className="mt-10 md:mt-20 mb-10 md:mb-14 px-4 sm:px-6 lg:px-8">
+      <ProtectRoutePage type="Tenants" />
       {myroom ? (
         <div>
           {myroom && myroom?.images?.length > 0 && (

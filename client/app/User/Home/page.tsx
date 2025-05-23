@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 
 import { base_url } from "@/constants/BaseUrl";
 import { GetToken } from "@/constants/GetToken";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 
 interface ContactData {
   email: string;
@@ -116,6 +117,7 @@ const Page = () => {
   };
   return (
     <div className="py-10 px-2 md:px-4">
+      <ProtectRoutePage type="Tenants" />
       <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 lg:gap-24 items-center px-4">
         <div className="space-y-5 text-center md:text-left">
           <h1 className="text-3xl md:text-4xl font-bold">

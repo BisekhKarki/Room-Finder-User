@@ -21,6 +21,7 @@ const { scheduleUserEmails } = require("./lib/Automatic");
 const homeCategory = require("./Routes/HomeRoute");
 
 const home = require("./Routes/NonUser");
+const validRoute = require("./Routes/ValidRoute");
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
@@ -45,6 +46,8 @@ scheduleUserEmails();
 // Validate User
 // for home router
 app.use("/api", homeCategory);
+
+app.use("/api/valid", validRoute);
 
 // For user Routes
 app.use("/api/user", userRouter);

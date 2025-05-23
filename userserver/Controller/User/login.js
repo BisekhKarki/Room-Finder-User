@@ -32,7 +32,7 @@ const loginUser = async (req, res) => {
 
   try {
     const findUser = await user.findOne({ Email });
-    console.log(findUser.UserType);
+
     if (!findUser) {
       return res.status(400).json({
         success: false,
@@ -54,8 +54,9 @@ const loginUser = async (req, res) => {
       success: true,
       message: `You have been logged in as ${findUser.UserType}`,
       redirect:
-        findUser.UserType === "Landlord" ? "/landlord/MyRooms" : "/User/home",
+        findUser.UserType === "Landlord" ? "/landlord/MyRooms" : "/User/Home",
       token: token,
+      userType: findUser.UserType,
     });
   } catch (error) {
     return res.status(500).json({

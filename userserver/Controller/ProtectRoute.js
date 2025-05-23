@@ -15,7 +15,7 @@ const validateUser = async (req, res) => {
     }
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decodedToken);
+
     if (!decodedToken) {
       return res.status(401).json({
         success: false,

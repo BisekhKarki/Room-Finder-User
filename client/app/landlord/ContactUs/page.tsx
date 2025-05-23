@@ -1,4 +1,5 @@
 "use client";
+import ProtectRoutePage from "@/components/ProtectRoutePage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,6 +67,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen">
+      <ProtectRoutePage type="Landlord" />
       {/* Contact Info Section */}
       <div className="flex justify-center py-6 md:py-10 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-4xl border rounded-md shadow-sm">

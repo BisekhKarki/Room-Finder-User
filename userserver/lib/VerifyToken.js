@@ -6,6 +6,7 @@ const verifyToken = async (req, res) => {
   try {
     const { token } = req.body;
     if (!token) {
+      res.redirect("/login");
       return res.status(400).json({
         success: false,
         message: "Access denied. No token provided",
@@ -15,6 +16,7 @@ const verifyToken = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (!decoded) {
+      res.redirect("/login");
       return res.status(400).json({
         success: false,
         message: "Access denied. Invalid token",
