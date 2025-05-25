@@ -108,7 +108,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
         email,
       })
     );
-    localStorage.setItem("Last_Page", JSON.stringify(counter));
+    // localStorage.setItem("Last_Page", JSON.stringify(counter));
   };
 
   const sendForApproval = async () => {

@@ -139,6 +139,7 @@ const EditContactDeatils = ({ counter, setCounter }: Props) => {
         localStorage.removeItem("Edit_Post_images");
         localStorage.removeItem("Edit_Post_location");
         localStorage.removeItem("Edit_Post_features");
+        localStorage.removeItem("Edit_Pinned_Location");
         setUserName("");
         setEmail("");
         setPhone("");

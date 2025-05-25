@@ -88,7 +88,7 @@ const Page = () => {
   return (
     <>
       <ProtectRoutePage type="Tenants" />
-      <div className="mt-6 md:mt-10 py-6 md:py-10">
+      <div className="mt-6 md:mt-10 py-6 md:py-10 mb-80">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 sm:px-8 lg:px-20 justify-center gap-8 md:gap-12 lg:gap-24 mt-6 md:mt-10">
           {watchlistsRoom && watchlistsRoom.length > 0 ? (
             watchlistsRoom.map((property, index) => (

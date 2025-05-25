@@ -34,6 +34,7 @@ const PaymentSuccessContent = () => {
   useEffect(() => {
     if (getRoomId !== "" && getStatus !== "") {
       paymentSuccessfull();
+      savePaymentDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getRoomId, getLandlordId, getStatus]);
@@ -100,7 +101,7 @@ const PaymentSuccessContent = () => {
               variant="ghost"
               size="sm"
               className="text-red-500 hover:bg-red-50 rounded-full p-2"
-              onClick={savePaymentDetails}
+              onClick={() => router.push("/landlord/MyRooms")}
             >
               <ImCross className="h-5 w-5" />
             </Button>
@@ -133,7 +134,7 @@ const PaymentSuccessContent = () => {
             <div className="w-full mt-6 space-y-4">
               <Button
                 className="w-full md:w-auto px-8 py-4 text-base md:text-lg"
-                onClick={() => savePaymentDetails()}
+                onClick={() => router.push("/landlord/MyRooms")}
               >
                 View My Rooms
               </Button>

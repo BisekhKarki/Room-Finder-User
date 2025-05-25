@@ -10,6 +10,7 @@ export interface Review {
   comment: string;
   rating: number;
   _id: string;
+  user: string;
   created_at: Date;
 }
 
@@ -27,6 +28,7 @@ interface userDetails {
 }
 
 const History = ({ review }: Props) => {
+  console.log(review);
   // Keyed by review ID instead of user ID
   const [userMap, setUserMap] = useState<Record<string, userDetails>>({});
 
@@ -37,7 +39,7 @@ const History = ({ review }: Props) => {
         review.map(async (r) => {
           try {
             const response = await fetch(
-              `${base_url}/rooms/tenant/review/info/${r._id}`,
+              `${base_url}/rooms/tenant/review/info/${r.user}`,
               {
                 method: "GET",
                 headers: {

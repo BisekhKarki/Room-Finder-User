@@ -110,11 +110,20 @@ const Page = () => {
   }, [getToken]);
 
   const filterRooms = () => {
+    console.log("Hhello");
+
+    if (!location || propertyType === "" || price === "") {
+      console.log("Hhello");
+
+      toast.error("Please enter all fields to search");
+      return;
+    }
     if (
       !location ||
       propertyType === "Property Type" ||
       price === "Price Range"
     ) {
+      console.log("Hhello");
       setProperties(originalProperties);
       toast.error("Please enter all fields to search");
       return;
@@ -240,7 +249,7 @@ const Page = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full md:flex-1 text-sm md:text-base"
-                placeholder="Search by location"
+                placeholder="Search by city"
               />
 
               <select
@@ -249,13 +258,13 @@ const Page = () => {
                 onChange={(e) => setPrice(e.target.value)}
                 className="w-full md:w-48 p-2 border rounded-md text-sm md:text-base"
               >
-                <option>Price Range</option>
-                <option>5-10k</option>
-                <option>10-20k</option>
-                <option>20-30k</option>
-                <option>30-40k</option>
-                <option>40-50k</option>
-                <option>More than 50k</option>
+                <option value="Price Range">Price Range</option>
+                <option value="5-10k">5-10k</option>
+                <option value="10-20k">10-20k</option>
+                <option value="20-30k">20-30k</option>
+                <option value="30-40k">30-40k</option>
+                <option value="40-50k">40-50k</option>
+                <option value="More than 50k">More than 50k</option>
               </select>
 
               <select
@@ -264,11 +273,11 @@ const Page = () => {
                 onChange={(e) => setPropertyType(e.target.value)}
                 className="w-full md:w-48 p-2 border rounded-md text-sm md:text-base"
               >
-                <option>Property Type</option>
-                <option>Room</option>
-                <option>Shop</option>
-                <option>Office</option>
-                <option>Apartment</option>
+                <option value="Property Type">Property Type</option>
+                <option value="Room">Room</option>
+                <option value="Shop">Shop</option>
+                <option value="Office">Office</option>
+                <option value="Apartment">Apartment</option>
               </select>
 
               <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">

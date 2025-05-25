@@ -110,7 +110,7 @@ const user_WatchLists = new mongoose.Schema({
   },
   reviews: [
     {
-      id: {
+      user: {
         type: Schema.Types.ObjectId,
         ref: "User",
       },

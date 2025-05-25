@@ -64,6 +64,7 @@ interface PropertyReviews {
   comment: string;
   rating: number;
   created_at: Date;
+  user: string;
 }
 
 interface PropertyPinnedLocation {

@@ -97,22 +97,6 @@ const rented_history = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Room",
     },
-    reviews: [
-      {
-        id: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-        comment: {
-          type: String,
-        },
-        rating: { type: Number, min: 0, max: 5 },
-        created_at: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
     rented_date: {
       type: Date,
     },

@@ -48,12 +48,8 @@ const reviewInfo = async (req, res) => {
   const { id } = req.params;
   console.log(id);
   try {
-    const users = await user
-      .findOne({
-        _id: id,
-      })
-      .select("-Password");
-    console.log("Hellop", users);
+    const users = await user.findById(id).select("-Password");
+    // console.log("Hellop", users);
     if (!users) {
       return res.status(404).json({
         success: false,
@@ -74,7 +70,7 @@ const reviewInfo = async (req, res) => {
 };
 
 const sendApprovalRent = async (req, res) => {
-  const userData = req.userData; // Tenant ID from auth middleware
+  const userData = req.userData;
 
   try {
     const {
@@ -87,23 +83,53 @@ const sendApprovalRent = async (req, res) => {
       landlordId,
     } = req.body;
 
+    // Validate numeric fields
+    const numericFields = [
+      { value: personalDetails.age, name: "Age" },
+      { value: personalDetails.numberOfRenters, name: "Number of renters" },
+      { value: rental_history.length_of_stay, name: "Length of stay" },
+      { value: employment_and_income.income, name: "Income" },
+    ];
+
+    for (const field of numericFields) {
+      if (!/^\d+$/.test(field.value)) {
+        return res.status(400).json({
+          success: false,
+          message: `${field.name} must be a positive integer`,
+        });
+      }
+    }
+
+    // Validate phone numbers
+    const phoneNumbers = [
+      {
+        number: emergency_contact_details.contact,
+        name: "Emergency phone",
+      },
+      {
+        number: personalDetails.perosonalContact,
+        name: "Personal phone",
+      },
+    ];
+
+    for (const phone of phoneNumbers) {
+      if (!/^98\d{8}$/.test(phone.number)) {
+        return res.status(400).json({
+          success: false,
+          message: `${phone.name} must be a 10-digit number starting with 98`,
+        });
+      }
+    }
+
+    // Rest of your existing code...
     const User = await user.findById(userData.id);
-
-    // const userDetails = {
-    //   fullName: User.FirstName + User.LastName,
-    //   email: User.Email,
-    //   phone: User.Phone,
-    //   address: User.Address,
-    //   personalDetails,
-    // };
-
     const findExistingApproval = await rentApproval.findOne({
       roomId,
       tenantId: User._id,
     });
 
     if (findExistingApproval) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Rent approval already made",
       });

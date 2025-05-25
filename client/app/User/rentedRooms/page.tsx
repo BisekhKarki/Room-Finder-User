@@ -53,6 +53,7 @@ interface PropertyReviews {
   _id: string;
   comment: string;
   rating: number;
+  user: string;
   created_at: Date;
 }
 

@@ -30,7 +30,7 @@ interface Props {
 }
 
 const UserPayment = ({ roomId, price, token, seller, landlord_id }: Props) => {
-  const convertAmount = (5 / 100) * parseInt(price);
+  const convertAmount = (10 / 100) * parseInt(price);
   const [status, setStatus] = useState<string>("");
 
   const [formData, setFormData] = useState({

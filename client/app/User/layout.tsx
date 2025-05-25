@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import UserNavbar from "@/components/Navbars/UserNavbar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "User ",
@@ -25,11 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster />
         <UserNavbar />
         {children}
         <Footer />

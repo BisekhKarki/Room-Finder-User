@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { resetPass } from "@/store/slice";
+import { resetPass, setResetUserEmail } from "@/store/slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -25,6 +25,7 @@ const Page = () => {
       const data = await dispatch(resetPass({ email }));
       if (resetPass.fulfilled.match(data)) {
         if (data.payload.success) {
+          dispatch(setResetUserEmail(email));
           toast.success("Verification code sent to your email");
           router.push("/ResetPassword/password");
         }

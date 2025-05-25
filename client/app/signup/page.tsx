@@ -25,7 +25,7 @@ import { base_url } from "@/constants/BaseUrl";
 const formSchema = z.object({
   firstName: z.string().min(1, "Enter at least 1 character"),
   lastName: z.string().min(1, "Enter at least 1 character"),
-  email: z.string().min(1, "Enter at least 1 character"),
+  email: z.string(),
   phone: z
     .string()
     .min(9, "Phone Numbers cannot be less than 10 digits")
@@ -76,11 +76,12 @@ const SignupPage = () => {
           }),
         });
         const val = await response.json();
-        if (response.status !== 200) {
-          toast.error(val.message || "Please Try again");
-        } else if (response.status === 200) {
+        console.log(val.message);
+        if (response.status === 200) {
           toast.success(val.message);
           router.push("/VerifyEmail");
+        } else {
+          toast.error(val.message);
         }
       }
     } catch (error: unknown) {
@@ -218,7 +219,7 @@ const SignupPage = () => {
                       className="w-full bg-white border rounded-md p-2"
                       aria-label="Select an option"
                     >
-                      <option value="" disabled>
+                      <option value="Select a user type">
                         Select a user type
                       </option>
                       <option value="Tenants">Tenants</option>

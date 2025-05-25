@@ -22,6 +22,7 @@ import { GetToken } from "@/constants/GetToken";
 import toast from "react-hot-toast";
 import { base_url } from "@/constants/BaseUrl";
 import UserPayment from "./UserPayment";
+import { useRouter } from "next/navigation";
 
 interface ContactData {
   email: string;
@@ -82,6 +83,8 @@ interface RentRoomProps {
 }
 
 const RentRoom = ({ property, roomId }: RentRoomProps) => {
+  const router = useRouter();
+
   const [applicationStatus, setApplicationStatus] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [alreadyRented, setAlreadyRented] = useState<boolean>(false);
@@ -158,10 +161,6 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
     e.preventDefault();
 
     const requiredFields = {
-      citizenshipFront,
-      citizenshipBack,
-      personalphoto,
-
       age,
       renters,
       martialStatus,
@@ -170,23 +169,68 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
       phone,
       relationship,
 
+      citizenshipFront,
+      citizenshipBack,
+      personalphoto,
+
       criminal,
     };
+
+    // Find empty fields
+    const emptyFields = Object.entries(requiredFields)
+      .filter(([key, value]) => {
+        const isEmpty = value.trim() === "";
+
+        console.log("Key: ", key);
+
+        return isEmpty;
+      })
+      .map(([key]) => key);
+
+    if (emptyFields.length > 0) {
+      console.log("Missing Fields:", emptyFields);
+      toast.error(`Fill ${emptyFields[0]} to send approval`);
+      return;
+    }
+
     if (!checked) {
       toast.error("Please agree the terms");
       return;
     }
 
-    // Find empty fields
-    const emptyFields = Object.entries(requiredFields)
-      .filter(([value]) => value.trim() === "")
-      .map(([key]) => key);
+    // console.log({
+    //   personalDetails: {
+    //     fullName: userName,
+    //     email: email,
+    //     perosonalContact: userphone,
+    //     age: age,
+    //     numberOfRenters: renters,
+    //     marital_status: martialStatus,
+    //   },
+    //   employment_and_income: {
+    //     job: job,
+    //     income: income,
+    //   },
+    //   emergency_contact_details: {
+    //     name: name,
+    //     contact: phone,
+    //     relationship: relationship,
+    //   },
+    //   rental_history: {
+    //     previous_address: history,
+    //     length_of_stay: length,
 
-    if (emptyFields.length > 0) {
-      console.log("Missing Fields:", emptyFields);
-      toast.error(`Fill all the details to send approval`);
-      return;
-    }
+    //     reason_for_leave: reason,
+    //     criminal_record: criminal,
+    //   },
+    //   images: {
+    //     citizen_front: citizenshipFront,
+    //     citizen_back: citizenshipBack,
+    //     personal_photo: personalphoto,
+    //   },
+    //   roomId: roomId,
+    //   landlordId: property?.landlordId,
+    // });
 
     try {
       const response = await fetch(
@@ -235,12 +279,13 @@ const RentRoom = ({ property, roomId }: RentRoomProps) => {
 
       const data = await response.json();
       if (response.status === 201) {
+        router.push("/User/Properties");
         toast.success(data.message);
       } else {
         toast.error(data.message);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      console.log(String(error));
     }
   };
 

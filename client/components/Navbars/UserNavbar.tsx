@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { IoReorderThree } from "react-icons/io5";
@@ -39,6 +38,14 @@ const UserNavbar = () => {
     { name: "Properties", path: "/User/Properties" },
   ];
 
+  const userMenuItems = [
+    { name: "My Profile", path: "/User/profile" },
+    { name: "History", path: "/User/history" },
+    { name: "My WatchLists", path: "/User/watchlists" },
+    { name: "Rented Rooms", path: "/User/rentedRooms" },
+    { name: "Rule and Regulation", path: "/User/rules" },
+  ];
+
   const handleClickOutside = (e: MouseEvent) => {
     if (
       closeNavbarMobile.current &&
@@ -67,7 +74,6 @@ const UserNavbar = () => {
     <div ref={closeNavbarMobile}>
       <div className="flex justify-between items-center px-4 md:px-6 lg:px-8 py-4 border-b-2 shadow-sm">
         {/* Logo */}
-
         <Image
           src={logo}
           onClick={() => router.push("/")}
@@ -110,12 +116,7 @@ const UserNavbar = () => {
               <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               {open && (
                 <div className="absolute right-0 top-8 w-48 border border-gray-200 rounded-lg bg-white shadow-xl z-50">
-                  {[
-                    { name: "My Profile", path: "/User/profile" },
-                    { name: "History", path: "/User/history" },
-                    { name: "My WatchLists", path: "/User/watchlists" },
-                    { name: "Rented Rooms", path: "/User/rentedRooms" },
-                  ].map((item) => (
+                  {userMenuItems.map((item) => (
                     <React.Fragment key={item.path}>
                       <p
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm relative group"
@@ -208,17 +209,19 @@ const UserNavbar = () => {
                 ))}
                 {validToken && (
                   <>
-                    <li
-                      className="text-base text-gray-600 hover:text-blue-500 cursor-pointer relative group transition-colors duration-300"
-                      onClick={() => {
-                        router.push("/User/profile");
-                        setMobileNavbar(false);
-                      }}
-                    >
-                      My Profile
-                      <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                    </li>
-                    {/* Repeat similar pattern for other mobile menu items */}
+                    {userMenuItems.map((item) => (
+                      <li
+                        key={item.path}
+                        className="text-base text-gray-600 hover:text-blue-500 cursor-pointer relative group transition-colors duration-300"
+                        onClick={() => {
+                          router.push(item.path);
+                          setMobileNavbar(false);
+                        }}
+                      >
+                        {item.name}
+                        <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                      </li>
+                    ))}
                     <li
                       className="text-base text-red-500 hover:text-red-600 cursor-pointer relative group transition-colors duration-300"
                       onClick={() => {

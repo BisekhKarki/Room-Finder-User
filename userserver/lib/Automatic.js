@@ -156,7 +156,7 @@ const scheduleUserEmails = async () => {
     const rentedRooms = await rented.find({});
 
     const filteredRoom = rentedRooms.filter((r) => {
-      const room_time = new Date(new Date(r.rented_date).toLocaleDateString());
+      const room_time = new Date(new Date(r.last_payment).toLocaleDateString());
       const minusedTime = (getLatestDate - room_time) / (1000 * 60 * 60 * 24);
 
       return minusedTime === 30;
@@ -174,7 +174,7 @@ const scheduleUserEmails = async () => {
         return; // Skip this user
       }
 
-      cron.schedule(`0 10 * * *`, async () => {
+      cron.schedule(`10 14 * * *`, async () => {
         try {
           console.log(`Sending reminder email to ${r.rented_user_name}`);
 

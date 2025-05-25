@@ -20,6 +20,38 @@ const checkUser = async (req, res, next) => {
     });
   }
 
+  if (UserType === "Select a user type") {
+    return res.status(400).json({
+      success: false,
+      message: "You need to select a user type",
+    });
+  }
+
+  // console.log("Phone: ", getStarts);
+  if (!Phone.startsWith("98")) {
+    return res.status(400).json({
+      success: false,
+      message: "Phone number must start with 98",
+    });
+  }
+
+  if (Password.length < 8) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be atleast 8 characters",
+    });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegexTest = emailRegex.test(Email);
+  // console.log("Email: ", emailRegexTest);
+  if (Email && !emailRegexTest) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email format. Please use a valid email address",
+    });
+  }
+
   try {
     const findUser = await user.findOne({ Email });
     if (findUser) {

@@ -58,6 +58,7 @@ interface reviewsArray {
   rating: number;
   _id: string;
   created_at: Date;
+  user: string;
 }
 interface PropertyPinnedLocation {
   locationName: string;

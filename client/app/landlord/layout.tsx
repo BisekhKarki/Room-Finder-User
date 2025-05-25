@@ -2,6 +2,7 @@ import Footer from "@/components/Footer";
 import LandlordNavbar from "@/components/Navbars/LandLordNavbar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Landlord ",
@@ -25,11 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body
-          suppressHydrationWarning
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <Toaster />
           <LandlordNavbar />
           {children}
           <Footer />

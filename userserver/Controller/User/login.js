@@ -23,6 +23,15 @@ const generateToken = async (userId, userType) => {
 // Function to validate user in order to login
 const loginUser = async (req, res) => {
   const { Email, Password } = req.body;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegexTest = emailRegex.test(Email);
+
+  if (Email && !emailRegexTest) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email format. Please use a valid email address ",
+    });
+  }
   if (Email === " " || Password === " ") {
     return res.status(400).json({
       success: false,

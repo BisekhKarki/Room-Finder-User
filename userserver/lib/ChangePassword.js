@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const changePass = async (req, res) => {
   const { newPass, email } = req.body;
-
+  console.log(email);
   try {
     const validUser = await user.findOne({ Email: email });
 

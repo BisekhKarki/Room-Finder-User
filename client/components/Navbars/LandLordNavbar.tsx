@@ -117,6 +117,14 @@ const LandlordNavbar = () => {
                   </p>
                   <hr />
                   <p
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm rounded-md transition-colors"
+                    onClick={() => router.push("/landlord/RulesAndRegulation")}
+                  >
+                    Rules
+                  </p>
+
+                  <hr />
+                  <p
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-red-500 rounded-md transition-colors"
                     onClick={logoutUser}
                   >

@@ -178,7 +178,7 @@ const Page = () => {
               </div>
             ))
           ) : (
-            <div className="col-span-full text-center py-8 text-gray-500 text-lg md:text-xl">
+            <div className="col-span-full text-center py-8 text-gray-500 text-lg md:text-xl mb-80">
               No rooms in the watchlists
             </div>
           )}

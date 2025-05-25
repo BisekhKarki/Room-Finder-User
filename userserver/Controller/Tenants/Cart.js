@@ -19,6 +19,7 @@ const saveToWatchLists = async (req, res) => {
     const getWatchLists = await watchLists.findOne({
       roomId: roomId,
       landlordId: landlordId,
+      userId: userData.id,
     });
 
     if (getWatchLists) {

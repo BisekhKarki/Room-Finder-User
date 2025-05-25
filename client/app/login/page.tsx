@@ -20,14 +20,14 @@ import { IoIosEyeOff } from "react-icons/io";
 
 // import { FcGoogle } from "react-icons/fc";
 import * as z from "zod";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import logo from "@/public/assets/Logo.png";
 import Image from "next/image";
 import { base_url } from "@/constants/BaseUrl";
 
 const formSchema = z.object({
-  email: z.string().min(1, "Enter at least 1 character"),
-  password: z.string().min(6, "Password must be more than 6 characters"),
+  email: z.string(),
+  password: z.string(),
 });
 
 const LoginPage = () => {
@@ -44,6 +44,10 @@ const LoginPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("Hellow world");
+    if (!values.email || !values.password) {
+      toast.error("Enter all fields to login");
+      return;
+    }
     try {
       const response = await fetch(`${base_url}/user/login`, {
         method: "POST",
@@ -62,7 +66,7 @@ const LoginPage = () => {
         toast.success(data.message);
         localStorage.setItem("Token", data.token);
         router.push(data.redirect);
-      } else if (response.status === 400) {
+      } else {
         toast.error(data.message);
       }
     } catch (error: unknown) {

@@ -138,6 +138,9 @@ export const slicer = createSlice({
     setCategory: (state, action: PayloadAction<CategoryValues>) => {
       state.searchCategoryValues = action.payload;
     },
+    setResetUserEmail: (state, action: PayloadAction<string>) => {
+      state.resetPassUserEmail = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -187,7 +190,12 @@ export const slicer = createSlice({
   },
 });
 
-export const { logout, registrationUserData, sendCode, setCategory } =
-  slicer.actions;
+export const {
+  logout,
+  registrationUserData,
+  sendCode,
+  setCategory,
+  setResetUserEmail,
+} = slicer.actions;
 
 export default slicer.reducer;

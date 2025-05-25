@@ -24,6 +24,7 @@ const {
   getRentedRooms,
   changePassword,
   getCurrentRentedRooms,
+  changeProfile,
 } = require("../Controller/User/PersonalDetails");
 
 // For User Registration Route
@@ -45,6 +46,8 @@ router.post("/pass/code", sendingCodeToEmail);
 router.post("/pass/verify/code", validateCode);
 // For Changing the password
 router.post("/pass/change", changePass);
+// For changing the profile details
+router.patch("/update", protectRoute, changeProfile);
 
 // to get the userDetails
 router.get("/get/details/user", protectRoute, getDetails);
