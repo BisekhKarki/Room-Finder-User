@@ -47,9 +47,9 @@ const Features = ({ counter, setCounter }: Props) => {
       kitchen === "" ||
       category === "" ||
       direction === "" ||
-      !floor
+      floor === ""
     ) {
-      toast.error("Fill all details to procced next");
+      toast.error("Fill all details to proceed next");
       return;
     }
     dispatch(
@@ -80,9 +80,9 @@ const Features = ({ counter, setCounter }: Props) => {
               onChange={(e) => setParking(e.target.value)}
               aria-label="Parking availability"
             >
-              <option>-- Select Option --</option>
-              <option>Yes</option>
-              <option>No</option>
+              <option value="">-- Select Option --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div className="space-y-2">
@@ -93,9 +93,9 @@ const Features = ({ counter, setCounter }: Props) => {
               onChange={(e) => setKitchen(e.target.value)}
               aria-label="Kitchen availability"
             >
-              <option>-- Select Option --</option>
-              <option>Yes</option>
-              <option>No</option>
+              <option value="">-- Select Option --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
         </div>
@@ -110,9 +110,9 @@ const Features = ({ counter, setCounter }: Props) => {
               onChange={(e) => setBalcony(e.target.value)}
               aria-label="Balcony availability"
             >
-              <option>-- Select Option --</option>
-              <option>Yes</option>
-              <option>No</option>
+              <option value="">-- Select Option --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div className="space-y-2">
@@ -123,15 +123,15 @@ const Features = ({ counter, setCounter }: Props) => {
               onChange={(e) => setCategory(e.target.value)}
               aria-label="Property category"
             >
-              <option>-- Select Option --</option>
-              <option>Single Room</option>
-              <option>Two Rooms</option>
-              <option>1 BHK</option>
-              <option>2 BHK</option>
-              <option>3 BHK</option>
-              <option>Flat</option>
-              <option>4 BHK</option>
-              <option>Apartment/Housing</option>
+              <option value="">-- Select Option --</option>
+              <option value="Single Room">Single Room</option>
+              <option value="Two Rooms">Two Rooms</option>
+              <option value="1 BHK">1 BHK</option>
+              <option value="2 BHK">2 BHK</option>
+              <option value="3 BHK">3 BHK</option>
+              <option value="Flat">Flat</option>
+              <option value="4 BHK">4 BHK</option>
+              <option value="Apartment/Housing">Apartment/Housing</option>
             </select>
           </div>
         </div>
@@ -146,9 +146,9 @@ const Features = ({ counter, setCounter }: Props) => {
               onChange={(e) => setWater(e.target.value)}
               aria-label="Water facility availability"
             >
-              <option>-- Select Option --</option>
-              <option>Yes</option>
-              <option>No</option>
+              <option value="">-- Select Option --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div className="space-y-2">
@@ -159,11 +159,11 @@ const Features = ({ counter, setCounter }: Props) => {
               onChange={(e) => setDirection(e.target.value)}
               aria-label="Facing direction"
             >
-              <option>-- Select Option --</option>
-              <option>East</option>
-              <option>West</option>
-              <option>North</option>
-              <option>South</option>
+              <option value="">-- Select Option --</option>
+              <option value="East">East</option>
+              <option value="West">West</option>
+              <option value="North">North</option>
+              <option value="South">South</option>
             </select>
           </div>
         </div>
@@ -175,8 +175,9 @@ const Features = ({ counter, setCounter }: Props) => {
             placeholder="e.g., 1, 2, 3"
             className="h-12 w-full"
             value={floor}
-            onChange={(e) => setFloor(e.target.value)}
+            onChange={(e) => setFloor(e.target.value.replace(/[^0-9]/g, ""))}
             aria-label="Floor number"
+            type="number"
           />
         </div>
       </div>
@@ -186,7 +187,7 @@ const Features = ({ counter, setCounter }: Props) => {
         <Button
           type="button"
           variant="secondary"
-          className="w-full md:w-32  bg-blue-400 hover:bg-blue-500 text-white"
+          className="w-full md:w-32 bg-blue-400 hover:bg-blue-500 text-white"
           onClick={() => {
             setCounter(counter - 1);
             localStorage.setItem("Last_Page", JSON.stringify(counter - 1));
@@ -196,8 +197,8 @@ const Features = ({ counter, setCounter }: Props) => {
         </Button>
         <Button
           type="button"
-          className="w-full md:w-32  bg-blue-400 hover:bg-blue-500 text-white"
-          onClick={() => setFeaturesDetails()}
+          className="w-full md:w-32 bg-blue-400 hover:bg-blue-500 text-white"
+          onClick={setFeaturesDetails}
         >
           Next <RxArrowRight className="ml-2" />
         </Button>

@@ -102,14 +102,17 @@ const Location = ({ counter, setCounter }: Props) => {
               onChange={(e) => setProvince(e.target.value)}
               aria-label="Province"
             >
-              <option>--- Select Province ---</option>
-              <option>Bagmati Province</option>
-              <option>Koshi Province</option>
-              <option>Madhesh Province</option>
-              <option>Gandaki Province</option>
-              <option>Lumbini Province</option>
-              <option>Karnali Province</option>
-              <option>Sudurpashchim Province</option>
+              {/* Set value to empty string for default option */}
+              <option value="">--- Select Province ---</option>
+              <option value="Bagmati Province">Bagmati Province</option>
+              <option value="Koshi Province">Koshi Province</option>
+              <option value="Madhesh Province">Madhesh Province</option>
+              <option value="Gandaki Province">Gandaki Province</option>
+              <option value="Lumbini Province">Lumbini Province</option>
+              <option value="Karnali Province">Karnali Province</option>
+              <option value="Sudurpashchim Province">
+                Sudurpashchim Province
+              </option>
             </select>
           </div>
         </div>

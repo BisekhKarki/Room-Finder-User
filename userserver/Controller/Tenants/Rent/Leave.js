@@ -94,11 +94,10 @@ const leaveRent = async (req, res) => {
       roomId,
       landlordId,
     });
-
-    console.log(application);
+    console.log(userData.id);
 
     if (application) {
-      // await userApplication.findByIdAndDelete(application._id);
+      await userApplication.findByIdAndDelete(application._id);
     }
 
     return res.status(200).json({

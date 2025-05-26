@@ -54,6 +54,14 @@ const PinLocationMap = ({ counter, setCounter }: Props) => {
   const [mapType, setMapType] = useState<"default" | "satellite">("default");
   const mapRef = useRef<L.Map | null>(null);
 
+  // useEffect(() => {
+  //   const pinnedLocationGet = localStorage.getItem("Post_Pinned_Location");
+  //   if (pinnedLocationGet) {
+  //     const parsedLocation = JSON.parse(pinnedLocationGet);
+  //     setPinLocation([parsedLocation.latitude, parsedLocation.longitude]);
+  //   }
+  // }, []);
+
   const handleDoubleClick = async (latlng: L.LatLng) => {
     const lat = latlng.lat;
     const lng = latlng.lng;

@@ -32,7 +32,6 @@ const sendingCodeToEmail = async (req, res) => {
       Your email verification code is: ${mailCode}
       `,
     });
-    console.log(info);
 
     return res.status(200).json({
       success: true,

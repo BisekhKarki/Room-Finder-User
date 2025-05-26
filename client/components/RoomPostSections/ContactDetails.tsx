@@ -101,6 +101,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
     if (!userName || !phone || !email) {
       toast.error("Fill all the details to procced next");
     }
+
     dispatch(
       contactDetails({
         username: userName,
@@ -113,6 +114,20 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
 
   const sendForApproval = async () => {
     setUserContact();
+    // if (!phone.startsWith("98")) {
+    //   toast.error("Invalid mobile number, please eneter a valid phone number");
+    // }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    const phoneRegex = /^\d{10}$/; // Matches 10 digits
+    if (!phoneRegex.test(phone)) {
+      toast.error("Please enter a valid 10-digit phone number");
+      return;
+    }
 
     try {
       if (landlordId) {
@@ -189,6 +204,7 @@ const ContactDeatils = ({ counter, setCounter }: Props) => {
           className="h-12 w-full"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          type="email"
         />
       </div>
 

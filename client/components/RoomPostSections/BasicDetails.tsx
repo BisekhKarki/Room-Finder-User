@@ -44,6 +44,7 @@ const BasicDetails = ({ counter, setCounter }: Props) => {
       toast.error("Please fill in all the details");
       return;
     }
+
     dispatch(
       basicDetails({
         name,
